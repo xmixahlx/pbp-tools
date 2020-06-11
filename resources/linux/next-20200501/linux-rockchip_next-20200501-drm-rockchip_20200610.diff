@@ -1,0 +1,601 @@
+diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+--- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-05-26 03:51:51.021292080 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-05-26 04:11:08.422213866 -0700
+@@ -801,8 +801,8 @@
+ 			<0>, <24000000>,
+ 			<24000000>, <24000000>,
+ 			<15000000>, <15000000>,
+-			<100000000>, <100000000>,
+-			<100000000>, <100000000>,
++			<300000000>, <100000000>,
++			<400000000>, <100000000>,
+ 			<50000000>, <100000000>,
+ 			<100000000>, <100000000>,
+ 			<50000000>, <50000000>,
+diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+--- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-05-26 03:51:51.025292138 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-05-26 04:11:08.426213904 -0700
+@@ -1589,7 +1589,7 @@
+ 		reg = <0x0 0xff8f0000 0x0 0x3efc>;
+ 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		assigned-clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
+-		assigned-clock-rates = <400000000>, <100000000>;
++		assigned-clock-rates = <400000000>, <200000000>;
+ 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		iommus = <&vopl_mmu>;
+@@ -1646,7 +1646,7 @@
+ 		reg = <0x0 0xff900000 0x0 0x3efc>;
+ 		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		assigned-clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
+-		assigned-clock-rates = <400000000>, <100000000>;
++		assigned-clock-rates = <400000000>, <200000000>;
+ 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		iommus = <&vopb_mmu>;
+diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+--- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts	2020-05-26 03:51:51.025292138 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts	2020-05-26 04:11:08.422213866 -0700
+@@ -733,3 +733,6 @@
+ &vopl_mmu {
+ 	status = "okay";
+ };
++
++/delete-node/ &hdmi_in_vopl;
++/delete-node/ &vopl_out_hdmi;
+diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3228.c
+--- linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c	2020-05-26 03:51:51.881304576 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3228.c	2020-05-26 04:11:09.270221951 -0700
+@@ -408,7 +408,7 @@
+ 			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
+ 	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
+ 			RK2928_CLKSEL_CON(27), 8, 8, DFLAGS),
+-	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, 0,
++	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 			RK2928_CLKSEL_CON(27), 1, 1, MFLAGS),
+ 
+ 	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
+diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3399.c
+--- linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c	2020-05-26 03:51:51.881304576 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3399.c	2020-05-26 04:11:09.270221951 -0700
+@@ -103,6 +103,25 @@
+ 	{ /* sentinel */ },
+ };
+ 
++static struct rockchip_pll_rate_table rk3399_vpll_rates[] = {
++	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
++	RK3036_PLL_RATE( 594000000, 1, 123, 5, 1, 0, 12582912),  /* vco = 2970000000 */
++	RK3036_PLL_RATE( 593406592, 1, 123, 5, 1, 0, 10508804),  /* vco = 2967032965 */
++	RK3036_PLL_RATE( 297000000, 1, 123, 5, 2, 0, 12582912),  /* vco = 2970000000 */
++	RK3036_PLL_RATE( 296703296, 1, 123, 5, 2, 0, 10508807),  /* vco = 2967032970 */
++	RK3036_PLL_RATE( 148500000, 1, 129, 7, 3, 0, 15728640),  /* vco = 3118500000 */
++	RK3036_PLL_RATE( 148351648, 1, 123, 5, 4, 0, 10508800),  /* vco = 2967032960 */
++	RK3036_PLL_RATE( 106500000, 1, 124, 7, 4, 0,  4194304),  /* vco = 2982000000 */
++	RK3036_PLL_RATE(  74250000, 1, 129, 7, 6, 0, 15728640),  /* vco = 3118500000 */
++	RK3036_PLL_RATE(  74175824, 1, 129, 7, 6, 0, 13550823),  /* vco = 3115384608 */
++	RK3036_PLL_RATE(  65000000, 1, 113, 7, 6, 0, 12582912),  /* vco = 2730000000 */
++	RK3036_PLL_RATE(  59340659, 1, 121, 7, 7, 0,  2581098),  /* vco = 2907692291 */
++	RK3036_PLL_RATE(  54000000, 1, 110, 7, 7, 0,  4194304),  /* vco = 2646000000 */
++	RK3036_PLL_RATE(  27000000, 1,  55, 7, 7, 0,  2097152),  /* vco = 1323000000 */
++	RK3036_PLL_RATE(  26973026, 1,  55, 7, 7, 0,  1173232),  /* vco = 1321678323 */
++	{ /* sentinel */ },
++};
++
+ /* CRU parents */
+ PNAME(mux_pll_p)				= { "xin24m", "xin32k" };
+ 
+@@ -121,7 +140,7 @@
+ PNAME(mux_aclk_cci_p)				= { "cpll_aclk_cci_src",
+ 						    "gpll_aclk_cci_src",
+ 						    "npll_aclk_cci_src",
+-						    "vpll_aclk_cci_src" };
++						    "prevent:vpll" };
+ PNAME(mux_cci_trace_p)				= { "cpll_cci_trace",
+ 						    "gpll_cci_trace" };
+ PNAME(mux_cs_p)					= { "cpll_cs", "gpll_cs",
+@@ -148,9 +167,10 @@
+ 						    "ppll", "upll", "xin24m" };
+ 
+ PNAME(mux_pll_src_vpll_cpll_gpll_p)		= { "vpll", "cpll", "gpll" };
+-PNAME(mux_pll_src_vpll_cpll_gpll_npll_p)	= { "vpll", "cpll", "gpll",
++
++PNAME(mux_pll_src_vpll_cpll_gpll_npll_p)	= { "prevent:vpll", "cpll", "gpll",
+ 						    "npll" };
+-PNAME(mux_pll_src_vpll_cpll_gpll_24m_p)		= { "vpll", "cpll", "gpll",
++PNAME(mux_pll_src_vpll_cpll_gpll_24m_p)		= { "prevent:vpll", "cpll", "gpll",
+ 						    "xin24m" };
+ 
+ PNAME(mux_dclk_vop0_p)			= { "dclk_vop0_div",
+@@ -227,7 +247,7 @@
+ 	[npll] = PLL(pll_rk3399, PLL_NPLL, "npll",  mux_pll_p, 0, RK3399_PLL_CON(40),
+ 		     RK3399_PLL_CON(43), 8, 31, ROCKCHIP_PLL_SYNC_RATE, rk3399_pll_rates),
+ 	[vpll] = PLL(pll_rk3399, PLL_VPLL, "vpll",  mux_pll_p, 0, RK3399_PLL_CON(48),
+-		     RK3399_PLL_CON(51), 8, 31, ROCKCHIP_PLL_SYNC_RATE, rk3399_pll_rates),
++		     RK3399_PLL_CON(51), 8, 31, ROCKCHIP_PLL_SYNC_RATE, rk3399_vpll_rates),
+ };
+ 
+ static struct rockchip_pll_clock rk3399_pmu_pll_clks[] __initdata = {
+@@ -277,7 +297,7 @@
+ 			RK3399_PMU_CLKSEL_CON(5), 8, 2, MFLAGS);
+ 
+ static struct rockchip_clk_branch rk3399_dclk_vop0_fracmux __initdata =
+-	MUX(DCLK_VOP0, "dclk_vop0", mux_dclk_vop0_p, CLK_SET_RATE_PARENT,
++	MUX(DCLK_VOP0, "dclk_vop0", mux_dclk_vop0_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 			RK3399_CLKSEL_CON(49), 11, 1, MFLAGS);
+ 
+ static struct rockchip_clk_branch rk3399_dclk_vop1_fracmux __initdata =
+@@ -1158,7 +1178,7 @@
+ 	GATE(HCLK_VOP0_NOC, "hclk_vop0_noc", "hclk_vop0_pre", CLK_IGNORE_UNUSED,
+ 			RK3399_CLKGATE_CON(28), 0, GFLAGS),
+ 
+-	COMPOSITE(DCLK_VOP0_DIV, "dclk_vop0_div", mux_pll_src_vpll_cpll_gpll_p, 0,
++	COMPOSITE(DCLK_VOP0_DIV, "dclk_vop0_div", mux_pll_src_vpll_cpll_gpll_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 			RK3399_CLKSEL_CON(49), 8, 2, MFLAGS, 0, 8, DFLAGS,
+ 			RK3399_CLKGATE_CON(10), 12, GFLAGS),
+ 
+diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+--- linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-05-26 03:51:52.689316310 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-05-26 04:11:10.078229655 -0700
+@@ -79,80 +79,88 @@
+ 
+ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
+ 	{
+-		27000000, {
+-			{ 0x00b3, 0x0000},
+-			{ 0x2153, 0x0000},
+-			{ 0x40f3, 0x0000}
+-		},
+-	}, {
+-		36000000, {
+-			{ 0x00b3, 0x0000},
+-			{ 0x2153, 0x0000},
+-			{ 0x40f3, 0x0000}
+-		},
+-	}, {
+-		40000000, {
+-			{ 0x00b3, 0x0000},
+-			{ 0x2153, 0x0000},
+-			{ 0x40f3, 0x0000}
+-		},
+-	}, {
+-		54000000, {
+-			{ 0x0072, 0x0001},
+-			{ 0x2142, 0x0001},
+-			{ 0x40a2, 0x0001},
+-		},
+-	}, {
+-		65000000, {
+-			{ 0x0072, 0x0001},
+-			{ 0x2142, 0x0001},
+-			{ 0x40a2, 0x0001},
+-		},
+-	}, {
+-		66000000, {
+-			{ 0x013e, 0x0003},
+-			{ 0x217e, 0x0002},
+-			{ 0x4061, 0x0002}
+-		},
+-	}, {
+-		74250000, {
+-			{ 0x0072, 0x0001},
+-			{ 0x2145, 0x0002},
+-			{ 0x4061, 0x0002}
+-		},
+-	}, {
+-		83500000, {
+-			{ 0x0072, 0x0001},
+-		},
+-	}, {
+-		108000000, {
+-			{ 0x0051, 0x0002},
+-			{ 0x2145, 0x0002},
+-			{ 0x4061, 0x0002}
+-		},
+-	}, {
+-		106500000, {
+-			{ 0x0051, 0x0002},
+-			{ 0x2145, 0x0002},
+-			{ 0x4061, 0x0002}
+-		},
+-	}, {
+-		146250000, {
+-			{ 0x0051, 0x0002},
+-			{ 0x2145, 0x0002},
+-			{ 0x4061, 0x0002}
+-		},
+-	}, {
+-		148500000, {
+-			{ 0x0051, 0x0003},
+-			{ 0x214c, 0x0003},
+-			{ 0x4064, 0x0003}
++		30666000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2153, 0x0000 },
++			{ 0x40f3, 0x0000 },
++		},
++	},  {
++		36800000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2153, 0x0000 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		46000000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2142, 0x0001 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		61333000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2142, 0x0001 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		73600000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2142, 0x0001 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		92000000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2145, 0x0002 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		122666000, {
++			{ 0x0051, 0x0002 },
++			{ 0x2145, 0x0002 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		147200000, {
++			{ 0x0051, 0x0002 },
++			{ 0x2145, 0x0002 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		184000000, {
++			{ 0x0051, 0x0002 },
++			{ 0x214c, 0x0003 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		226666000, {
++			{ 0x0040, 0x0003 },
++			{ 0x214c, 0x0003 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		272000000, {
++			{ 0x0040, 0x0003 },
++			{ 0x214c, 0x0003 },
++			{ 0x5a64, 0x0003 },
++		},
++	},  {
++		340000000, {
++			{ 0x0040, 0x0003 },
++			{ 0x3b4c, 0x0003 },
++			{ 0x5a64, 0x0003 },
++		},
++	},  {
++		600000000, {
++			{ 0x1a40, 0x0003 },
++			{ 0x3b4c, 0x0003 },
++			{ 0x5a64, 0x0003 },
+ 		},
+-	}, {
++	},  {
+ 		~0UL, {
+-			{ 0x00a0, 0x000a },
+-			{ 0x2001, 0x000f },
+-			{ 0x4002, 0x000f },
++			{ 0x0000, 0x0000 },
++			{ 0x0000, 0x0000 },
++			{ 0x0000, 0x0000 },
+ 		},
+ 	}
+ };
+@@ -160,20 +168,8 @@
+ static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
+ 	/*      pixelclk    bpp8    bpp10   bpp12 */
+ 	{
+-		40000000,  { 0x0018, 0x0018, 0x0018 },
+-	}, {
+-		65000000,  { 0x0028, 0x0028, 0x0028 },
+-	}, {
+-		66000000,  { 0x0038, 0x0038, 0x0038 },
+-	}, {
+-		74250000,  { 0x0028, 0x0038, 0x0038 },
+-	}, {
+-		83500000,  { 0x0028, 0x0038, 0x0038 },
+-	}, {
+-		146250000, { 0x0038, 0x0038, 0x0038 },
+-	}, {
+-		148500000, { 0x0000, 0x0038, 0x0038 },
+-	}, {
++		600000000, { 0x0000, 0x0000, 0x0000 },
++	},  {
+ 		~0UL,      { 0x0000, 0x0000, 0x0000},
+ 	}
+ };
+@@ -181,8 +177,9 @@
+ static const struct dw_hdmi_phy_config rockchip_phy_config[] = {
+ 	/*pixelclk   symbol   term   vlev*/
+ 	{ 74250000,  0x8009, 0x0004, 0x0272},
+-	{ 148500000, 0x802b, 0x0004, 0x028d},
++	{ 165000000, 0x802b, 0x0004, 0x0209},
+ 	{ 297000000, 0x8039, 0x0005, 0x028d},
++	{ 594000000, 0x8039, 0x0000, 0x019d},
+ 	{ ~0UL,	     0x0000, 0x0000, 0x0000}
+ };
+ 
+@@ -223,25 +220,62 @@
+ dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
+ 			    const struct drm_display_mode *mode)
+ {
+-	const struct dw_hdmi_mpll_config *mpll_cfg = rockchip_mpll_cfg;
+-	int pclk = mode->clock * 1000;
+-	bool valid = false;
+-	int i;
+-
+-	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++) {
+-		if (pclk == mpll_cfg[i].mpixelclock) {
+-			valid = true;
+-			break;
+-		}
+-	}
++	struct drm_display_info *info = &connector->display_info;
++	int clock = mode->clock;
++
++	if (mode->hdisplay > 3840)
++		return MODE_VIRTUAL_X;
++
++	if (mode->vdisplay > 2160)
++		return MODE_VIRTUAL_Y;
++
++	if (connector->ycbcr_420_allowed && drm_mode_is_420(info, mode) &&
++	    (info->color_formats & DRM_COLOR_FORMAT_YCRCB420))
++		clock /= 2;
++
++	if (clock > 340000 ||
++	    (info->max_tmds_clock && clock > info->max_tmds_clock))
++		return MODE_CLOCK_HIGH;
+ 
+-	return (valid) ? MODE_OK : MODE_BAD;
++	return MODE_OK;
+ }
+ 
+ static void dw_hdmi_rockchip_encoder_disable(struct drm_encoder *encoder)
+ {
+ }
+ 
++/*
++ * The VESA DMT standard specifies a 0.5% pixel clock frequency tolerance.
++ * The CVT spec reuses that tolerance in its examples.
++ */
++#define	CLOCK_TOLERANCE_PER_MILLE	5
++
++static enum drm_mode_status
++dw_hdmi_rockchip_encoder_mode_valid(struct drm_encoder *encoder,
++				    const struct drm_display_mode *mode)
++{
++	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
++	long rounded_rate;
++	long lowest, highest;
++
++	if (hdmi->vpll_clk) {
++		rounded_rate = clk_round_rate(hdmi->vpll_clk,
++					      mode->clock * 1000 + 999);
++		if (rounded_rate < 0)
++			return MODE_NOCLOCK;
++
++		lowest = mode->clock * (1000 - CLOCK_TOLERANCE_PER_MILLE);
++		if (rounded_rate < lowest)
++			return MODE_CLOCK_LOW;
++
++		highest = mode->clock * (1000 + CLOCK_TOLERANCE_PER_MILLE);
++		if (rounded_rate > highest)
++			return MODE_CLOCK_HIGH;
++	}
++
++	return MODE_OK;
++}
++
+ static bool
+ dw_hdmi_rockchip_encoder_mode_fixup(struct drm_encoder *encoder,
+ 				    const struct drm_display_mode *mode,
+@@ -303,6 +337,7 @@
+ }
+ 
+ static const struct drm_encoder_helper_funcs dw_hdmi_rockchip_encoder_helper_funcs = {
++	.mode_valid = dw_hdmi_rockchip_encoder_mode_valid,
+ 	.mode_fixup = dw_hdmi_rockchip_encoder_mode_fixup,
+ 	.mode_set   = dw_hdmi_rockchip_encoder_mode_set,
+ 	.enable     = dw_hdmi_rockchip_encoder_enable,
+@@ -315,6 +350,8 @@
+ {
+ 	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+ 
++	dw_hdmi_set_high_tmds_clock_ratio(dw_hdmi);
++
+ 	return phy_power_on(hdmi->phy);
+ }
+ 
+@@ -403,9 +440,6 @@
+ 
+ static const struct dw_hdmi_plat_data rk3228_hdmi_drv_data = {
+ 	.mode_valid = dw_hdmi_rockchip_mode_valid,
+-	.mpll_cfg = rockchip_mpll_cfg,
+-	.cur_ctr = rockchip_cur_ctr,
+-	.phy_config = rockchip_phy_config,
+ 	.phy_data = &rk3228_chip_data,
+ 	.phy_ops = &rk3228_hdmi_phy_ops,
+ 	.phy_name = "inno_dw_hdmi_phy2",
+@@ -440,9 +474,6 @@
+ 
+ static const struct dw_hdmi_plat_data rk3328_hdmi_drv_data = {
+ 	.mode_valid = dw_hdmi_rockchip_mode_valid,
+-	.mpll_cfg = rockchip_mpll_cfg,
+-	.cur_ctr = rockchip_cur_ctr,
+-	.phy_config = rockchip_phy_config,
+ 	.phy_data = &rk3328_chip_data,
+ 	.phy_ops = &rk3328_hdmi_phy_ops,
+ 	.phy_name = "inno_dw_hdmi_phy2",
+diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+--- linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-05-26 03:51:52.689316310 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-05-26 04:11:10.082229693 -0700
+@@ -1138,6 +1138,34 @@
+ 	spin_unlock_irqrestore(&vop->irq_lock, flags);
+ }
+ 
++/*
++ * The VESA DMT standard specifies a 0.5% pixel clock frequency tolerance.
++ * The CVT spec reuses that tolerance in its examples.
++ */
++#define	CLOCK_TOLERANCE_PER_MILLE	5
++
++static enum drm_mode_status vop_crtc_mode_valid(struct drm_crtc *crtc,
++					const struct drm_display_mode *mode)
++{
++	struct vop *vop = to_vop(crtc);
++	long rounded_rate;
++	long lowest, highest;
++
++	rounded_rate = clk_round_rate(vop->dclk, mode->clock * 1000 + 999);
++	if (rounded_rate < 0)
++		return MODE_NOCLOCK;
++
++	lowest = mode->clock * (1000 - CLOCK_TOLERANCE_PER_MILLE);
++	if (rounded_rate < lowest)
++		return MODE_CLOCK_LOW;
++
++	highest = mode->clock * (1000 + CLOCK_TOLERANCE_PER_MILLE);
++	if (rounded_rate > highest)
++		return MODE_CLOCK_HIGH;
++
++	return MODE_OK;
++}
++
+ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 				const struct drm_display_mode *mode,
+ 				struct drm_display_mode *adjusted_mode)
+@@ -1508,6 +1536,7 @@
+ }
+ 
+ static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
++	.mode_valid = vop_crtc_mode_valid,
+ 	.mode_fixup = vop_crtc_mode_fixup,
+ 	.atomic_check = vop_crtc_atomic_check,
+ 	.atomic_begin = vop_crtc_atomic_begin,
+diff -uNr linux-next_next-20200501/.git/config linux-rockchip_next-20200501-drm-rockchip/.git/config
+--- linux-next_next-20200501/.git/config	2020-05-26 03:51:18.656815801 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/.git/config	2020-05-26 04:11:07.570205741 -0700
+@@ -4,5 +4,8 @@
+ 	bare = false
+ 	logallrefupdates = true
+ [remote "origin"]
+-	url = https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+-	fetch = +refs/tags/next-20200501:refs/tags/next-20200501
++	url = https://github.com/Kwiboo/linux-rockchip.git
++	fetch = +refs/heads/next-20200501-drm-rockchip:refs/remotes/origin/next-20200501-drm-rockchip
++[branch "next-20200501-drm-rockchip"]
++	remote = origin
++	merge = refs/heads/next-20200501-drm-rockchip
+diff -uNr linux-next_next-20200501/.git/FETCH_HEAD linux-rockchip_next-20200501-drm-rockchip/.git/FETCH_HEAD
+--- linux-next_next-20200501/.git/FETCH_HEAD	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_next-20200501-drm-rockchip/.git/FETCH_HEAD	2020-06-10 20:09:49.766177623 -0700
+@@ -0,0 +1 @@
++9561778053c93fde2194477897e6db671508cbe6		branch 'next-20200501-drm-rockchip' of https://github.com/Kwiboo/linux-rockchip
+diff -uNr linux-next_next-20200501/.git/HEAD linux-rockchip_next-20200501-drm-rockchip/.git/HEAD
+--- linux-next_next-20200501/.git/HEAD	2020-05-26 03:51:50.089278528 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/.git/HEAD	2020-05-26 04:11:07.570205741 -0700
+@@ -1 +1 @@
+-fb9d670f57e3f6478602328bbbf71138be06ca4f
++ref: refs/heads/next-20200501-drm-rockchip
+Binary files linux-next_next-20200501/.git/index and linux-rockchip_next-20200501-drm-rockchip/.git/index differ
+diff -uNr linux-next_next-20200501/.git/logs/HEAD linux-rockchip_next-20200501-drm-rockchip/.git/logs/HEAD
+--- linux-next_next-20200501/.git/logs/HEAD	2020-05-26 03:51:50.089278528 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/.git/logs/HEAD	2020-05-26 04:11:07.570205741 -0700
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 fb9d670f57e3f6478602328bbbf71138be06ca4f Michael Gan <mike@gurney> 1590490310 -0700	clone: from https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
++0000000000000000000000000000000000000000 9561778053c93fde2194477897e6db671508cbe6 Michael Gan <mike@gurney> 1590491467 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
+diff -uNr linux-next_next-20200501/.git/logs/refs/heads/next-20200501-drm-rockchip linux-rockchip_next-20200501-drm-rockchip/.git/logs/refs/heads/next-20200501-drm-rockchip
+--- linux-next_next-20200501/.git/logs/refs/heads/next-20200501-drm-rockchip	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_next-20200501-drm-rockchip/.git/logs/refs/heads/next-20200501-drm-rockchip	2020-05-26 04:11:07.570205741 -0700
+@@ -0,0 +1 @@
++0000000000000000000000000000000000000000 9561778053c93fde2194477897e6db671508cbe6 Michael Gan <mike@gurney> 1590491467 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
+Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx differ
+Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack differ
+Binary files linux-next_next-20200501/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.idx and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.idx differ
+Binary files linux-next_next-20200501/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.pack and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.pack differ
+diff -uNr linux-next_next-20200501/.git/ORIG_HEAD linux-rockchip_next-20200501-drm-rockchip/.git/ORIG_HEAD
+--- linux-next_next-20200501/.git/ORIG_HEAD	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_next-20200501-drm-rockchip/.git/ORIG_HEAD	2020-06-10 20:09:49.790177939 -0700
+@@ -0,0 +1 @@
++9561778053c93fde2194477897e6db671508cbe6
+diff -uNr linux-next_next-20200501/.git/packed-refs linux-rockchip_next-20200501-drm-rockchip/.git/packed-refs
+--- linux-next_next-20200501/.git/packed-refs	2020-05-26 03:51:50.029277655 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/.git/packed-refs	2020-05-26 04:11:07.566205703 -0700
+@@ -1,3 +1,2 @@
+ # pack-refs with: peeled fully-peeled sorted 
+-502e54cc8e13b51da134ed57b027930494aeb110 refs/tags/next-20200501
+-^fb9d670f57e3f6478602328bbbf71138be06ca4f
++9561778053c93fde2194477897e6db671508cbe6 refs/remotes/origin/next-20200501-drm-rockchip
+diff -uNr linux-next_next-20200501/.git/refs/heads/next-20200501-drm-rockchip linux-rockchip_next-20200501-drm-rockchip/.git/refs/heads/next-20200501-drm-rockchip
+--- linux-next_next-20200501/.git/refs/heads/next-20200501-drm-rockchip	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_next-20200501-drm-rockchip/.git/refs/heads/next-20200501-drm-rockchip	2020-05-26 04:11:07.570205741 -0700
+@@ -0,0 +1 @@
++9561778053c93fde2194477897e6db671508cbe6
+diff -uNr linux-next_next-20200501/.git/shallow linux-rockchip_next-20200501-drm-rockchip/.git/shallow
+--- linux-next_next-20200501/.git/shallow	2020-05-26 03:51:18.732816933 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/.git/shallow	2020-05-26 04:09:57.993539356 -0700
+@@ -1 +1 @@
+-fb9d670f57e3f6478602328bbbf71138be06ca4f
++9561778053c93fde2194477897e6db671508cbe6
+diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi
+--- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi	2020-05-26 03:51:51.021292080 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi	2020-05-26 04:11:08.422213866 -0700
+@@ -801,8 +801,8 @@
+ 			<0>, <24000000>,
+ 			<24000000>, <24000000>,
+ 			<15000000>, <15000000>,
+-			<100000000>, <100000000>,
+-			<100000000>, <100000000>,
++			<300000000>, <100000000>,
++			<400000000>, <100000000>,
+ 			<50000000>, <100000000>,
+ 			<100000000>, <100000000>,
+ 			<50000000>, <50000000>,
+diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi
+--- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi	2020-05-26 03:51:51.025292138 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi	2020-05-26 04:11:08.426213904 -0700
+@@ -1589,7 +1589,7 @@
+ 		reg = <0x0 0xff8f0000 0x0 0x3efc>;
+ 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		assigned-clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
+-		assigned-clock-rates = <400000000>, <100000000>;
++		assigned-clock-rates = <400000000>, <200000000>;
+ 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		iommus = <&vopl_mmu>;
+@@ -1646,7 +1646,7 @@
+ 		reg = <0x0 0xff900000 0x0 0x3efc>;
+ 		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		assigned-clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
+-		assigned-clock-rates = <400000000>, <100000000>;
++		assigned-clock-rates = <400000000>, <200000000>;
+ 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		iommus = <&vopb_mmu>;
+diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts
+--- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts	2020-05-26 03:51:51.025292138 -0700
++++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts	2020-05-26 04:11:08.422213866 -0700
+@@ -733,3 +733,6 @@
+ &vopl_mmu {
+ 	status = "okay";
+ };
++
++/delete-node/ &hdmi_in_vopl;
++/delete-node/ &vopl_out_hdmi;

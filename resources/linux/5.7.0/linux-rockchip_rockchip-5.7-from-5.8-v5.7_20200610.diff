@@ -1,0 +1,2458 @@
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3036-kylin.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3036-kylin.dts
+--- linux-5.7/arch/arm/boot/dts/rk3036-kylin.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3036-kylin.dts	2020-06-01 11:15:46.749486758 -0700
+@@ -16,7 +16,7 @@
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
+ 			label = "kylin:red:led";
+ 			pinctrl-names = "default";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3066a-mk808.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3066a-mk808.dts
+--- linux-5.7/arch/arm/boot/dts/rk3066a-mk808.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3066a-mk808.dts	2020-06-01 11:15:46.749486758 -0700
+@@ -22,7 +22,7 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		blue {
++		blue_led: led-0 {
+ 			label = "mk808:blue:power";
+ 			gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3188-radxarock.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3188-radxarock.dts
+--- linux-5.7/arch/arm/boot/dts/rk3188-radxarock.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3188-radxarock.dts	2020-06-01 11:15:46.749486758 -0700
+@@ -33,19 +33,19 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		green {
++		green_led: led-0 {
+ 			label = "rock:green:user1";
+ 			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+ 
+-		blue {
++		blue_led: led-1 {
+ 			label = "rock:blue:user2";
+ 			gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+ 
+-		sleep {
++		sleep_led: led-2 {
+ 			label = "rock:red:power";
+ 			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3229-xms6.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3229-xms6.dts
+--- linux-5.7/arch/arm/boot/dts/rk3229-xms6.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3229-xms6.dts	2020-06-01 11:15:46.753486801 -0700
+@@ -33,12 +33,18 @@
+ 	power-led {
+ 		compatible = "gpio-leds";
+ 
+-		blue {
++		blue_led: led-0 {
+ 			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
++		              <&gpio2 29 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vcc_host: vcc-host-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -131,7 +137,6 @@
+ 
+ &emmc {
+ 	cap-mmc-highspeed;
+-	disable-wp;
+ 	non-removable;
+ 	status = "okay";
+ };
+@@ -202,6 +207,16 @@
+ 	status = "okay";
+ };
+ 
++&sdio {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	vqmmc-supply = <&vccio_1v8>;
++	status = "okay";
++};
++
+ &sdmmc {
+ 	cap-mmc-highspeed;
+ 	disable-wp;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk322x.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk322x.dtsi
+--- linux-5.7/arch/arm/boot/dts/rk322x.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk322x.dtsi	2020-06-01 11:15:46.753486801 -0700
+@@ -615,6 +615,16 @@
+ 		status = "disabled";
+ 	};
+ 
++	rga: rga@20060000 {
++		compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
++		reg = <0x20060000 0x1000>;
++		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
++		clock-names = "aclk", "hclk", "sclk";
++		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
++		reset-names = "core", "axi", "ahb";
++	};
++
+ 	iep_mmu: iommu@20070800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x20070800 0x100>;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288.dtsi
+--- linux-5.7/arch/arm/boot/dts/rk3288.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288.dtsi	2020-06-01 11:15:46.753486801 -0700
+@@ -7,7 +7,6 @@
+ #include <dt-bindings/clock/rk3288-cru.h>
+ #include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/thermal/thermal.h>
+-#include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/soc/rockchip,boot-mode.h>
+ 
+ / {
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-firefly.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-firefly.dtsi
+--- linux-5.7/arch/arm/boot/dts/rk3288-firefly.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-firefly.dtsi	2020-06-01 11:15:46.753486801 -0700
+@@ -62,20 +62,20 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio8 RK_PA1 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:user";
+ 			linux,default-trigger = "rc-feedback";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&work_led>;
++			pinctrl-0 = <&work_led_pin>;
+ 		};
+ 
+-		power {
++		power_led: led-1 {
+ 			gpios = <&gpio8 RK_PA2 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:green:power";
+ 			linux,default-trigger = "default-on";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&power_led>;
++			pinctrl-0 = <&power_led_pin>;
+ 		};
+ 	};
+ 
+@@ -429,11 +429,11 @@
+ 	};
+ 
+ 	leds {
+-		power_led: power-led {
++		power_led_pin: power-led-pin {
+ 			rockchip,pins = <8 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		work_led: work-led {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <8 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-firefly-reload.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-firefly-reload.dts
+--- linux-5.7/arch/arm/boot/dts/rk3288-firefly-reload.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-firefly-reload.dts	2020-06-01 11:15:46.753486801 -0700
+@@ -45,20 +45,20 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		power {
++		power_led: led-0 {
+ 			gpios = <&gpio8 RK_PA2 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:power";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&power_led>;
++			pinctrl-0 = <&power_led_pin>;
+ 			panic-indicator;
+ 		};
+ 
+-		work {
++		work_led: led-1 {
+ 			gpios = <&gpio8 RK_PA1 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:user";
+ 			linux,default-trigger = "rc-feedback";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&work_led>;
++			pinctrl-0 = <&work_led_pin>;
+ 		};
+ 	};
+ 
+@@ -334,11 +334,11 @@
+ 	};
+ 
+ 	leds {
+-		power_led: power-led {
++		power_led_pin: power-led-pin {
+ 			rockchip,pins = <8 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		work_led: work-led {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <8 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-miqi.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-miqi.dts
+--- linux-5.7/arch/arm/boot/dts/rk3288-miqi.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-miqi.dts	2020-06-01 11:15:46.753486801 -0700
+@@ -30,7 +30,7 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio7 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 			label = "miqi:green:user";
+ 			linux,default-trigger = "timer";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-phycore-som.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+--- linux-5.7/arch/arm/boot/dts/rk3288-phycore-som.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-phycore-som.dtsi	2020-06-01 11:15:46.753486801 -0700
+@@ -36,9 +36,9 @@
+ 	leds: user-leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_led>;
++		pinctrl-0 = <&user_led_pin>;
+ 
+-		user {
++		user_led: led-0 {
+ 			label = "green_led";
+ 			gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+@@ -372,7 +372,7 @@
+ 	};
+ 
+ 	leds {
+-		user_led: user-led {
++		user_led_pin: user-led-pin {
+ 			rockchip,pins = <7 RK_PA2 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+ 	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-rock2-square.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-rock2-square.dts
+--- linux-5.7/arch/arm/boot/dts/rk3288-rock2-square.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-rock2-square.dts	2020-06-01 11:15:46.753486801 -0700
+@@ -41,13 +41,13 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		heartbeat {
++		heartbeat_led: led-0 {
+ 			gpios = <&gpio7 RK_PB7 GPIO_ACTIVE_LOW>;
+ 			label = "rock2:green:state1";
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		mmc {
++		mmc_led: led-1 {
+ 			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_LOW>;
+ 			label = "rock2:blue:state2";
+ 			linux,default-trigger = "mmc0";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/boot/dts/rk3288-tinker.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-tinker.dtsi
+--- linux-5.7/arch/arm/boot/dts/rk3288-tinker.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/boot/dts/rk3288-tinker.dtsi	2020-06-01 11:15:46.753486801 -0700
+@@ -46,17 +46,17 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		act-led {
++		act_led: led-0 {
+ 			gpios = <&gpio1 RK_PD0 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "mmc0";
+ 		};
+ 
+-		heartbeat-led {
++		heartbeat_led: led-1 {
+ 			gpios = <&gpio1 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		pwr-led {
++		pwr_led: led-2 {
+ 			gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "default-on";
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/mach-rockchip/platsmp.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/mach-rockchip/platsmp.c
+--- linux-5.7/arch/arm/mach-rockchip/platsmp.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/mach-rockchip/platsmp.c	2020-06-01 11:15:46.889488257 -0700
+@@ -180,7 +180,7 @@
+ 
+ 	rsize = resource_size(&res);
+ 	if (rsize < trampoline_sz) {
+-		pr_err("%s: reserved block with size 0x%x is to small for trampoline size 0x%x\n",
++		pr_err("%s: reserved block with size 0x%x is too small for trampoline size 0x%x\n",
+ 		       __func__, rsize, trampoline_sz);
+ 		return -EINVAL;
+ 	}
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm/mach-rockchip/rockchip.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/mach-rockchip/rockchip.c
+--- linux-5.7/arch/arm/mach-rockchip/rockchip.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm/mach-rockchip/rockchip.c	2020-06-01 11:15:46.889488257 -0700
+@@ -9,9 +9,9 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/of_clk.h>
+ #include <linux/of_platform.h>
+ #include <linux/irqchip.h>
+-#include <linux/clk-provider.h>
+ #include <linux/clocksource.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/Makefile linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/Makefile
+--- linux-5.7/arch/arm64/boot/dts/rockchip/Makefile	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/Makefile	2020-06-01 11:15:46.965489071 -0700
+@@ -2,6 +2,7 @@
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/px30.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/px30.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/px30.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/px30.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -931,6 +931,7 @@
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <4>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
+@@ -946,6 +947,7 @@
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <4>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
+@@ -961,6 +963,7 @@
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <8>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -28,14 +28,14 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		power {
++		power_led: led-0 {
+ 			label = "firefly:red:power";
+ 			linux,default-trigger = "ir-power-click";
+ 			default-state = "on";
+ 			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		user {
++		user_led: led-1 {
+ 			label = "firefly:blue:user";
+ 			linux,default-trigger = "ir-user-click";
+ 			default-state = "off";
+@@ -123,9 +123,7 @@
+ };
+ 
+ &emmc {
+-	bus-width = <8>;
+ 	cap-mmc-highspeed;
+-	disable-wp;
+ 	mmc-hs200-1_8v;
+ 	non-removable;
+ 	status = "okay";
+@@ -171,7 +169,6 @@
+ };
+ 
+ &sdmmc {
+-	bus-width = <4>;
+ 	cap-mmc-highspeed;
+ 	cap-sd-highspeed;
+ 	card-detect-delay = <300>;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3326.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3326.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3326.dtsi	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3326.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2020 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++#include "px30.dtsi"
++
++&display_subsystem {
++	ports = <&vopb_out>;
++};
++
++/delete-node/ &dsi_in_vopl;
++/delete-node/ &lvds_vopl_in;
++/delete-node/ &vopl;
++/delete-node/ &vopl_mmu;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -0,0 +1,557 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 Hardkernel Co., Ltd
++ * Copyright (c) 2020 Theobroma Systems Design und Consulting GmbH
++ */
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include "rk3326.dtsi"
++
++/ {
++	model = "ODROID-GO Advance";
++	compatible = "hardkernel,rk3326-odroid-go2", "rockchip,rk3326";
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		power-supply = <&vcc_bl>;
++		pwms = <&pwm1 0 25000 0>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&btn_pins>;
++
++		/*
++		 *      *** ODROIDGO2-Advance Switch layout ***
++		 * |------------------------------------------------|
++		 * | sw15                                      sw16 |
++		 * |------------------------------------------------|
++		 * |     sw1      |-------------------|      sw8    |
++		 * |  sw3   sw4   |                   |   sw7   sw5 |
++		 * |     sw2      |    LCD Display    |      sw6    |
++		 * |              |                   |             |
++		 * |              |-------------------|             |
++		 * |         sw9 sw10   sw11 sw12   sw13 sw14       |
++		 * |------------------------------------------------|
++		 */
++
++		sw1 {
++			gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_LOW>;
++			label = "DPAD-UP";
++			linux,code = <BTN_DPAD_UP>;
++		};
++		sw2 {
++			gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;
++			label = "DPAD-DOWN";
++			linux,code = <BTN_DPAD_DOWN>;
++		};
++		sw3 {
++			gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_LOW>;
++			label = "DPAD-LEFT";
++			linux,code = <BTN_DPAD_LEFT>;
++		};
++		sw4 {
++			gpios = <&gpio1 RK_PB7 GPIO_ACTIVE_LOW>;
++			label = "DPAD-RIGHT";
++			linux,code = <BTN_DPAD_RIGHT>;
++		};
++		sw5 {
++			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_LOW>;
++			label = "BTN-A";
++			linux,code = <BTN_EAST>;
++		};
++		sw6 {
++			gpios = <&gpio1 RK_PA5 GPIO_ACTIVE_LOW>;
++			label = "BTN-B";
++			linux,code = <BTN_SOUTH>;
++		};
++		sw7 {
++			gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
++			label = "BTN-Y";
++			linux,code = <BTN_WEST>;
++		};
++		sw8 {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
++			label = "BTN-X";
++			linux,code = <BTN_NORTH>;
++		};
++		sw9 {
++			gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_LOW>;
++			label = "F1";
++			linux,code = <BTN_TRIGGER_HAPPY1>;
++		};
++		sw10 {
++			gpios = <&gpio2 RK_PA1 GPIO_ACTIVE_LOW>;
++			label = "F2";
++			linux,code = <BTN_TRIGGER_HAPPY2>;
++		};
++		sw11 {
++			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
++			label = "F3";
++			linux,code = <BTN_TRIGGER_HAPPY3>;
++		};
++		sw12 {
++			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_LOW>;
++			label = "F4";
++			linux,code = <BTN_TRIGGER_HAPPY4>;
++		};
++		sw13 {
++			gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_LOW>;
++			label = "F5";
++			linux,code = <BTN_TRIGGER_HAPPY5>;
++		};
++		sw14 {
++			gpios = <&gpio2 RK_PA5 GPIO_ACTIVE_LOW>;
++			label = "F6";
++			linux,code = <BTN_TRIGGER_HAPPY6>;
++		};
++		sw15 {
++			gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_LOW>;
++			label = "TOP-LEFT";
++			linux,code = <BTN_TL>;
++		};
++		sw16 {
++			gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_LOW>;
++			label = "TOP-RIGHT";
++			linux,code = <BTN_TR>;
++		};
++	};
++
++	leds: gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&blue_led_pin>;
++
++		blue_led: led-0 {
++			label = "blue:heartbeat";
++			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	vccsys: vccsys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v8_sys";
++		regulator-always-on;
++		regulator-min-microvolt = <3800000>;
++		regulator-max-microvolt = <3800000>;
++	};
++
++	vcc_host: vcc_host {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_host";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++		vin-supply = <&vccsys>;
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cru {
++	assigned-clocks = <&cru PLL_NPLL>,
++		<&cru ACLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
++		<&cru HCLK_BUS_PRE>, <&cru HCLK_PERI_PRE>,
++		<&cru PCLK_BUS_PRE>, <&cru SCLK_GPU>,
++		<&cru PLL_CPLL>;
++
++	assigned-clock-rates = <1188000000>,
++		<200000000>, <200000000>,
++		<150000000>, <150000000>,
++		<100000000>, <200000000>,
++		<17000000>;
++};
++
++&display_subsystem {
++	status = "okay";
++};
++
++&dsi {
++	status = "okay";
++
++	ports {
++		mipi_out: port@1 {
++			reg = <1>;
++
++			mipi_out_panel: endpoint {
++				remote-endpoint = <&mipi_in_panel>;
++			};
++		};
++	};
++
++	panel@0 {
++		compatible = "elida,kd35t133";
++		reg = <0>;
++		backlight = <&backlight>;
++		iovcc-supply = <&vcc_lcd>;
++		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
++		vdd-supply = <&vcc_lcd>;
++
++		port {
++			mipi_in_panel: endpoint {
++				remote-endpoint = <&mipi_out_panel>;
++			};
++		};
++	};
++};
++
++&dsi_dphy {
++	status = "okay";
++};
++
++&gpu {
++	mali-supply = <&vdd_logic>;
++	status = "okay";
++};
++
++&i2c0 {
++	clock-frequency = <400000>;
++	i2c-scl-falling-time-ns = <16>;
++	i2c-scl-rising-time-ns = <280>;
++	status = "okay";
++
++	rk817: pmic@20 {
++		compatible = "rockchip,rk817";
++		reg = <0x20>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "rk808-clkout1", "xin32k";
++
++		vcc1-supply = <&vccsys>;
++		vcc2-supply = <&vccsys>;
++		vcc3-supply = <&vccsys>;
++		vcc4-supply = <&vccsys>;
++		vcc5-supply = <&vccsys>;
++		vcc6-supply = <&vccsys>;
++		vcc7-supply = <&vccsys>;
++
++		regulators {
++			vdd_logic: DCDC_REG1 {
++				regulator-name = "vdd_logic";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1150000>;
++				regulator-ramp-delay = <6001>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <950000>;
++				};
++			};
++
++			vdd_arm: DCDC_REG2 {
++				regulator-name = "vdd_arm";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <950000>;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-name = "vcc_ddr";
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_3v3: DCDC_REG4 {
++				regulator-name = "vcc_3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_1v8: LDO_REG2 {
++				regulator-name = "vcc_1v8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vdd_1v0: LDO_REG3 {
++				regulator-name = "vdd_1v0";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vcc3v3_pmu: LDO_REG4 {
++				regulator-name = "vcc3v3_pmu";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vccio_sd: LDO_REG5 {
++				regulator-name = "vccio_sd";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_sd: LDO_REG6 {
++				regulator-name = "vcc_sd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_bl: LDO_REG7 {
++				regulator-name = "vcc_bl";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_lcd: LDO_REG8 {
++				regulator-name = "vcc_lcd";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <2800000>;
++				};
++			};
++
++			vcc_cam: LDO_REG9 {
++				regulator-name = "vcc_cam";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <3000000>;
++				};
++			};
++		};
++	};
++};
++
++/* EXT Header(P2): 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
++&i2c1 {
++	clock-frequency = <400000>;
++	status = "okay";
++};
++
++/* I2S 1 Channel Used */
++&i2s1_2ch {
++	status = "okay";
++};
++
++&io_domains {
++	vccio1-supply = <&vcc_3v3>;
++	vccio2-supply = <&vccio_sd>;
++	vccio3-supply = <&vcc_3v3>;
++	vccio4-supply = <&vcc_3v3>;
++	vccio5-supply = <&vcc_3v3>;
++	vccio6-supply = <&vcc_3v3>;
++	status = "okay";
++};
++
++&pmu_io_domains {
++	pmuio1-supply = <&vcc3v3_pmu>;
++	pmuio2-supply = <&vcc3v3_pmu>;
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&saradc {
++	vref-supply = <&vcc_1v8>;
++	status = "okay";
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	card-detect-delay = <200>;
++	cd-gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_LOW>; /*[> CD GPIO <]*/
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc_sd>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
++&tsadc {
++	status = "okay";
++};
++
++&u2phy {
++	status = "okay";
++
++	u2phy_host: host-port {
++		status = "okay";
++	};
++
++	u2phy_otg: otg-port {
++		status = "disabled";
++	};
++};
++
++&usb20_otg {
++	status = "okay";
++};
++
++/* EXT Header(P2): 2(RXD:GPIO1.C0),3(TXD:.C1),4(CTS:.C2),5(RTS:.C3) */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_xfer &uart1_cts>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2m1_xfer>;
++	status = "okay";
++};
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&pinctrl {
++	btns {
++		btn_pins: btn-pins {
++			rockchip,pins = <1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_up>,
++					<1 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>,
++					<2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	headphone {
++		hp_det: hp-det {
++			rockchip,pins = <2 RK_PC6 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++
++	leds {
++		blue_led_pin: blue-led-pin {
++			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	pmic {
++		dc_det: dc-det {
++			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		pmic_int: pmic-int {
++			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		soc_slppin_gpio: soc_slppin_gpio {
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++
++		soc_slppin_rst: soc_slppin_rst {
++			rockchip,pins = <0 RK_PA4 2 &pcfg_pull_none>;
++		};
++
++		soc_slppin_slp: soc_slppin_slp {
++			rockchip,pins = <0 RK_PA4 1 &pcfg_pull_none>;
++		};
++	};
++};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-a1.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-a1.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-a1.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -115,7 +115,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		rtl8211f: phy@0 {
++		rtl8211f: ethernet-phy@0 {
+ 			reg = <0>;
+ 			reset-assert-us = <10000>;
+ 			reset-deassert-us = <30000>;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3328.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -934,7 +934,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			phy: phy@0 {
++			phy: ethernet-phy@0 {
+ 				compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
+ 				reg = <0>;
+ 				clocks = <&cru SCLK_MAC2PHY_OUT>;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -86,7 +86,7 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		power {
++		power_led: led-0 {
+ 			label = "firefly:blue:power";
+ 			linux,default-trigger = "heartbeat";
+ 			gpios = <&rk805 1 GPIO_ACTIVE_LOW>;
+@@ -94,7 +94,7 @@
+ 			mode = <0x23>;
+ 		};
+ 
+-		user {
++		user_led: led-1 {
+ 			label = "firefly:yellow:user";
+ 			linux,default-trigger = "mmc1";
+ 			gpios = <&rk805 0 GPIO_ACTIVE_LOW>;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -73,12 +73,12 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		power {
++		power_led: led-0 {
+ 			gpios = <&rk805 1 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "mmc0";
+ 		};
+ 
+-		standby {
++		standby_led: led-1 {
+ 			gpios = <&rk805 0 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -50,13 +50,13 @@
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		blue {
++		blue_led: led-0 {
+ 			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 			label = "geekbox:blue:led";
+ 			default-state = "on";
+ 		};
+ 
+-		red {
++		red_led: led-1 {
+ 			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_HIGH>;
+ 			label = "geekbox:red:led";
+ 			default-state = "off";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -50,7 +50,7 @@
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		red {
++		red_led: led-0 {
+ 			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
+ 			label = "orion:red:led";
+ 			pinctrl-names = "default";
+@@ -58,7 +58,7 @@
+ 			default-state = "on";
+ 		};
+ 
+-		blue {
++		blue_led: led-1 {
+ 			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+ 			label = "orion:blue:led";
+ 			pinctrl-names = "default";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-r88.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3368-r88.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3368-r88.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -43,7 +43,7 @@
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
+ 			label = "r88:green:led";
+ 			pinctrl-names = "default";
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -1056,6 +1056,16 @@
+ 				clocks = <&cru HCLK_SDIO>;
+ 				pm_qos = <&qos_sdioaudio>;
+ 			};
++			pd_tcpc0@RK3399_PD_TCPD0 {
++				reg = <RK3399_PD_TCPD0>;
++				clocks = <&cru SCLK_UPHY0_TCPDCORE>,
++					 <&cru SCLK_UPHY0_TCPDPHY_REF>;
++			};
++			pd_tcpc1@RK3399_PD_TCPD1 {
++				reg = <RK3399_PD_TCPD1>;
++				clocks = <&cru SCLK_UPHY1_TCPDCORE>,
++					 <&cru SCLK_UPHY1_TCPDPHY_REF>;
++			};
+ 			pd_usb3@RK3399_PD_USB3 {
+ 				reg = <RK3399_PD_USB3>;
+ 				clocks = <&cru ACLK_USB3>;
+@@ -1088,16 +1098,6 @@
+ 					pm_qos = <&qos_isp1_m0>,
+ 						 <&qos_isp1_m1>;
+ 				};
+-				pd_tcpc0@RK3399_PD_TCPC0 {
+-					reg = <RK3399_PD_TCPD0>;
+-					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+-						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+-				};
+-				pd_tcpc1@RK3399_PD_TCPC1 {
+-					reg = <RK3399_PD_TCPD1>;
+-					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+-						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+-				};
+ 				pd_vo@RK3399_PD_VO {
+ 					reg = <RK3399_PD_VO>;
+ 					#address-cells = <1>;
+@@ -1269,6 +1269,18 @@
+ 		power-domains = <&power RK3399_PD_VCODEC>;
+ 	};
+ 
++	vdec: video-codec@ff660000 {
++		compatible = "rockchip,rk3399-vdec";
++		reg = <0x0 0xff660000 0x0 0x400>;
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "vdpu";
++		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
++			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
++		clock-names = "axi", "ahb", "cabac", "core";
++		iommus = <&vdec_mmu>;
++		power-domains = <&power RK3399_PD_VDU>;
++	};
++
+ 	vdec_mmu: iommu@ff660480 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff660480 0x0 0x40>, <0x0 0xff6604c0 0x0 0x40>;
+@@ -1276,8 +1288,8 @@
+ 		interrupt-names = "vdec_mmu";
+ 		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
+ 		clock-names = "aclk", "iface";
++		power-domains = <&power RK3399_PD_VDU>;
+ 		#iommu-cells = <0>;
+-		status = "disabled";
+ 	};
+ 
+ 	iep_mmu: iommu@ff670800 {
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -27,42 +27,43 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_led1>, <&user_led2>, <&user_led3>,
+-			    <&user_led4>, <&wlan_led>, <&bt_led>;
++		pinctrl-0 = <&user_led1_pin>, <&user_led2_pin>,
++			    <&user_led3_pin>, <&user_led4_pin>,
++			    <&wlan_led_pin>, <&bt_led_pin>;
+ 
+-		user_led1 {
++		user_led1: led-1 {
+ 			label = "red:user1";
+ 			gpios = <&gpio4 25 0>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		user_led2 {
++		user_led2: led-2 {
+ 			label = "red:user2";
+ 			gpios = <&gpio4 26 0>;
+ 			linux,default-trigger = "mmc0";
+ 		};
+ 
+-		user_led3 {
++		user_led3: led-3 {
+ 			label = "red:user3";
+ 			gpios = <&gpio4 30 0>;
+ 			linux,default-trigger = "mmc1";
+ 		};
+ 
+-		user_led4 {
++		user_led4: led-4 {
+ 			label = "red:user4";
+ 			gpios = <&gpio1 0 0>;
+ 			panic-indicator;
+ 			linux,default-trigger = "none";
+ 		};
+ 
+-		wlan_active_led {
++		wlan_active_led: led-5 {
+ 			label = "red:wlan";
+ 			gpios = <&gpio1 1 0>;
+ 			linux,default-trigger = "phy0tx";
+ 			default-state = "off";
+ 		};
+ 
+-		bt_active_led {
++		bt_active_led: led-6 {
+ 			label = "red:bt";
+ 			gpios = <&gpio1 4 0>;
+ 			linux,default-trigger = "hci0-power";
+@@ -114,32 +115,32 @@
+ 	};
+ 
+ 	leds {
+-		user_led1: user_led1 {
++		user_led1_pin: user-led1-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led2: user_led2 {
++		user_led2_pin: user-led2-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led3: user_led3 {
++		user_led3_pin: user-led3-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led4: user_led4 {
++		user_led4_pin: user-led4-pin {
+ 			rockchip,pins =
+ 				<1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		wlan_led: wlan_led {
++		wlan_led_pin: wlan-led-pin {
+ 			rockchip,pins =
+ 				<1 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		bt_led: bt_led {
++		bt_led_pin: bt-led-pin {
+ 			rockchip,pins =
+ 				<1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -91,15 +91,15 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&work_led_gpio>, <&diy_led_gpio>;
++		pinctrl-0 = <&work_led_pin>, <&diy_led_pin>;
+ 
+-		work-led {
++		work_led: led-0 {
+ 			label = "work";
+ 			default-state = "on";
+ 			gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		diy-led {
++		diy_led: led-1 {
+ 			label = "diy";
+ 			default-state = "off";
+ 			gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+@@ -629,11 +629,11 @@
+ 	};
+ 
+ 	leds {
+-		work_led_gpio: work_led-gpio {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		diy_led_gpio: diy_led-gpio {
++		diy_led_pin: diy-led-pin {
+ 			rockchip,pins = <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -39,9 +39,9 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&power_led_gpio>;
++		pinctrl-0 = <&power_led_pin>;
+ 
+-		led-0 {
++		power_led: led-0 {
+ 			label = "blue:power";
+ 			gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+@@ -510,7 +510,7 @@
+ 	};
+ 
+ 	leds {
+-		power_led_gpio: power-led-gpio {
++		power_led_pin: power-led-pin {
+ 			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+@@ -633,7 +633,6 @@
+ &spdif {
+ 	status = "okay";
+ 	pinctrl-0 = <&spdif_bus_1>;
+-	#sound-dai-cells = <0>;
+ };
+ 
+ &spi1 {
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -182,7 +182,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		rtl8211e: phy@1 {
++		rtl8211e: ethernet-phy@1 {
+ 			reg = <1>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
+@@ -525,7 +525,7 @@
+ 		};
+ 	};
+ 
+-	phy {
++	gmac {
+ 		phy_intb: phy-intb {
+ 			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -214,7 +214,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		rtl8211e: phy@1 {
++		rtl8211e: ethernet-phy@1 {
+ 			reg = <1>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
+@@ -554,7 +554,7 @@
+ 		};
+ 	};
+ 
+-	phy {
++	gmac {
+ 		phy_intb: phy-intb {
+ 			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -90,9 +90,9 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&pwrled_gpio &slpled_gpio>;
++		pinctrl-0 = <&pwr_led_pin &slp_led_pin>;
+ 
+-		green-led {
++		green_led: led-0 {
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			default-state = "on";
+ 			function = LED_FUNCTION_POWER;
+@@ -100,7 +100,7 @@
+ 			label = "green:power";
+ 		};
+ 
+-		red-led {
++		red_led: led-1 {
+ 			color = <LED_COLOR_ID_RED>;
+ 			default-state = "off";
+ 			function = LED_FUNCTION_STANDBY;
+@@ -744,7 +744,6 @@
+ };
+ 
+ &i2s1 {
+-	#sound-dai-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2s_8ch_mclk_gpio>, <&i2s1_2ch_bus>;
+ 	rockchip,capture-channels = <8>;
+@@ -826,11 +825,11 @@
+ 	};
+ 
+ 	leds {
+-		pwrled_gpio: pwrled_gpio {
++		pwr_led_pin: pwr-led-pin {
+ 			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		slpled_gpio: slpled_gpio {
++		slp_led_pin: slp-led-pin {
+ 			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts	2020-06-01 11:15:46.969489113 -0700
+@@ -17,42 +17,43 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_led1>, <&user_led2>, <&user_led3>,
+-			    <&user_led4>, <&wlan_led>, <&bt_led>;
++		pinctrl-0 = <&user_led1_pin>, <&user_led2_pin>,
++			    <&user_led3_pin>, <&user_led4_pin>,
++			    <&wlan_led_pin>, <&bt_led_pin>;
+ 
+-		user_led1 {
++		user_led1: led-1 {
+ 			label = "green:user1";
+ 			gpios = <&gpio4 RK_PC2 0>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		user_led2 {
++		user_led2: led-2 {
+ 			label = "green:user2";
+ 			gpios = <&gpio4 RK_PC6 0>;
+ 			linux,default-trigger = "mmc0";
+ 		};
+ 
+-		user_led3 {
++		user_led3: led-3 {
+ 			label = "green:user3";
+ 			gpios = <&gpio4 RK_PD0 0>;
+ 			linux,default-trigger = "mmc1";
+ 		};
+ 
+-		user_led4 {
++		user_led4: led-4 {
+ 			label = "green:user4";
+ 			gpios = <&gpio4 RK_PD4 0>;
+ 			panic-indicator;
+ 			linux,default-trigger = "none";
+ 		};
+ 
+-		wlan_active_led {
++		wlan_active_led: led-5 {
+ 			label = "yellow:wlan";
+ 			gpios = <&gpio4 RK_PD5 0>;
+ 			linux,default-trigger = "phy0tx";
+ 			default-state = "off";
+ 		};
+ 
+-		bt_active_led {
++		bt_active_led: led-6 {
+ 			label = "blue:bt";
+ 			gpios = <&gpio4 RK_PD6 0>;
+ 			linux,default-trigger = "hci0-power";
+@@ -68,32 +69,32 @@
+ 
+ &pinctrl {
+ 	leds {
+-		user_led1: user_led1 {
++		user_led1_pin: user-led1-pin {
+ 			rockchip,pins =
+ 				<4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led2: user_led2 {
++		user_led2_pin: user-led2-pin {
+ 			rockchip,pins =
+ 				<4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led3: user_led3 {
++		user_led3_pin: user-led3-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		user_led4: user_led4 {
++		user_led4_pin: user-led4-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		wlan_led: wlan_led {
++		wlan_led_pin: wlan-led-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		bt_led: bt_led {
++		bt_led_pin: bt-led-pin {
+ 			rockchip,pins =
+ 				<4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+--- linux-5.7/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi	2020-06-01 11:15:46.969489113 -0700
+@@ -96,6 +96,24 @@
+ 		vin-supply = <&vcc_1v8>;
+ 	};
+ 
++	/* micro SD card power */
++	vcc3v0_sd: vcc3v0-sd {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdmmc0_pwr_h>;
++		regulator-name = "vcc3v0_sd";
++		regulator-always-on;
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++		vin-supply = <&vcc3v3_sys>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
+ 	vcc3v3_pcie: vcc3v3-pcie-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -603,6 +621,13 @@
+ 		};
+ 	};
+ 
++	sdcard {
++		sdmmc0_pwr_h: sdmmc0-pwr-h {
++			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++	};
++
+ 	sdio-pwrseq {
+ 		wifi_enable_h: wifi-enable-h {
+ 			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
+@@ -661,6 +686,8 @@
+ 	max-frequency = <150000000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
++	vmmc-supply = <&vcc3v0_sd>;
++	vqmmc-supply = <&vcc_sdio>;
+ 	status = "okay";
+ };
+ 
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/arm/rockchip.yaml linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/arm/rockchip.yaml
+--- linux-5.7/Documentation/devicetree/bindings/arm/rockchip.yaml	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/arm/rockchip.yaml	2020-06-01 11:15:46.253481450 -0700
+@@ -358,6 +358,11 @@
+           - const: haoyu,marsboard-rk3066
+           - const: rockchip,rk3066a
+ 
++      - description: Hardkernel Odroid Go Advance
++        items:
++          - const: hardkernel,rk3326-odroid-go2
++          - const: rockchip,rk3326
++
+       - description: Hugsun X99 TV Box
+         items:
+           - const: hugsun,x99
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+--- linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt	1969-12-31 16:00:00.000000000 -0800
+@@ -1,72 +0,0 @@
+-Rockchip specific extensions for rk3066 HDMI
+-============================================
+-
+-Required properties:
+-- compatible:
+-	"rockchip,rk3066-hdmi";
+-- reg:
+-	Physical base address and length of the controller's registers.
+-- clocks, clock-names:
+-	Phandle to HDMI controller clock, name should be "hclk".
+-- interrupts:
+-	HDMI interrupt number.
+-- power-domains:
+-	Phandle to the RK3066_PD_VIO power domain.
+-- rockchip,grf:
+-	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
+-- ports:
+-	Contains one port node with two endpoints, numbered 0 and 1,
+-	connected respectively to vop0 and vop1.
+-	Contains one port node with one endpoint
+-	connected to a hdmi-connector node.
+-- pinctrl-0, pinctrl-name:
+-	Switch the iomux for the HPD/I2C pins to HDMI function.
+-
+-Example:
+-	hdmi: hdmi@10116000 {
+-		compatible = "rockchip,rk3066-hdmi";
+-		reg = <0x10116000 0x2000>;
+-		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru HCLK_HDMI>;
+-		clock-names = "hclk";
+-		power-domains = <&power RK3066_PD_VIO>;
+-		rockchip,grf = <&grf>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			hdmi_in: port@0 {
+-				reg = <0>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				hdmi_in_vop0: endpoint@0 {
+-					reg = <0>;
+-					remote-endpoint = <&vop0_out_hdmi>;
+-				};
+-				hdmi_in_vop1: endpoint@1 {
+-					reg = <1>;
+-					remote-endpoint = <&vop1_out_hdmi>;
+-				};
+-			};
+-			hdmi_out: port@1 {
+-				reg = <1>;
+-				hdmi_out_con: endpoint {
+-					remote-endpoint = <&hdmi_con_in>;
+-				};
+-			};
+-		};
+-	};
+-
+-&pinctrl {
+-		hdmi {
+-			hdmi_hpd: hdmi-hpd {
+-				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
+-			};
+-			hdmii2c_xfer: hdmii2c-xfer {
+-				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
+-						<0 RK_PA2 1 &pcfg_pull_none>;
+-			};
+-		};
+-};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+--- linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml	2020-06-01 11:15:46.285481793 -0700
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3066-hdmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip rk3066 HDMI controller
++
++maintainers:
++  - Sandy Huang <hjc@rock-chips.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    const: rockchip,rk3066-hdmi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: hclk
++
++  pinctrl-0:
++    maxItems: 2
++
++  pinctrl-names:
++    const: default
++    description:
++      Switch the iomux for the HPD/I2C pins to HDMI function.
++
++  power-domains:
++    maxItems: 1
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          Port node with two endpoints, numbered 0 and 1,
++          connected respectively to vop0 and vop1.
++
++      port@1:
++        type: object
++        description:
++          Port node with one endpoint connected to a hdmi-connector node.
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - pinctrl-0
++  - pinctrl-names
++  - power-domains
++  - rockchip,grf
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3066a-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/pinctrl/rockchip.h>
++    #include <dt-bindings/power/rk3066-power.h>
++    hdmi: hdmi@10116000 {
++      compatible = "rockchip,rk3066-hdmi";
++      reg = <0x10116000 0x2000>;
++      interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru HCLK_HDMI>;
++      clock-names = "hclk";
++      pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++      pinctrl-names = "default";
++      power-domains = <&power RK3066_PD_VIO>;
++      rockchip,grf = <&grf>;
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        hdmi_in: port@0 {
++          reg = <0>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++          hdmi_in_vop0: endpoint@0 {
++            reg = <0>;
++            remote-endpoint = <&vop0_out_hdmi>;
++          };
++          hdmi_in_vop1: endpoint@1 {
++            reg = <1>;
++            remote-endpoint = <&vop1_out_hdmi>;
++          };
++        };
++        hdmi_out: port@1 {
++          reg = <1>;
++          hdmi_out_con: endpoint {
++            remote-endpoint = <&hdmi_con_in>;
++          };
++        };
++      };
++    };
++
++    pinctrl {
++      hdmi {
++        hdmi_hpd: hdmi-hpd {
++          rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++        };
++        hdmii2c_xfer: hdmii2c-xfer {
++          rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++                          <0 RK_PA2 1 &pcfg_pull_none>;
++        };
++      };
++    };
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+--- linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt	1969-12-31 16:00:00.000000000 -0800
+@@ -1,74 +0,0 @@
+-device-tree bindings for rockchip soc display controller (vop)
+-
+-VOP (Visual Output Processor) is the Display Controller for the Rockchip
+-series of SoCs which transfers the image data from a video memory
+-buffer to an external LCD interface.
+-
+-Required properties:
+-- compatible: value should be one of the following
+-		"rockchip,rk3036-vop";
+-		"rockchip,rk3126-vop";
+-		"rockchip,px30-vop-lit";
+-		"rockchip,px30-vop-big";
+-		"rockchip,rk3066-vop";
+-		"rockchip,rk3188-vop";
+-		"rockchip,rk3288-vop";
+-		"rockchip,rk3368-vop";
+-		"rockchip,rk3366-vop";
+-		"rockchip,rk3399-vop-big";
+-		"rockchip,rk3399-vop-lit";
+-		"rockchip,rk3228-vop";
+-		"rockchip,rk3328-vop";
+-
+-- reg: Must contain one entry corresponding to the base address and length
+-	of the register space. Can optionally contain a second entry
+-	corresponding to the CRTC gamma LUT address.
+-
+-- interrupts: should contain a list of all VOP IP block interrupts in the
+-		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
+-		 format depends on the interrupt controller used.
+-
+-- clocks: must include clock specifiers corresponding to entries in the
+-		clock-names property.
+-
+-- clock-names: Must contain
+-		aclk_vop: for ddr buffer transfer.
+-		hclk_vop: for ahb bus to R/W the phy regs.
+-		dclk_vop: pixel clock.
+-
+-- resets: Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names: Must include the following entries:
+-  - axi
+-  - ahb
+-  - dclk
+-
+-- iommus: required a iommu node
+-
+-- port: A port node with endpoint definitions as defined in
+-  Documentation/devicetree/bindings/media/video-interfaces.txt.
+-
+-Example:
+-SoC specific DT entry:
+-	vopb: vopb@ff930000 {
+-		compatible = "rockchip,rk3288-vop";
+-		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
+-		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+-		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+-		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
+-		reset-names = "axi", "ahb", "dclk";
+-		iommus = <&vopb_mmu>;
+-		vopb_out: port {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			vopb_out_edp: endpoint@0 {
+-				reg = <0>;
+-				remote-endpoint=<&edp_in_vopb>;
+-			};
+-			vopb_out_hdmi: endpoint@1 {
+-				reg = <1>;
+-				remote-endpoint=<&hdmi_in_vopb>;
+-			};
+-		};
+-	};
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+--- linux-5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml	1969-12-31 16:00:00.000000000 -0800
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml	2020-06-01 11:15:46.285481793 -0700
+@@ -0,0 +1,134 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip SoC display controller (VOP)
++
++description:
++  VOP (Video Output Processor) is the display controller for the Rockchip
++  series of SoCs which transfers the image data from a video memory
++  buffer to an external LCD interface.
++
++maintainers:
++  - Sandy Huang <hjc@rock-chips.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    enum:
++      - rockchip,px30-vop-big
++      - rockchip,px30-vop-lit
++      - rockchip,rk3036-vop
++      - rockchip,rk3066-vop
++      - rockchip,rk3126-vop
++      - rockchip,rk3188-vop
++      - rockchip,rk3228-vop
++      - rockchip,rk3288-vop
++      - rockchip,rk3328-vop
++      - rockchip,rk3366-vop
++      - rockchip,rk3368-vop
++      - rockchip,rk3399-vop-big
++      - rockchip,rk3399-vop-lit
++
++  reg:
++    minItems: 1
++    items:
++      - description:
++          Must contain one entry corresponding to the base address and length
++          of the register space.
++      - description:
++          Can optionally contain a second entry corresponding to
++          the CRTC gamma LUT address.
++
++  interrupts:
++    maxItems: 1
++    description:
++      The VOP interrupt is shared by several interrupt sources, such as
++      frame start (VSYNC), line flag and other status interrupts.
++
++  clocks:
++    items:
++      - description: Clock for ddr buffer transfer.
++      - description: Pixel clock.
++      - description: Clock for the ahb bus to R/W the phy regs.
++
++  clock-names:
++    items:
++      - const: aclk_vop
++      - const: dclk_vop
++      - const: hclk_vop
++
++  resets:
++    maxItems: 3
++
++  reset-names:
++    items:
++      - const: axi
++      - const: ahb
++      - const: dclk
++
++  port:
++    type: object
++    description:
++      A port node with endpoint definitions as defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++  assigned-clocks:
++    maxItems: 2
++
++  assigned-clock-rates:
++    maxItems: 2
++
++  iommus:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3288-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/rk3288-power.h>
++    vopb: vopb@ff930000 {
++      compatible = "rockchip,rk3288-vop";
++      reg = <0x0 0xff930000 0x0 0x19c>,
++            <0x0 0xff931000 0x0 0x1000>;
++      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru ACLK_VOP0>,
++               <&cru DCLK_VOP0>,
++               <&cru HCLK_VOP0>;
++      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++      power-domains = <&power RK3288_PD_VIO>;
++      resets = <&cru SRST_LCDC1_AXI>,
++               <&cru SRST_LCDC1_AHB>,
++               <&cru SRST_LCDC1_DCLK>;
++      reset-names = "axi", "ahb", "dclk";
++      iommus = <&vopb_mmu>;
++      vopb_out: port {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        vopb_out_edp: endpoint@0 {
++          reg = <0>;
++          remote-endpoint=<&edp_in_vopb>;
++        };
++        vopb_out_hdmi: endpoint@1 {
++          reg = <1>;
++          remote-endpoint=<&hdmi_in_vopb>;
++        };
++      };
++    };
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+--- linux-5.7/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml	2020-06-01 11:15:46.297481921 -0700
+@@ -43,9 +43,15 @@
+ 
+   operating-points-v2: true
+ 
++  power-domains:
++    maxItems: 1
++
+   resets:
+     maxItems: 2
+ 
++  "#cooling-cells":
++    const: 2
++
+ required:
+   - compatible
+   - reg
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/clk/rockchip/clk-pll.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/clk/rockchip/clk-pll.c
+--- linux-5.7/drivers/clk/rockchip/clk-pll.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/clk/rockchip/clk-pll.c	2020-06-01 11:15:47.833498358 -0700
+@@ -12,6 +12,7 @@
+ #include <linux/io.h>
+ #include <linux/delay.h>
+ #include <linux/clk-provider.h>
++#include <linux/iopoll.h>
+ #include <linux/regmap.h>
+ #include <linux/clk.h>
+ #include "clk.h"
+@@ -86,23 +87,14 @@
+ {
+ 	struct regmap *grf = pll->ctx->grf;
+ 	unsigned int val;
+-	int delay = 24000000, ret;
+-
+-	while (delay > 0) {
+-		ret = regmap_read(grf, pll->lock_offset, &val);
+-		if (ret) {
+-			pr_err("%s: failed to read pll lock status: %d\n",
+-			       __func__, ret);
+-			return ret;
+-		}
++	int ret;
+ 
+-		if (val & BIT(pll->lock_shift))
+-			return 0;
+-		delay--;
+-	}
++	ret = regmap_read_poll_timeout(grf, pll->lock_offset, val,
++				       val & BIT(pll->lock_shift), 0, 1000);
++	if (ret)
++		pr_err("%s: timeout waiting for pll to lock\n", __func__);
+ 
+-	pr_err("%s: timeout waiting for pll to lock\n", __func__);
+-	return -ETIMEDOUT;
++	return ret;
+ }
+ 
+ /**
+@@ -118,12 +110,31 @@
+ #define RK3036_PLLCON1_REFDIV_SHIFT		0
+ #define RK3036_PLLCON1_POSTDIV2_MASK		0x7
+ #define RK3036_PLLCON1_POSTDIV2_SHIFT		6
++#define RK3036_PLLCON1_LOCK_STATUS		BIT(10)
+ #define RK3036_PLLCON1_DSMPD_MASK		0x1
+ #define RK3036_PLLCON1_DSMPD_SHIFT		12
++#define RK3036_PLLCON1_PWRDOWN			BIT(13)
+ #define RK3036_PLLCON2_FRAC_MASK		0xffffff
+ #define RK3036_PLLCON2_FRAC_SHIFT		0
+ 
+-#define RK3036_PLLCON1_PWRDOWN			(1 << 13)
++static int rockchip_rk3036_pll_wait_lock(struct rockchip_clk_pll *pll)
++{
++	u32 pllcon;
++	int ret;
++
++	/*
++	 * Lock time typical 250, max 500 input clock cycles @24MHz
++	 * So define a very safe maximum of 1000us, meaning 24000 cycles.
++	 */
++	ret = readl_relaxed_poll_timeout(pll->reg_base + RK3036_PLLCON(1),
++					 pllcon,
++					 pllcon & RK3036_PLLCON1_LOCK_STATUS,
++					 0, 1000);
++	if (ret)
++		pr_err("%s: timeout waiting for pll to lock\n", __func__);
++
++	return ret;
++}
+ 
+ static void rockchip_rk3036_pll_get_params(struct rockchip_clk_pll *pll,
+ 					struct rockchip_pll_rate_table *rate)
+@@ -221,7 +232,7 @@
+ 	writel_relaxed(pllcon, pll->reg_base + RK3036_PLLCON(2));
+ 
+ 	/* wait for the pll to lock */
+-	ret = rockchip_pll_wait_lock(pll);
++	ret = rockchip_rk3036_pll_wait_lock(pll);
+ 	if (ret) {
+ 		pr_warn("%s: pll update unsuccessful, trying to restore old params\n",
+ 			__func__);
+@@ -260,7 +271,7 @@
+ 
+ 	writel(HIWORD_UPDATE(0, RK3036_PLLCON1_PWRDOWN, 0),
+ 	       pll->reg_base + RK3036_PLLCON(1));
+-	rockchip_pll_wait_lock(pll);
++	rockchip_rk3036_pll_wait_lock(pll);
+ 
+ 	return 0;
+ }
+@@ -589,19 +600,20 @@
+ static int rockchip_rk3399_pll_wait_lock(struct rockchip_clk_pll *pll)
+ {
+ 	u32 pllcon;
+-	int delay = 24000000;
++	int ret;
+ 
+-	/* poll check the lock status in rk3399 xPLLCON2 */
+-	while (delay > 0) {
+-		pllcon = readl_relaxed(pll->reg_base + RK3399_PLLCON(2));
+-		if (pllcon & RK3399_PLLCON2_LOCK_STATUS)
+-			return 0;
++	/*
++	 * Lock time typical 250, max 500 input clock cycles @24MHz
++	 * So define a very safe maximum of 1000us, meaning 24000 cycles.
++	 */
++	ret = readl_relaxed_poll_timeout(pll->reg_base + RK3399_PLLCON(2),
++					 pllcon,
++					 pllcon & RK3399_PLLCON2_LOCK_STATUS,
++					 0, 1000);
++	if (ret)
++		pr_err("%s: timeout waiting for pll to lock\n", __func__);
+ 
+-		delay--;
+-	}
+-
+-	pr_err("%s: timeout waiting for pll to lock\n", __func__);
+-	return -ETIMEDOUT;
++	return ret;
+ }
+ 
+ static void rockchip_rk3399_pll_get_params(struct rockchip_clk_pll *pll,
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+--- linux-5.7/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c	2020-06-01 11:15:48.733507989 -0700
+@@ -26,6 +26,7 @@
+ #include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -258,10 +259,6 @@
+ 	.atomic_check = rockchip_dp_drm_encoder_atomic_check,
+ };
+ 
+-static struct drm_encoder_funcs rockchip_dp_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static int rockchip_dp_of_probe(struct rockchip_dp_device *dp)
+ {
+ 	struct device *dev = dp->dev;
+@@ -309,8 +306,8 @@
+ 							     dev->of_node);
+ 	DRM_DEBUG_KMS("possible_crtcs = 0x%x\n", encoder->possible_crtcs);
+ 
+-	ret = drm_encoder_init(drm_dev, encoder, &rockchip_dp_encoder_funcs,
+-			       DRM_MODE_ENCODER_TMDS, NULL);
++	ret = drm_simple_encoder_init(drm_dev, encoder,
++				      DRM_MODE_ENCODER_TMDS);
+ 	if (ret) {
+ 		DRM_ERROR("failed to initialize encoder with drm\n");
+ 		return ret;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/cdn-dp-core.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/cdn-dp-core.c
+--- linux-5.7/drivers/gpu/drm/rockchip/cdn-dp-core.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/cdn-dp-core.c	2020-06-01 11:15:48.733507989 -0700
+@@ -20,6 +20,7 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "cdn-dp-core.h"
+ #include "cdn-dp-reg.h"
+@@ -689,10 +690,6 @@
+ 	.atomic_check = cdn_dp_encoder_atomic_check,
+ };
+ 
+-static const struct drm_encoder_funcs cdn_dp_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static int cdn_dp_parse_dt(struct cdn_dp_device *dp)
+ {
+ 	struct device *dev = dp->dev;
+@@ -1030,8 +1027,8 @@
+ 							     dev->of_node);
+ 	DRM_DEBUG_KMS("possible_crtcs = 0x%x\n", encoder->possible_crtcs);
+ 
+-	ret = drm_encoder_init(drm_dev, encoder, &cdn_dp_encoder_funcs,
+-			       DRM_MODE_ENCODER_TMDS, NULL);
++	ret = drm_simple_encoder_init(drm_dev, encoder,
++				      DRM_MODE_ENCODER_TMDS);
+ 	if (ret) {
+ 		DRM_ERROR("failed to initialize encoder with drm\n");
+ 		return ret;
+@@ -1109,7 +1106,7 @@
+ 	.unbind = cdn_dp_unbind,
+ };
+ 
+-int cdn_dp_suspend(struct device *dev)
++static int cdn_dp_suspend(struct device *dev)
+ {
+ 	struct cdn_dp_device *dp = dev_get_drvdata(dev);
+ 	int ret = 0;
+@@ -1123,7 +1120,7 @@
+ 	return ret;
+ }
+ 
+-int cdn_dp_resume(struct device *dev)
++static int cdn_dp_resume(struct device *dev)
+ {
+ 	struct cdn_dp_device *dp = dev_get_drvdata(dev);
+ 
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/cdn-dp-reg.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+--- linux-5.7/drivers/gpu/drm/rockchip/cdn-dp-reg.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/cdn-dp-reg.c	2020-06-01 11:15:48.733507989 -0700
+@@ -601,7 +601,7 @@
+ 	case YCBCR_4_2_0:
+ 		val[0] = 5;
+ 		break;
+-	};
++	}
+ 
+ 	switch (video->color_depth) {
+ 	case 6:
+@@ -619,7 +619,7 @@
+ 	case 16:
+ 		val[1] = 4;
+ 		break;
+-	};
++	}
+ 
+ 	msa_misc = 2 * val[0] + 32 * val[1] +
+ 		   ((video->color_fmt == Y_ONLY) ? (1 << 14) : 0);
+@@ -700,7 +700,7 @@
+ 	case 16:
+ 		val = BCS_16;
+ 		break;
+-	};
++	}
+ 
+ 	val += video->color_fmt << 8;
+ 	ret = cdn_dp_reg_write(dp, DP_FRAMER_PXL_REPR, val);
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+--- linux-5.7/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-06-01 11:15:48.733507989 -0700
+@@ -14,6 +14,7 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -237,10 +238,6 @@
+ 	return (valid) ? MODE_OK : MODE_BAD;
+ }
+ 
+-static const struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static void dw_hdmi_rockchip_encoder_disable(struct drm_encoder *encoder)
+ {
+ }
+@@ -546,8 +543,7 @@
+ 	}
+ 
+ 	drm_encoder_helper_add(encoder, &dw_hdmi_rockchip_encoder_helper_funcs);
+-	drm_encoder_init(drm, encoder, &dw_hdmi_rockchip_encoder_funcs,
+-			 DRM_MODE_ENCODER_TMDS, NULL);
++	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
+ 
+ 	platform_set_drvdata(pdev, hdmi);
+ 
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+--- linux-5.7/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c	2020-06-01 11:15:48.733507989 -0700
+@@ -21,6 +21,7 @@
+ #include <drm/bridge/dw_mipi_dsi.h>
+ #include <drm/drm_mipi_dsi.h>
+ #include <drm/drm_of.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -789,10 +790,6 @@
+ 	.disable = dw_mipi_dsi_encoder_disable,
+ };
+ 
+-static const struct drm_encoder_funcs dw_mipi_dsi_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static int rockchip_dsi_drm_create_encoder(struct dw_mipi_dsi_rockchip *dsi,
+ 					   struct drm_device *drm_dev)
+ {
+@@ -802,8 +799,7 @@
+ 	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm_dev,
+ 							     dsi->dev->of_node);
+ 
+-	ret = drm_encoder_init(drm_dev, encoder, &dw_mipi_dsi_encoder_funcs,
+-			       DRM_MODE_ENCODER_DSI, NULL);
++	ret = drm_simple_encoder_init(drm_dev, encoder, DRM_MODE_ENCODER_DSI);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to initialize encoder with drm\n");
+ 		return ret;
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/inno_hdmi.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/inno_hdmi.c
+--- linux-5.7/drivers/gpu/drm/rockchip/inno_hdmi.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/inno_hdmi.c	2020-06-01 11:15:48.733507989 -0700
+@@ -19,6 +19,7 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -532,10 +533,6 @@
+ 	.atomic_check = inno_hdmi_encoder_atomic_check,
+ };
+ 
+-static struct drm_encoder_funcs inno_hdmi_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static enum drm_connector_status
+ inno_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ {
+@@ -617,8 +614,7 @@
+ 		return -EPROBE_DEFER;
+ 
+ 	drm_encoder_helper_add(encoder, &inno_hdmi_encoder_helper_funcs);
+-	drm_encoder_init(drm, encoder, &inno_hdmi_encoder_funcs,
+-			 DRM_MODE_ENCODER_TMDS, NULL);
++	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
+ 
+ 	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
+ 
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/rk3066_hdmi.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+--- linux-5.7/drivers/gpu/drm/rockchip/rk3066_hdmi.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rk3066_hdmi.c	2020-06-01 11:15:48.733507989 -0700
+@@ -6,6 +6,7 @@
+ 
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+@@ -451,10 +452,6 @@
+ 	.atomic_check = rk3066_hdmi_encoder_atomic_check,
+ };
+ 
+-static const struct drm_encoder_funcs rk3066_hdmi_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static enum drm_connector_status
+ rk3066_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ {
+@@ -557,8 +554,7 @@
+ 		return -EPROBE_DEFER;
+ 
+ 	drm_encoder_helper_add(encoder, &rk3066_hdmi_encoder_helper_funcs);
+-	drm_encoder_init(drm, encoder, &rk3066_hdmi_encoder_funcs,
+-			 DRM_MODE_ENCODER_TMDS, NULL);
++	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
+ 
+ 	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
+ 
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/rockchip_lvds.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rockchip_lvds.c
+--- linux-5.7/drivers/gpu/drm/rockchip/rockchip_lvds.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rockchip_lvds.c	2020-06-01 11:15:48.737508032 -0700
+@@ -16,13 +16,14 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
++
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_bridge.h>
+-
+ #include <drm/drm_dp_helper.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -435,10 +436,6 @@
+ 	.atomic_check = rockchip_lvds_encoder_atomic_check,
+ };
+ 
+-static const struct drm_encoder_funcs rockchip_lvds_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ static int rk3288_lvds_probe(struct platform_device *pdev,
+ 			     struct rockchip_lvds *lvds)
+ {
+@@ -607,8 +604,7 @@
+ 	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm_dev,
+ 							     dev->of_node);
+ 
+-	ret = drm_encoder_init(drm_dev, encoder, &rockchip_lvds_encoder_funcs,
+-			       DRM_MODE_ENCODER_LVDS, NULL);
++	ret = drm_simple_encoder_init(drm_dev, encoder, DRM_MODE_ENCODER_LVDS);
+ 	if (ret < 0) {
+ 		DRM_DEV_ERROR(drm_dev->dev,
+ 			      "failed to initialize encoder: %d\n", ret);
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.7/drivers/gpu/drm/rockchip/rockchip_rgb.c linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rockchip_rgb.c
+--- linux-5.7/drivers/gpu/drm/rockchip/rockchip_rgb.c	2020-05-31 16:49:15.000000000 -0700
++++ linux-rockchip_rockchip-5.7-from-5.8-v5.7/drivers/gpu/drm/rockchip/rockchip_rgb.c	2020-06-01 11:15:48.737508032 -0700
+@@ -14,6 +14,7 @@
+ #include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+@@ -67,10 +68,6 @@
+ 	.atomic_check = rockchip_rgb_encoder_atomic_check,
+ };
+ 
+-static const struct drm_encoder_funcs rockchip_rgb_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+ struct rockchip_rgb *rockchip_rgb_init(struct device *dev,
+ 				       struct drm_crtc *crtc,
+ 				       struct drm_device *drm_dev)
+@@ -126,8 +123,7 @@
+ 	encoder = &rgb->encoder;
+ 	encoder->possible_crtcs = drm_crtc_mask(crtc);
+ 
+-	ret = drm_encoder_init(drm_dev, encoder, &rockchip_rgb_encoder_funcs,
+-			       DRM_MODE_ENCODER_NONE, NULL);
++	ret = drm_simple_encoder_init(drm_dev, encoder, DRM_MODE_ENCODER_NONE);
+ 	if (ret < 0) {
+ 		DRM_DEV_ERROR(drm_dev->dev,
+ 			      "failed to initialize encoder: %d\n", ret);

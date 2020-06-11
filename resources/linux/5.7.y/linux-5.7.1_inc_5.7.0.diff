@@ -1,0 +1,416 @@
+diff --git a/Makefile b/Makefile
+index b668725a2a62..2dd4f37c9f10 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 7
+-SUBLEVEL = 0
++SUBLEVEL = 1
+ EXTRAVERSION =
+ NAME = Kleptomaniac Octopus
+ 
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 4d02e64af1b3..19cdeebfbde6 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -257,6 +257,7 @@ static inline int pmd_large(pmd_t pte)
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
++/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
+ static inline int pmd_trans_huge(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+diff --git a/crypto/algapi.c b/crypto/algapi.c
+index 69605e21af92..f8b4dc161c02 100644
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -716,17 +716,27 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ 
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+-	struct crypto_alg *alg;
++	struct crypto_alg *alg = ERR_PTR(-EAGAIN);
++	struct crypto_alg *target;
++	bool shoot = false;
+ 
+ 	down_read(&crypto_alg_sem);
+-	alg = spawn->alg;
+-	if (!spawn->dead && !crypto_mod_get(alg)) {
+-		alg->cra_flags |= CRYPTO_ALG_DYING;
+-		alg = NULL;
++	if (!spawn->dead) {
++		alg = spawn->alg;
++		if (!crypto_mod_get(alg)) {
++			target = crypto_alg_get(alg);
++			shoot = true;
++			alg = ERR_PTR(-EAGAIN);
++		}
+ 	}
+ 	up_read(&crypto_alg_sem);
+ 
+-	return alg ?: ERR_PTR(-EAGAIN);
++	if (shoot) {
++		crypto_shoot_alg(target);
++		crypto_alg_put(target);
++	}
++
++	return alg;
+ }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+diff --git a/crypto/api.c b/crypto/api.c
+index 7d71a9b10e5f..edcf690800d4 100644
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -333,12 +333,13 @@ static unsigned int crypto_ctxsize(struct crypto_alg *alg, u32 type, u32 mask)
+ 	return len;
+ }
+ 
+-static void crypto_shoot_alg(struct crypto_alg *alg)
++void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
++EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+diff --git a/crypto/internal.h b/crypto/internal.h
+index d5ebc60c5143..ff06a3bd1ca1 100644
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -65,6 +65,7 @@ void crypto_alg_tested(const char *name, int err);
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
++void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 03c720b47306..39e4da7468e1 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+ #define MT_QUIRK_ASUS_CUSTOM_UP		BIT(17)
+ #define MT_QUIRK_WIN8_PTP_BUTTONS	BIT(18)
+ #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
++#define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
+ 
+ #define MT_INPUTMODE_TOUCHSCREEN	0x02
+ #define MT_INPUTMODE_TOUCHPAD		0x03
+@@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
+ #define MT_CLS_WIN_8				0x0012
+ #define MT_CLS_EXPORT_ALL_INPUTS		0x0013
+ #define MT_CLS_WIN_8_DUAL			0x0014
++#define MT_CLS_WIN_8_FORCE_MULTI_INPUT		0x0015
+ 
+ /* vendor specific classes */
+ #define MT_CLS_3M				0x0101
+@@ -279,6 +281,15 @@ static const struct mt_class mt_classes[] = {
+ 			MT_QUIRK_CONTACT_CNT_ACCURATE |
+ 			MT_QUIRK_WIN8_PTP_BUTTONS,
+ 		.export_all_inputs = true },
++	{ .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		.quirks = MT_QUIRK_ALWAYS_VALID |
++			MT_QUIRK_IGNORE_DUPLICATES |
++			MT_QUIRK_HOVERING |
++			MT_QUIRK_CONTACT_CNT_ACCURATE |
++			MT_QUIRK_STICKY_FINGERS |
++			MT_QUIRK_WIN8_PTP_BUTTONS |
++			MT_QUIRK_FORCE_MULTI_INPUT,
++		.export_all_inputs = true },
+ 
+ 	/*
+ 	 * vendor specific classes
+@@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
+ 		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
+ 
++	if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
++		hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
++		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
++	}
++
+ 	timer_setup(&td->release_timer, mt_expired_timeout, 0);
+ 
+ 	ret = hid_parse(hdev);
+@@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_devices[] = {
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
++	/* Elan devices */
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_ELAN, 0x313a) },
++
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
+@@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_devices[] = {
+ 		MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
+ 			USB_DEVICE_ID_MTP_STM)},
+ 
++	/* Synaptics devices */
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
++
+ 	/* TopSeed panels */
+ 	{ .driver_data = MT_CLS_TOPSEED,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
+diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
+index 4c6ed6ef31f1..2f073f536070 100644
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -867,6 +867,23 @@ static u8 *sony_report_fixup(struct hid_device *hdev, u8 *rdesc,
+ 	if (sc->quirks & PS3REMOTE)
+ 		return ps3remote_fixup(hdev, rdesc, rsize);
+ 
++	/*
++	 * Some knock-off USB dongles incorrectly report their button count
++	 * as 13 instead of 16 causing three non-functional buttons.
++	 */
++	if ((sc->quirks & SIXAXIS_CONTROLLER_USB) && *rsize >= 45 &&
++		/* Report Count (13) */
++		rdesc[23] == 0x95 && rdesc[24] == 0x0D &&
++		/* Usage Maximum (13) */
++		rdesc[37] == 0x29 && rdesc[38] == 0x0D &&
++		/* Report Count (3) */
++		rdesc[43] == 0x95 && rdesc[44] == 0x03) {
++		hid_info(hdev, "Fixing up USB dongle report descriptor\n");
++		rdesc[24] = 0x10;
++		rdesc[38] = 0x10;
++		rdesc[44] = 0x00;
++	}
++
+ 	return rdesc;
+ }
+ 
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index a66f08041a1a..ec142bc8c1da 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -389,6 +389,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Schneider SCL142ALM",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
+ 
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 80b6a71aa33e..959fa2820259 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -707,9 +707,10 @@ int dvb_create_media_graph(struct dvb_adapter *adap,
+ 	}
+ 
+ 	if (ntuner && ndemod) {
+-		pad_source = media_get_pad_index(tuner, true,
++		/* NOTE: first found tuner source pad presumed correct */
++		pad_source = media_get_pad_index(tuner, false,
+ 						 PAD_SIGNAL_ANALOG);
+-		if (pad_source)
++		if (pad_source < 0)
+ 			return -EINVAL;
+ 		ret = media_create_pad_links(mdev,
+ 					     MEDIA_ENT_F_TUNER,
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 34e4aadfa705..b75d09783a05 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -807,10 +807,15 @@ mt7530_port_set_vlan_aware(struct dsa_switch *ds, int port)
+ 		   PCR_MATRIX_MASK, PCR_MATRIX(MT7530_ALL_MEMBERS));
+ 
+ 	/* Trapped into security mode allows packet forwarding through VLAN
+-	 * table lookup.
++	 * table lookup. CPU port is set to fallback mode to let untagged
++	 * frames pass through.
+ 	 */
+-	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
+-		   MT7530_PORT_SECURITY_MODE);
++	if (dsa_is_cpu_port(ds, port))
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_FALLBACK_MODE);
++	else
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_SECURITY_MODE);
+ 
+ 	/* Set the port as a user port which is to be able to recognize VID
+ 	 * from incoming packets before fetching entry within the VLAN table.
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 82af4d2d406e..14de60d0b9ca 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -153,6 +153,12 @@ enum mt7530_port_mode {
+ 	/* Port Matrix Mode: Frames are forwarded by the PCR_MATRIX members. */
+ 	MT7530_PORT_MATRIX_MODE = PORT_VLAN(0),
+ 
++	/* Fallback Mode: Forward received frames with ingress ports that do
++	 * not belong to the VLAN member. Frames whose VID is not listed on
++	 * the VLAN table are forwarded by the PCR_MATRIX members.
++	 */
++	MT7530_PORT_FALLBACK_MODE = PORT_VLAN(1),
++
+ 	/* Security Mode: Discard any frame due to ingress membership
+ 	 * violation or VID missed on the VLAN table.
+ 	 */
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index 8363f91df7ea..827bb6d74815 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -1925,6 +1925,10 @@ static netdev_tx_t mpi_start_xmit(struct sk_buff *skb,
+ 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 	npacks = skb_queue_len (&ai->txq);
+ 
+ 	if (npacks >= MAXTXQ - 1) {
+@@ -2127,6 +2131,10 @@ static netdev_tx_t airo_start_xmit(struct sk_buff *skb,
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
+@@ -2201,6 +2209,10 @@ static netdev_tx_t airo_start_xmit11(struct sk_buff *skb,
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
+diff --git a/drivers/net/wireless/intersil/p54/p54usb.c b/drivers/net/wireless/intersil/p54/p54usb.c
+index b94764c88750..ff0e30c0c14c 100644
+--- a/drivers/net/wireless/intersil/p54/p54usb.c
++++ b/drivers/net/wireless/intersil/p54/p54usb.c
+@@ -61,6 +61,7 @@ static const struct usb_device_id p54u_table[] = {
+ 	{USB_DEVICE(0x0db0, 0x6826)},	/* MSI UB54G (MS-6826) */
+ 	{USB_DEVICE(0x107b, 0x55f2)},	/* Gateway WGU-210 (Gemtek) */
+ 	{USB_DEVICE(0x124a, 0x4023)},	/* Shuttle PN15, Airvast WM168g, IOGear GWU513 */
++	{USB_DEVICE(0x124a, 0x4026)},	/* AirVasT USB wireless device */
+ 	{USB_DEVICE(0x1435, 0x0210)},	/* Inventel UR054G */
+ 	{USB_DEVICE(0x15a9, 0x0002)},	/* Gemtek WUBI-100GW 802.11g */
+ 	{USB_DEVICE(0x1630, 0x0005)},	/* 2Wire 802.11g USB (v1) / Z-Com */
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02.h b/drivers/net/wireless/mediatek/mt76/mt76x02.h
+index 23040c193ca5..830532b85b58 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02.h
+@@ -216,6 +216,7 @@ static inline bool is_mt76x0(struct mt76x02_dev *dev)
+ static inline bool is_mt76x2(struct mt76x02_dev *dev)
+ {
+ 	return mt76_chip(&dev->mt76) == 0x7612 ||
++	       mt76_chip(&dev->mt76) == 0x7632 ||
+ 	       mt76_chip(&dev->mt76) == 0x7662 ||
+ 	       mt76_chip(&dev->mt76) == 0x7602;
+ }
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
+index eafa283ca699..6376734282b7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
+@@ -18,6 +18,7 @@ static const struct usb_device_id mt76x2u_device_table[] = {
+ 	{ USB_DEVICE(0x7392, 0xb711) },	/* Edimax EW 7722 UAC */
+ 	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
+ 	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
++	{ USB_DEVICE(0x045e, 0x02fe) },	/* XBox One Wireless Adapter */
+ 	{ },
+ };
+ 
+diff --git a/drivers/staging/media/ipu3/include/intel-ipu3.h b/drivers/staging/media/ipu3/include/intel-ipu3.h
+index 1c9c3ba4d518..a607b0158c81 100644
+--- a/drivers/staging/media/ipu3/include/intel-ipu3.h
++++ b/drivers/staging/media/ipu3/include/intel-ipu3.h
+@@ -450,7 +450,7 @@ struct ipu3_uapi_awb_fr_config_s {
+ 	__u32 bayer_sign;
+ 	__u8 bayer_nf;
+ 	__u8 reserved2[7];
+-} __attribute__((aligned(32))) __packed;
++} __packed;
+ 
+ /**
+  * struct ipu3_uapi_4a_config - 4A config
+@@ -466,7 +466,8 @@ struct ipu3_uapi_4a_config {
+ 	struct ipu3_uapi_ae_grid_config ae_grd_config;
+ 	__u8 padding[20];
+ 	struct ipu3_uapi_af_config_s af_config;
+-	struct ipu3_uapi_awb_fr_config_s awb_fr_config;
++	struct ipu3_uapi_awb_fr_config_s awb_fr_config
++		__attribute__((aligned(32)));
+ } __packed;
+ 
+ /**
+@@ -2477,7 +2478,7 @@ struct ipu3_uapi_acc_param {
+ 	struct ipu3_uapi_yuvp1_yds_config yds2 __attribute__((aligned(32)));
+ 	struct ipu3_uapi_yuvp2_tcc_static_config tcc __attribute__((aligned(32)));
+ 	struct ipu3_uapi_anr_config anr;
+-	struct ipu3_uapi_awb_fr_config_s awb_fr __attribute__((aligned(32)));
++	struct ipu3_uapi_awb_fr_config_s awb_fr;
+ 	struct ipu3_uapi_ae_config ae;
+ 	struct ipu3_uapi_af_config_s af;
+ 	struct ipu3_uapi_awb_config awb;
+diff --git a/include/uapi/linux/mmc/ioctl.h b/include/uapi/linux/mmc/ioctl.h
+index 00c08120f3ba..27a39847d55c 100644
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -3,6 +3,7 @@
+ #define LINUX_MMC_IOCTL_H
+ 
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/*
+diff --git a/kernel/relay.c b/kernel/relay.c
+index ade14fb7ce2e..4b760ec16342 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *base_filename,
+ 		return NULL;
+ 
+ 	chan->buf = alloc_percpu(struct rchan_buf *);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
++	}
++
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 6aa6ea605068..57b1f999f789 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
+ 		if (!new_pmd)
+ 			break;
+-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
++		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
+ 			if (extent == HPAGE_PMD_SIZE) {
+ 				bool moved;
+ 				/* See comment in move_ptes() */
