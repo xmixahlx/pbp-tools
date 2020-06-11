@@ -2,14 +2,14 @@
 
 pinebook pro tools: pinebook pro management scripts
 
-pbp-build-ffmpeg-v4l2request
-pbp-build-ffmpeg-v4l2request_full
-pbp-build-kodi
-pbp-build-kodi-inputstream-adaptive
-pbp-build-linux
-pbp-build-linux-hwaccel
-pbp-build-mesa
-pbp-update-ap6256-firmware
-pbp-update-ap6256-firmware_current
-pbp-update-postinstall
-pbp-update-systempartitions
+pbp-build-ffmpeg-v4l2request<br>
+pbp-build-ffmpeg-v4l2request_full<br>
+pbp-build-kodi<br>
+pbp-build-kodi-inputstream-adaptive<br>
+pbp-build-linux<br>
+pbp-build-linux-hwaccel<br>
+pbp-build-mesa<br>
+pbp-update-ap6256-firmware<br>
+pbp-update-ap6256-firmware_current<br>
+pbp-update-postinstall<br>
+pbp-update-systempartitions<br>
