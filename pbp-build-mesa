@@ -1,0 +1,47 @@
+#!/bin/sh
+
+### Package: pbp-build-mesa
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://gitlab.freedesktop.org/mesa
+GITTREE=mesa
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## CONFIGURE
+meson pbp-build --prefix=/usr/local --buildtype=release \
+-Dplatforms=x11,wayland,drm,surfaceless -Ddri-drivers= \
+-Dvulkan-drivers= -Dgallium-drivers=panfrost,kmsro,swrast \
+-Dlibunwind=false -Dllvm=false
+
+## BUILD
+ninja -C pbp-build
+
+## INSTALL
+sudo ninja -C pbp-build install
+sudo ldconfig
+
+## EXIT
+exit
+
+# ENJOY

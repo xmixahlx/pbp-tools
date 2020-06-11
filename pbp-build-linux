@@ -1,0 +1,50 @@
+#!/bin/sh
+
+### Package: pbp-build-linux
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://gitlab.manjaro.org/tsys
+GITTREE=linux-pinebook-pro
+GITBRANCH=v5.7
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+make mrproper
+
+## CONFIG
+cp $RESDIR/linux/config_current .config
+
+## OLDCONFIG
+make oldconfig
+
+## MENUCONFIG
+make menuconfig
+
+## MAKE
+make -j6 INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
+
+## EXIT
+exit
+
+## POST SCRIPT
+# install manually with dpkg
+
+## ENJOY

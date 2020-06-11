@@ -1,0 +1,41 @@
+#!/bin/sh
+
+### Package: pbp-update-postinstall
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: {linux,linux-hwaccel}
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://gitlab.manjaro.org/manjaro-arm/packages/community
+GITTREE=pinebookpro-post-install
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## INSTALL
+sudo mkdir -p /etc/udev/hwdb.d
+sudo mkdir -p /var/lib/alsa
+sudo install -Dm644 10-usb-kbd.hwdb /etc/udev/hwdb.d/
+sudo install -Dm644 asound.state /var/lib/alsa/
+
+## RESTART SERVICES
+sudo alsactl nrestore
+sudo systemctl restart udev
+
+## EXIT
+exit
+
+## ENJOY

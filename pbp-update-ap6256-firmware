@@ -1,0 +1,47 @@
+#!/bin/sh
+
+### Package: pbp-update-ap6256-firmware
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: {linux,linux-hwaccel}
+
+## VARS
+DATE=`date +%Y%m%d-%H%S`
+DEVDIR=`pwd`/upstream
+GITREPO=https://gitlab.manjaro.org/manjaro-arm/packages/community
+GITTREE=ap6256-firmware
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH\_$DATE
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CHECKOUT OLD FIRMWARE
+git checkout a30bf312b268eab42d38fab0cc3ed3177895ff5d
+
+## INSTALL
+sudo mv -f /usr/lib/firmware/brcm /usr/lib/firmware/brcm-$DATE
+sudo mkdir -p /usr/lib/firmware/brcm
+sudo install -Dm644 "BCM4345C5.hcd" /usr/lib/firmware/brcm/
+sudo install -Dm644 "nvram_ap6256.txt" /usr/lib/firmware/brcm/brcmfmac43456-sdio.txt
+sudo install -Dm644 "fw_bcm43456c5_ag.bin" /usr/lib/firmware/brcm/brcmfmac43456-sdio.bin
+sudo install -Dm644 "brcmfmac43456-sdio.clm_blob" /usr/lib/firmware/brcm/brcmfmac43456-sdio.clm_blob
+sudo ln -s /usr/lib/firmware/brcm/brcmfmac43456-sdio.txt /usr/lib/firmware/brcm/brcmfmac43456-sdio.pine64,pinebook-pro.txt
+
+## EXIT
+exit
+
+# ENJOY
+
+# POST SCRIPT
+# Manually delete /usr/lib/firmware/brcm-$DATE after confirmation of success.

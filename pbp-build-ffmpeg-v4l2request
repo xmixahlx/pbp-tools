@@ -1,0 +1,67 @@
+#!/bin/sh
+
+### Package: pbp-build-ffmpeg-v4l2request
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux-hwaccel
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://git.ffmpeg.org
+GITTREE=ffmpeg
+GITBRANCH=n4.2.3
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## PATCH
+patch -p1 < $RESDIR/ffmpeg/4.2.2/ffmpeg_v4l2-request-hwaccel-4.2.2-rkvdec_20200610.diff
+
+## CONFIGURE
+./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic \
+--enable-shared --prefix=/usr/local --incdir=/usr/local/include/aarch64-linux-gnu \
+--libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
+
+## BUILD
+make -j6
+
+## INSTALL
+sudo make install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
+
+## FULL CONFIG
+#./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic --enable-shared \
+#--disable-decoder=amrnb --disable-decoder=libopenjpeg --disable-gnutls --disable-libopencv \
+#--disable-podpages --disable-sndio --disable-stripping --enable-avfilter --enable-gcrypt \
+#--enable-gpl --enable-ladspa --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray \
+#--enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d \
+#--enable-libfdk-aac --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi \
+#--enable-libgme --enable-libgsm --enable-libilbc --enable-libjack --enable-libkvazaar --enable-liblensfun \
+#--enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb \
+#--enable-libopenh264 --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse \
+#--enable-librsvg --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr \
+#--enable-libspeex --enable-libsrt --enable-libtesseract --enable-libtheora --enable-libtwolame \
+#--enable-libvidstab --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack \
+#--enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq \
+#--enable-libzvbi --enable-lv2 --enable-nonfree --enable-openal --enable-opencl --enable-chromaprint \
+#--enable-opengl --enable-openssl --enable-postproc --enable-pthreads --enable-version3 \
+#--enable-avresample --enable-frei0r --enable-libx264 --enable-libiec61883 --enable-libdc1394 \
+#--toolchain=hardened --prefix=/usr/local --incdir=/usr/local/include/aarch64-linux-gnu \
+#--libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu

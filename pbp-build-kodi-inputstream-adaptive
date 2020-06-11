@@ -1,0 +1,46 @@
+#!/bin/sh
+
+### Package: pbp-build-kodi-inputstream-adaptive
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: kodi
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/peak3d
+GITTREE=inputstream.adaptive
+GITBRANCH=Matrix
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## CONFIGURE
+mkdir -p pbp-build
+cd pbp-build
+cmake .. -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Debug
+
+## MAKE
+make -j6
+
+## INSTALL
+sudo make install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY

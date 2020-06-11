@@ -1,0 +1,63 @@
+#!/bin/sh
+
+### Package: pbp-update-systempartitions
+### Version: v20200610.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: {linux,linux-hwaccel}
+### System Dependencies: git coreutils wget
+### USAGE: Pass $BLKDEV before command on terminal
+### 		i.e. BLKDEV=/dev/nvme0n1 pbp-update-system-partitions
+
+## VARS
+DATE=`date +%Y%m%d-%H%S`
+DEVDIR=`pwd`/upstream
+PKGDIR=pbp-update-system-partitions_$DATE
+GITBRANCH=v2.0
+
+## DISPLAY BLKDEV
+lsblk -a
+echo "\n*** Select a device to write to, i.e. /dev/mmcblk1 or /dev/nvme0n1. \n"
+echo "\n*** You have selected $BLKDEV. \n"
+
+## CONFIRM BLKDEV
+read -p "*** Continue to write to $BLKDEV ? Y/N:  " CONTINUE
+case $CONTINUE in
+ [Yy] ) echo "*** Continuing..." ;;
+ [Nn] ) echo "*** Cancelling..." && exit ;;
+ * ) echo "*** Y or N" && exit ;;
+esac
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## WGET
+rm -Rf $PKGDIR
+mkdir -p $PKGDIR
+cd $PKGDIR
+wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/idbloader.img
+wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/trust.img
+wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/uboot.img
+
+## CREATE MD5
+echo "763b41dbc3fee4aaf26b720e7722b235  idbloader.img" > v2.0.md5
+echo "2ad66a3fc90823e48fdd081059543709  trust.img" >> v2.0.md5
+echo "c74d819aff8a55626754d55b82732b16  uboot.img" >> v2.0.md5
+
+## CHECK MD5
+if md5sum -c v2.0.md5 --quiet; then
+ echo "\n*** MD5 checksum passed. Writing to device $BLKDEV. \n"
+ sudo dd if=idbloader.img of=${BLKDEV}p1 bs=4096
+ sudo dd if=uboot.img of=${BLKDEV}p2 bs=4096
+ sudo dd if=trust.img of=${BLKDEV}p3 bs=4096
+ echo "\n*** Wrote images to device $BLKDEV. Done. Exiting. \n"
+else
+ echo "MD5 failed. Did NOT write images to device $BLKDEV. Exiting. \n"
+fi
+
+## EXIT
+exit
+
+## ENJOY
