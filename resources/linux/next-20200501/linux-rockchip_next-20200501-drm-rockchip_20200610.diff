@@ -1,4 +1,4 @@
-diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3328.dtsi
 --- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-05-26 03:51:51.021292080 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3328.dtsi	2020-05-26 04:11:08.422213866 -0700
 @@ -801,8 +801,8 @@
@@ -12,7 +12,7 @@ diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3328.dtsi linu
  			<50000000>, <100000000>,
  			<100000000>, <100000000>,
  			<50000000>, <50000000>,
-diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 --- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-05-26 03:51:51.025292138 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-05-26 04:11:08.426213904 -0700
 @@ -1589,7 +1589,7 @@
@@ -33,7 +33,7 @@ diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399.dtsi linu
  		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
  		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
  		iommus = <&vopb_mmu>;
-diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
 --- linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts	2020-05-26 03:51:51.025292138 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts	2020-05-26 04:11:08.422213866 -0700
 @@ -733,3 +733,6 @@
@@ -43,7 +43,7 @@ diff -uNr linux-next_next-20200501/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4
 +
 +/delete-node/ &hdmi_in_vopl;
 +/delete-node/ &vopl_out_hdmi;
-diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3228.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3228.c
 --- linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c	2020-05-26 03:51:51.881304576 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3228.c	2020-05-26 04:11:09.270221951 -0700
 @@ -408,7 +408,7 @@
@@ -55,7 +55,7 @@ diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3228.c linux-rockc
  			RK2928_CLKSEL_CON(27), 1, 1, MFLAGS),
  
  	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
-diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3399.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3399.c
 --- linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c	2020-05-26 03:51:51.881304576 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/drivers/clk/rockchip/clk-rk3399.c	2020-05-26 04:11:09.270221951 -0700
 @@ -103,6 +103,25 @@
@@ -133,7 +133,7 @@ diff -uNr linux-next_next-20200501/drivers/clk/rockchip/clk-rk3399.c linux-rockc
  			RK3399_CLKSEL_CON(49), 8, 2, MFLAGS, 0, 8, DFLAGS,
  			RK3399_CLKGATE_CON(10), 12, GFLAGS),
  
-diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
 --- linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-05-26 03:51:52.689316310 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c	2020-05-26 04:11:10.078229655 -0700
 @@ -79,80 +79,88 @@
@@ -443,7 +443,7 @@ diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c l
  	.phy_data = &rk3328_chip_data,
  	.phy_ops = &rk3328_hdmi_phy_ops,
  	.phy_name = "inno_dw_hdmi_phy2",
-diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
 --- linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-05-26 03:51:52.689316310 -0700
 +++ linux-rockchip_next-20200501-drm-rockchip/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-05-26 04:11:10.082229693 -0700
 @@ -1138,6 +1138,34 @@
@@ -489,113 +489,3 @@ diff -uNr linux-next_next-20200501/drivers/gpu/drm/rockchip/rockchip_drm_vop.c l
  	.mode_fixup = vop_crtc_mode_fixup,
  	.atomic_check = vop_crtc_atomic_check,
  	.atomic_begin = vop_crtc_atomic_begin,
-diff -uNr linux-next_next-20200501/.git/config linux-rockchip_next-20200501-drm-rockchip/.git/config
---- linux-next_next-20200501/.git/config	2020-05-26 03:51:18.656815801 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/config	2020-05-26 04:11:07.570205741 -0700
-@@ -4,5 +4,8 @@
- 	bare = false
- 	logallrefupdates = true
- [remote "origin"]
--	url = https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
--	fetch = +refs/tags/next-20200501:refs/tags/next-20200501
-+	url = https://github.com/Kwiboo/linux-rockchip.git
-+	fetch = +refs/heads/next-20200501-drm-rockchip:refs/remotes/origin/next-20200501-drm-rockchip
-+[branch "next-20200501-drm-rockchip"]
-+	remote = origin
-+	merge = refs/heads/next-20200501-drm-rockchip
-diff -uNr linux-next_next-20200501/.git/FETCH_HEAD linux-rockchip_next-20200501-drm-rockchip/.git/FETCH_HEAD
---- linux-next_next-20200501/.git/FETCH_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/FETCH_HEAD	2020-06-10 20:09:49.766177623 -0700
-@@ -0,0 +1 @@
-+9561778053c93fde2194477897e6db671508cbe6		branch 'next-20200501-drm-rockchip' of https://github.com/Kwiboo/linux-rockchip
-diff -uNr linux-next_next-20200501/.git/HEAD linux-rockchip_next-20200501-drm-rockchip/.git/HEAD
---- linux-next_next-20200501/.git/HEAD	2020-05-26 03:51:50.089278528 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/HEAD	2020-05-26 04:11:07.570205741 -0700
-@@ -1 +1 @@
--fb9d670f57e3f6478602328bbbf71138be06ca4f
-+ref: refs/heads/next-20200501-drm-rockchip
-Binary files linux-next_next-20200501/.git/index and linux-rockchip_next-20200501-drm-rockchip/.git/index differ
-diff -uNr linux-next_next-20200501/.git/logs/HEAD linux-rockchip_next-20200501-drm-rockchip/.git/logs/HEAD
---- linux-next_next-20200501/.git/logs/HEAD	2020-05-26 03:51:50.089278528 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/logs/HEAD	2020-05-26 04:11:07.570205741 -0700
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 fb9d670f57e3f6478602328bbbf71138be06ca4f Michael Gan <mike@gurney> 1590490310 -0700	clone: from https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-+0000000000000000000000000000000000000000 9561778053c93fde2194477897e6db671508cbe6 Michael Gan <mike@gurney> 1590491467 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
-diff -uNr linux-next_next-20200501/.git/logs/refs/heads/next-20200501-drm-rockchip linux-rockchip_next-20200501-drm-rockchip/.git/logs/refs/heads/next-20200501-drm-rockchip
---- linux-next_next-20200501/.git/logs/refs/heads/next-20200501-drm-rockchip	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/logs/refs/heads/next-20200501-drm-rockchip	2020-05-26 04:11:07.570205741 -0700
-@@ -0,0 +1 @@
-+0000000000000000000000000000000000000000 9561778053c93fde2194477897e6db671508cbe6 Michael Gan <mike@gurney> 1590491467 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
-Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.idx and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.idx differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.pack and linux-rockchip_next-20200501-drm-rockchip/.git/objects/pack/pack-ec36e2917f6122abb1bdbdd97ac6aa3a30332d61.pack differ
-diff -uNr linux-next_next-20200501/.git/ORIG_HEAD linux-rockchip_next-20200501-drm-rockchip/.git/ORIG_HEAD
---- linux-next_next-20200501/.git/ORIG_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/ORIG_HEAD	2020-06-10 20:09:49.790177939 -0700
-@@ -0,0 +1 @@
-+9561778053c93fde2194477897e6db671508cbe6
-diff -uNr linux-next_next-20200501/.git/packed-refs linux-rockchip_next-20200501-drm-rockchip/.git/packed-refs
---- linux-next_next-20200501/.git/packed-refs	2020-05-26 03:51:50.029277655 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/packed-refs	2020-05-26 04:11:07.566205703 -0700
-@@ -1,3 +1,2 @@
- # pack-refs with: peeled fully-peeled sorted 
--502e54cc8e13b51da134ed57b027930494aeb110 refs/tags/next-20200501
--^fb9d670f57e3f6478602328bbbf71138be06ca4f
-+9561778053c93fde2194477897e6db671508cbe6 refs/remotes/origin/next-20200501-drm-rockchip
-diff -uNr linux-next_next-20200501/.git/refs/heads/next-20200501-drm-rockchip linux-rockchip_next-20200501-drm-rockchip/.git/refs/heads/next-20200501-drm-rockchip
---- linux-next_next-20200501/.git/refs/heads/next-20200501-drm-rockchip	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/refs/heads/next-20200501-drm-rockchip	2020-05-26 04:11:07.570205741 -0700
-@@ -0,0 +1 @@
-+9561778053c93fde2194477897e6db671508cbe6
-diff -uNr linux-next_next-20200501/.git/shallow linux-rockchip_next-20200501-drm-rockchip/.git/shallow
---- linux-next_next-20200501/.git/shallow	2020-05-26 03:51:18.732816933 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/.git/shallow	2020-05-26 04:09:57.993539356 -0700
-@@ -1 +1 @@
--fb9d670f57e3f6478602328bbbf71138be06ca4f
-+9561778053c93fde2194477897e6db671508cbe6
-diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi
---- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi	2020-05-26 03:51:51.021292080 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3328.dtsi	2020-05-26 04:11:08.422213866 -0700
-@@ -801,8 +801,8 @@
- 			<0>, <24000000>,
- 			<24000000>, <24000000>,
- 			<15000000>, <15000000>,
--			<100000000>, <100000000>,
--			<100000000>, <100000000>,
-+			<300000000>, <100000000>,
-+			<400000000>, <100000000>,
- 			<50000000>, <100000000>,
- 			<100000000>, <100000000>,
- 			<50000000>, <50000000>,
-diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi
---- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi	2020-05-26 03:51:51.025292138 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399.dtsi	2020-05-26 04:11:08.426213904 -0700
-@@ -1589,7 +1589,7 @@
- 		reg = <0x0 0xff8f0000 0x0 0x3efc>;
- 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
- 		assigned-clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
--		assigned-clock-rates = <400000000>, <100000000>;
-+		assigned-clock-rates = <400000000>, <200000000>;
- 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
- 		iommus = <&vopl_mmu>;
-@@ -1646,7 +1646,7 @@
- 		reg = <0x0 0xff900000 0x0 0x3efc>;
- 		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
- 		assigned-clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
--		assigned-clock-rates = <400000000>, <100000000>;
-+		assigned-clock-rates = <400000000>, <200000000>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
- 		iommus = <&vopb_mmu>;
-diff -uNr linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts
---- linux-next_next-20200501/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts	2020-05-26 03:51:51.025292138 -0700
-+++ linux-rockchip_next-20200501-drm-rockchip/scripts/dtc/include-prefixes/arm64/rockchip/rk3399-rock-pi-4.dts	2020-05-26 04:11:08.422213866 -0700
-@@ -733,3 +733,6 @@
- &vopl_mmu {
- 	status = "okay";
- };
-+
-+/delete-node/ &hdmi_in_vopl;
-+/delete-node/ &vopl_out_hdmi;

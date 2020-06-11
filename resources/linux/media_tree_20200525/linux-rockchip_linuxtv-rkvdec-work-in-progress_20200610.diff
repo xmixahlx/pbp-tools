@@ -1,4 +1,4 @@
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/biblio.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/biblio.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/biblio.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/biblio.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/biblio.rst	2020-05-30 15:14:40.547029446 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/biblio.rst	2020-06-06 12:35:20.260119292 -0700
 @@ -414,3 +414,13 @@
@@ -15,7 +15,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/biblio.rst lin
 +:title:     VP9 Bitstream & Decoding Process Specification
 +
 +:author:    Adrian Grange (Google), Peter de Rivaz (Argon Design), Jonathan Hunt (Argon Design)
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst	2020-05-30 15:14:40.551029433 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst	2020-06-06 12:35:20.264119308 -0700
 @@ -2668,6 +2668,556 @@
@@ -642,7 +642,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/ext-ctrls-code
  ``V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE (enum)``
      Specifies the decoding mode to use. Currently exposes slice-based and
      frame-based decoding but new modes might be added later on.
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst	2020-05-30 15:14:40.555029422 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst	2020-06-06 12:35:20.264119308 -0700
 @@ -207,6 +207,7 @@
@@ -653,7 +653,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-compres
  	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
  	Buffers associated with this pixel format must contain the appropriate
  	number of macroblocks to decode a full corresponding frame.
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst	1969-12-31 16:00:00.000000000 -0800
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst	2020-06-06 12:35:20.264119308 -0700
 @@ -0,0 +1,101 @@
@@ -758,7 +758,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv15.rs
 +      - Y
 +      -
 +      - Y
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst	1969-12-31 16:00:00.000000000 -0800
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst	2020-06-06 12:35:20.268119324 -0700
 @@ -0,0 +1,99 @@
@@ -861,7 +861,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/pixfmt-nv20.rs
 +      - Y
 +      - C
 +      - Y
-diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/yuv-formats.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/yuv-formats.rst
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/Documentation/userspace-api/media/v4l/yuv-formats.rst linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/yuv-formats.rst
 --- media_tree_master/Documentation/userspace-api/media/v4l/yuv-formats.rst	2020-05-30 15:14:40.567029386 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/Documentation/userspace-api/media/v4l/yuv-formats.rst	2020-06-06 12:35:20.276119356 -0700
 @@ -61,4 +61,6 @@
@@ -871,7 +871,7 @@ diff -uNr media_tree_master/Documentation/userspace-api/media/v4l/yuv-formats.rs
 +    pixfmt-nv15
 +    pixfmt-nv20
      pixfmt-m420
-diff -uNr media_tree_master/drivers/gpu/drm/drm_fourcc.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/drm_fourcc.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/gpu/drm/drm_fourcc.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/drm_fourcc.c
 --- media_tree_master/drivers/gpu/drm/drm_fourcc.c	2020-05-30 15:14:42.403023873 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/drm_fourcc.c	2020-06-06 12:35:22.092126724 -0700
 @@ -274,6 +274,22 @@
@@ -897,7 +897,7 @@ diff -uNr media_tree_master/drivers/gpu/drm/drm_fourcc.c linux-rockchip_linuxtv-
  	};
  
  	unsigned int i;
-diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
 --- media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-05-30 15:14:42.615023242 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.c	2020-06-06 12:35:22.312127619 -0700
 @@ -248,6 +248,17 @@
@@ -971,7 +971,7 @@ diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.c linux-ro
  		offset += (src->y1 >> 16) * fb->pitches[1] / vsub;
  
  		dma_addr = rk_uv_obj->dma_addr + offset + fb->offsets[1];
-diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
 --- media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.h	2020-05-30 15:14:42.615023242 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_drm_vop.h	2020-06-06 12:35:22.312127619 -0700
 @@ -138,6 +138,7 @@
@@ -982,7 +982,7 @@ diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_drm_vop.h linux-ro
  	struct vop_reg rb_swap;
  	struct vop_reg act_info;
  	struct vop_reg dsp_info;
-diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_vop_reg.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/gpu/drm/rockchip/rockchip_vop_reg.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
 --- media_tree_master/drivers/gpu/drm/rockchip/rockchip_vop_reg.c	2020-05-30 15:14:42.615023242 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/gpu/drm/rockchip/rockchip_vop_reg.c	2020-06-06 12:35:22.312127619 -0700
 @@ -48,6 +48,8 @@
@@ -1010,7 +1010,7 @@ diff -uNr media_tree_master/drivers/gpu/drm/rockchip/rockchip_vop_reg.c linux-ro
  	.rb_swap = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 12),
  	.x_mir_en = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 21),
  	.y_mir_en = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 22),
-diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-common.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-common.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/media/v4l2-core/v4l2-common.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-common.c
 --- media_tree_master/drivers/media/v4l2-core/v4l2-common.c	2020-05-30 15:14:43.247021363 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-common.c	2020-06-06 12:35:22.848129797 -0700
 @@ -268,6 +268,9 @@
@@ -1124,7 +1124,7 @@ diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-common.c linux-rockchip
  	return 0;
  }
  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
-diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-ctrls.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ctrls.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/media/v4l2-core/v4l2-ctrls.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ctrls.c
 --- media_tree_master/drivers/media/v4l2-core/v4l2-ctrls.c	2020-05-30 15:14:43.247021363 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ctrls.c	2020-06-06 12:35:22.848129797 -0700
 @@ -939,6 +939,11 @@
@@ -1448,7 +1448,7 @@ diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-ctrls.c linux-rockchip_
  	case V4L2_CTRL_TYPE_AREA:
  		elem_size = sizeof(struct v4l2_area);
  		break;
-diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-h264.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-h264.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/media/v4l2-core/v4l2-h264.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-h264.c
 --- media_tree_master/drivers/media/v4l2-core/v4l2-h264.c	2020-05-30 15:14:43.247021363 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-h264.c	2020-06-06 12:35:22.848129797 -0700
 @@ -66,10 +66,11 @@
@@ -1465,7 +1465,7 @@ diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-h264.c linux-rockchip_l
  			pic_order_count = dpb[i].bottom_field_order_cnt;
  		else
  			pic_order_count = dpb[i].top_field_order_cnt;
-diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-ioctl.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ioctl.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/media/v4l2-core/v4l2-ioctl.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ioctl.c
 --- media_tree_master/drivers/media/v4l2-core/v4l2-ioctl.c	2020-05-30 15:14:43.247021363 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/media/v4l2-core/v4l2-ioctl.c	2020-06-06 12:35:22.852129813 -0700
 @@ -1315,6 +1315,8 @@
@@ -1485,7 +1485,7 @@ diff -uNr media_tree_master/drivers/media/v4l2-core/v4l2-ioctl.c linux-rockchip_
  		case V4L2_PIX_FMT_HEVC:		descr = "HEVC"; break; /* aka H.265 */
  		case V4L2_PIX_FMT_HEVC_SLICE:	descr = "HEVC Parsed Slice Data"; break;
  		case V4L2_PIX_FMT_FWHT:		descr = "FWHT"; break; /* used in vicodec */
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/Makefile linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/Makefile
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/Makefile linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/Makefile
 --- media_tree_master/drivers/staging/media/rkvdec/Makefile	2020-05-30 15:14:44.771016868 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/Makefile	2020-06-06 12:35:24.060134727 -0700
 @@ -1,3 +1,3 @@
@@ -1493,7 +1493,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/Makefile linux-rockchip
  
 -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
 +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-hevc.o rkvdec-vp9.o
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.c
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec.c	2020-05-30 15:14:44.771016868 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.c	2020-06-06 12:35:24.060134727 -0700
 @@ -67,6 +67,19 @@
@@ -1746,7 +1746,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec.c linux-rockchip
  	return 0;
  }
  
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.h
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec.h	2020-05-30 15:14:44.771016868 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec.h	2020-06-06 12:35:24.060134727 -0700
 @@ -52,6 +52,10 @@
@@ -1776,7 +1776,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec.h linux-rockchip
 +extern const struct rkvdec_coded_fmt_ops rkvdec_vp9_fmt_ops;
 +
  #endif /* RKVDEC_H_ */
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-h264.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-h264.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec-h264.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-h264.c
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec-h264.c	2020-05-30 15:14:44.771016868 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-h264.c	2020-06-06 12:35:24.060134727 -0700
 @@ -18,11 +18,16 @@
@@ -2119,7 +2119,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-h264.c linux-roc
  	assemble_hw_pps(ctx, &run);
  	assemble_hw_rps(ctx, &run);
  	config_registers(ctx, &run);
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-hevc.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-hevc.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec-hevc.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-hevc.c
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec-hevc.c	1969-12-31 16:00:00.000000000 -0800
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-hevc.c	2020-06-06 12:35:24.060134727 -0700
 @@ -0,0 +1,2522 @@
@@ -4645,7 +4645,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-hevc.c linux-roc
 +	.stop = rkvdec_hevc_stop,
 +	.run = rkvdec_hevc_run,
 +};
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-regs.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-regs.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec-regs.h linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-regs.h
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec-regs.h	2020-05-30 15:14:44.771016868 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-regs.h	2020-06-06 12:35:24.060134727 -0700
 @@ -43,6 +43,7 @@
@@ -4656,7 +4656,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-regs.h linux-roc
  #define RKVDEC_MODE_H264				1
  #define RKVDEC_MODE_VP9					2
  #define RKVDEC_RPS_MODE					BIT(24)
-diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-vp9.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-vp9.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/drivers/staging/media/rkvdec/rkvdec-vp9.c linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-vp9.c
 --- media_tree_master/drivers/staging/media/rkvdec/rkvdec-vp9.c	1969-12-31 16:00:00.000000000 -0800
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/drivers/staging/media/rkvdec/rkvdec-vp9.c	2020-06-06 12:35:24.060134727 -0700
 @@ -0,0 +1,1577 @@
@@ -6237,93 +6237,7 @@ diff -uNr media_tree_master/drivers/staging/media/rkvdec/rkvdec-vp9.c linux-rock
 +	.run = rkvdec_vp9_run,
 +	.done = rkvdec_vp9_done,
 +};
-diff -uNr media_tree_master/.git/config linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/config
---- media_tree_master/.git/config	2020-05-30 15:14:40.083030848 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/config	2020-06-06 12:35:19.796117412 -0700
-@@ -4,8 +4,8 @@
- 	bare = false
- 	logallrefupdates = true
- [remote "origin"]
--	url = git://linuxtv.org/media_tree.git
--	fetch = +refs/heads/master:refs/remotes/origin/master
--[branch "master"]
-+	url = https://github.com/kwiboo/linux-rockchip.git
-+	fetch = +refs/heads/linuxtv-rkvdec-work-in-progress:refs/remotes/origin/linuxtv-rkvdec-work-in-progress
-+[branch "linuxtv-rkvdec-work-in-progress"]
- 	remote = origin
--	merge = refs/heads/master
-+	merge = refs/heads/linuxtv-rkvdec-work-in-progress
-diff -uNr media_tree_master/.git/FETCH_HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/FETCH_HEAD
---- media_tree_master/.git/FETCH_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/FETCH_HEAD	2020-06-10 20:29:39.283545796 -0700
-@@ -0,0 +1 @@
-+5b4cef826b66d65dd4ae1d8638208485713cf98f		branch 'linuxtv-rkvdec-work-in-progress' of https://github.com/kwiboo/linux-rockchip
-diff -uNr media_tree_master/.git/HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/HEAD
---- media_tree_master/.git/HEAD	2020-05-30 15:14:40.083030848 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/HEAD	2020-06-06 12:35:19.796117412 -0700
-@@ -1 +1 @@
--ref: refs/heads/master
-+ref: refs/heads/linuxtv-rkvdec-work-in-progress
-Binary files media_tree_master/.git/index and linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/index differ
-diff -uNr media_tree_master/.git/logs/HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/HEAD
---- media_tree_master/.git/logs/HEAD	2020-05-30 15:14:40.083030848 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/HEAD	2020-06-06 12:35:19.796117412 -0700
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 938b29db3aa9c293c7c1366b16e55e308f1a1ddd Michael Gan <mike@gurney> 1590876880 -0700	clone: from git://linuxtv.org/media_tree.git
-+0000000000000000000000000000000000000000 5b4cef826b66d65dd4ae1d8638208485713cf98f Michael Gan <mike@gurney> 1591472119 -0700	clone: from https://github.com/kwiboo/linux-rockchip.git
-diff -uNr media_tree_master/.git/logs/refs/heads/linuxtv-rkvdec-work-in-progress linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/heads/linuxtv-rkvdec-work-in-progress
---- media_tree_master/.git/logs/refs/heads/linuxtv-rkvdec-work-in-progress	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/heads/linuxtv-rkvdec-work-in-progress	2020-06-06 12:35:19.796117412 -0700
-@@ -0,0 +1 @@
-+0000000000000000000000000000000000000000 5b4cef826b66d65dd4ae1d8638208485713cf98f Michael Gan <mike@gurney> 1591472119 -0700	clone: from https://github.com/kwiboo/linux-rockchip.git
-diff -uNr media_tree_master/.git/logs/refs/heads/master linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/heads/master
---- media_tree_master/.git/logs/refs/heads/master	2020-05-30 15:14:40.083030848 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/heads/master	1969-12-31 16:00:00.000000000 -0800
-@@ -1 +0,0 @@
--0000000000000000000000000000000000000000 938b29db3aa9c293c7c1366b16e55e308f1a1ddd Michael Gan <mike@gurney> 1590876880 -0700	clone: from git://linuxtv.org/media_tree.git
-diff -uNr media_tree_master/.git/logs/refs/remotes/origin/HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/remotes/origin/HEAD
---- media_tree_master/.git/logs/refs/remotes/origin/HEAD	2020-05-30 15:14:40.079030861 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/logs/refs/remotes/origin/HEAD	1969-12-31 16:00:00.000000000 -0800
-@@ -1 +0,0 @@
--0000000000000000000000000000000000000000 938b29db3aa9c293c7c1366b16e55e308f1a1ddd Michael Gan <mike@gurney> 1590876880 -0700	clone: from git://linuxtv.org/media_tree.git
-Binary files media_tree_master/.git/objects/pack/pack-4822126e984fac4306dee9eba8041e453150ad06.idx and linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/objects/pack/pack-4822126e984fac4306dee9eba8041e453150ad06.idx differ
-Binary files media_tree_master/.git/objects/pack/pack-4822126e984fac4306dee9eba8041e453150ad06.pack and linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/objects/pack/pack-4822126e984fac4306dee9eba8041e453150ad06.pack differ
-Binary files media_tree_master/.git/objects/pack/pack-ccc85a0eaab877a1867b3ce6e89186cf515e2135.idx and linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/objects/pack/pack-ccc85a0eaab877a1867b3ce6e89186cf515e2135.idx differ
-Binary files media_tree_master/.git/objects/pack/pack-ccc85a0eaab877a1867b3ce6e89186cf515e2135.pack and linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/objects/pack/pack-ccc85a0eaab877a1867b3ce6e89186cf515e2135.pack differ
-diff -uNr media_tree_master/.git/ORIG_HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/ORIG_HEAD
---- media_tree_master/.git/ORIG_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/ORIG_HEAD	2020-06-10 20:29:39.311545952 -0700
-@@ -0,0 +1 @@
-+5b4cef826b66d65dd4ae1d8638208485713cf98f
-diff -uNr media_tree_master/.git/packed-refs linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/packed-refs
---- media_tree_master/.git/packed-refs	2020-05-30 15:14:40.079030861 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/packed-refs	2020-06-06 12:35:19.796117412 -0700
-@@ -1,2 +1,2 @@
- # pack-refs with: peeled fully-peeled sorted 
--938b29db3aa9c293c7c1366b16e55e308f1a1ddd refs/remotes/origin/master
-+5b4cef826b66d65dd4ae1d8638208485713cf98f refs/remotes/origin/linuxtv-rkvdec-work-in-progress
-diff -uNr media_tree_master/.git/refs/heads/linuxtv-rkvdec-work-in-progress linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/heads/linuxtv-rkvdec-work-in-progress
---- media_tree_master/.git/refs/heads/linuxtv-rkvdec-work-in-progress	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/heads/linuxtv-rkvdec-work-in-progress	2020-06-06 12:35:19.796117412 -0700
-@@ -0,0 +1 @@
-+5b4cef826b66d65dd4ae1d8638208485713cf98f
-diff -uNr media_tree_master/.git/refs/heads/master linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/heads/master
---- media_tree_master/.git/refs/heads/master	2020-05-30 15:14:40.083030848 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/heads/master	1969-12-31 16:00:00.000000000 -0800
-@@ -1 +0,0 @@
--938b29db3aa9c293c7c1366b16e55e308f1a1ddd
-diff -uNr media_tree_master/.git/refs/remotes/origin/HEAD linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/remotes/origin/HEAD
---- media_tree_master/.git/refs/remotes/origin/HEAD	2020-05-30 15:14:40.079030861 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/refs/remotes/origin/HEAD	1969-12-31 16:00:00.000000000 -0800
-@@ -1 +0,0 @@
--ref: refs/remotes/origin/master
-diff -uNr media_tree_master/.git/shallow linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/shallow
---- media_tree_master/.git/shallow	2020-05-30 15:13:34.791275393 -0700
-+++ linux-rockchip_linuxtv-rkvdec-work-in-progress/.git/shallow	2020-06-06 12:34:17.267877351 -0700
-@@ -1 +1 @@
--938b29db3aa9c293c7c1366b16e55e308f1a1ddd
-+5b4cef826b66d65dd4ae1d8638208485713cf98f
-diff -uNr media_tree_master/include/media/h264-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/h264-ctrls.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/media/h264-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/h264-ctrls.h
 --- media_tree_master/include/media/h264-ctrls.h	2020-05-30 15:14:45.575014516 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/h264-ctrls.h	2020-06-06 12:35:24.908138181 -0700
 @@ -188,11 +188,12 @@
@@ -6343,7 +6257,7 @@ diff -uNr media_tree_master/include/media/h264-ctrls.h linux-rockchip_linuxtv-rk
  
  struct v4l2_h264_dpb_entry {
  	__u64 reference_ts;
-diff -uNr media_tree_master/include/media/hevc-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/hevc-ctrls.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/media/hevc-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/hevc-ctrls.h
 --- media_tree_master/include/media/hevc-ctrls.h	2020-05-30 15:14:45.575014516 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/hevc-ctrls.h	2020-06-06 12:35:24.908138181 -0700
 @@ -19,6 +19,7 @@
@@ -6443,7 +6357,7 @@ diff -uNr media_tree_master/include/media/hevc-ctrls.h linux-rockchip_linuxtv-rk
 +};
 +
  #endif
-diff -uNr media_tree_master/include/media/v4l2-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/v4l2-ctrls.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/media/v4l2-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/v4l2-ctrls.h
 --- media_tree_master/include/media/v4l2-ctrls.h	2020-05-30 15:14:45.579014505 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/v4l2-ctrls.h	2020-06-06 12:35:24.912138197 -0700
 @@ -21,6 +21,7 @@
@@ -6454,7 +6368,7 @@ diff -uNr media_tree_master/include/media/v4l2-ctrls.h linux-rockchip_linuxtv-rk
  #include <media/hevc-ctrls.h>
  
  /* forward references */
-diff -uNr media_tree_master/include/media/vp9-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/vp9-ctrls.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/media/vp9-ctrls.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/vp9-ctrls.h
 --- media_tree_master/include/media/vp9-ctrls.h	1969-12-31 16:00:00.000000000 -0800
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/media/vp9-ctrls.h	2020-06-06 12:35:24.916138213 -0700
 @@ -0,0 +1,485 @@
@@ -6943,7 +6857,7 @@ diff -uNr media_tree_master/include/media/vp9-ctrls.h linux-rockchip_linuxtv-rkv
 +};
 +
 +#endif /* _VP9_CTRLS_H_ */
-diff -uNr media_tree_master/include/uapi/drm/drm_fourcc.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/drm/drm_fourcc.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/uapi/drm/drm_fourcc.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/drm/drm_fourcc.h
 --- media_tree_master/include/uapi/drm/drm_fourcc.h	2020-05-30 15:14:45.651014295 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/drm/drm_fourcc.h	2020-06-06 12:35:24.976138458 -0700
 @@ -236,6 +236,13 @@
@@ -6985,7 +6899,7 @@ diff -uNr media_tree_master/include/uapi/drm/drm_fourcc.h linux-rockchip_linuxtv
  /*
   * 3 plane YCbCr
   * index 0: Y plane, [7:0] Y
-diff -uNr media_tree_master/include/uapi/linux/videodev2.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/linux/videodev2.h
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' media_tree_master/include/uapi/linux/videodev2.h linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/linux/videodev2.h
 --- media_tree_master/include/uapi/linux/videodev2.h	2020-05-30 15:14:45.707014131 -0700
 +++ linux-rockchip_linuxtv-rkvdec-work-in-progress/include/uapi/linux/videodev2.h	2020-06-06 12:35:25.028138669 -0700
 @@ -608,6 +608,9 @@

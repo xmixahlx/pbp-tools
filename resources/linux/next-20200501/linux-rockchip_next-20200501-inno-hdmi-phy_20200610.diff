@@ -1,4 +1,4 @@
-diff -uNr linux-next_next-20200501/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c linux-rockchip_next-20200501-inno-hdmi-phy/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-next_next-20200501/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c linux-rockchip_next-20200501-inno-hdmi-phy/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
 --- linux-next_next-20200501/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c	2020-05-26 03:51:54.121337088 -0700
 +++ linux-rockchip_next-20200501-inno-hdmi-phy/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c	2020-06-01 12:50:35.278905686 -0700
 @@ -245,6 +245,7 @@
@@ -211,68 +211,3 @@ diff -uNr linux-next_next-20200501/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
  	}
  
  	for (v = 0; v < 14; v++)
-diff -uNr linux-next_next-20200501/.git/config linux-rockchip_next-20200501-inno-hdmi-phy/.git/config
---- linux-next_next-20200501/.git/config	2020-05-26 03:51:18.656815801 -0700
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/config	2020-06-01 12:50:26.174778324 -0700
-@@ -4,5 +4,8 @@
- 	bare = false
- 	logallrefupdates = true
- [remote "origin"]
--	url = https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
--	fetch = +refs/tags/next-20200501:refs/tags/next-20200501
-+	url = https://github.com/Kwiboo/linux-rockchip.git
-+	fetch = +refs/heads/next-20200501-inno-hdmi-phy:refs/remotes/origin/next-20200501-inno-hdmi-phy
-+[branch "next-20200501-inno-hdmi-phy"]
-+	remote = origin
-+	merge = refs/heads/next-20200501-inno-hdmi-phy
-diff -uNr linux-next_next-20200501/.git/FETCH_HEAD linux-rockchip_next-20200501-inno-hdmi-phy/.git/FETCH_HEAD
---- linux-next_next-20200501/.git/FETCH_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/FETCH_HEAD	2020-06-10 20:10:07.002404047 -0700
-@@ -0,0 +1 @@
-+29f68f058011692499526df09f4eafa204402984		branch 'next-20200501-inno-hdmi-phy' of https://github.com/Kwiboo/linux-rockchip
-diff -uNr linux-next_next-20200501/.git/HEAD linux-rockchip_next-20200501-inno-hdmi-phy/.git/HEAD
---- linux-next_next-20200501/.git/HEAD	2020-05-26 03:51:50.089278528 -0700
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/HEAD	2020-06-01 12:50:26.174778324 -0700
-@@ -1 +1 @@
--fb9d670f57e3f6478602328bbbf71138be06ca4f
-+ref: refs/heads/next-20200501-inno-hdmi-phy
-Binary files linux-next_next-20200501/.git/index and linux-rockchip_next-20200501-inno-hdmi-phy/.git/index differ
-diff -uNr linux-next_next-20200501/.git/logs/HEAD linux-rockchip_next-20200501-inno-hdmi-phy/.git/logs/HEAD
---- linux-next_next-20200501/.git/logs/HEAD	2020-05-26 03:51:50.089278528 -0700
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/logs/HEAD	2020-06-01 12:50:26.174778324 -0700
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 fb9d670f57e3f6478602328bbbf71138be06ca4f Michael Gan <mike@gurney> 1590490310 -0700	clone: from https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-+0000000000000000000000000000000000000000 29f68f058011692499526df09f4eafa204402984 Michael Gan <mike@gurney> 1591041026 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
-diff -uNr linux-next_next-20200501/.git/logs/refs/heads/next-20200501-inno-hdmi-phy linux-rockchip_next-20200501-inno-hdmi-phy/.git/logs/refs/heads/next-20200501-inno-hdmi-phy
---- linux-next_next-20200501/.git/logs/refs/heads/next-20200501-inno-hdmi-phy	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/logs/refs/heads/next-20200501-inno-hdmi-phy	2020-06-01 12:50:26.174778324 -0700
-@@ -0,0 +1 @@
-+0000000000000000000000000000000000000000 29f68f058011692499526df09f4eafa204402984 Michael Gan <mike@gurney> 1591041026 -0700	clone: from https://github.com/Kwiboo/linux-rockchip.git
-Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx and linux-rockchip_next-20200501-inno-hdmi-phy/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.idx differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack and linux-rockchip_next-20200501-inno-hdmi-phy/.git/objects/pack/pack-14593e2a0b2910373f584f4d0c3cad70da296fb3.pack differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-25fa971cee9893dc2239e31b97c64e2f9d7bfadf.idx and linux-rockchip_next-20200501-inno-hdmi-phy/.git/objects/pack/pack-25fa971cee9893dc2239e31b97c64e2f9d7bfadf.idx differ
-Binary files linux-next_next-20200501/.git/objects/pack/pack-25fa971cee9893dc2239e31b97c64e2f9d7bfadf.pack and linux-rockchip_next-20200501-inno-hdmi-phy/.git/objects/pack/pack-25fa971cee9893dc2239e31b97c64e2f9d7bfadf.pack differ
-diff -uNr linux-next_next-20200501/.git/ORIG_HEAD linux-rockchip_next-20200501-inno-hdmi-phy/.git/ORIG_HEAD
---- linux-next_next-20200501/.git/ORIG_HEAD	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/ORIG_HEAD	2020-06-10 20:10:07.022404311 -0700
-@@ -0,0 +1 @@
-+29f68f058011692499526df09f4eafa204402984
-diff -uNr linux-next_next-20200501/.git/packed-refs linux-rockchip_next-20200501-inno-hdmi-phy/.git/packed-refs
---- linux-next_next-20200501/.git/packed-refs	2020-05-26 03:51:50.029277655 -0700
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/packed-refs	2020-06-01 12:50:26.170778269 -0700
-@@ -1,3 +1,2 @@
- # pack-refs with: peeled fully-peeled sorted 
--502e54cc8e13b51da134ed57b027930494aeb110 refs/tags/next-20200501
--^fb9d670f57e3f6478602328bbbf71138be06ca4f
-+29f68f058011692499526df09f4eafa204402984 refs/remotes/origin/next-20200501-inno-hdmi-phy
-diff -uNr linux-next_next-20200501/.git/refs/heads/next-20200501-inno-hdmi-phy linux-rockchip_next-20200501-inno-hdmi-phy/.git/refs/heads/next-20200501-inno-hdmi-phy
---- linux-next_next-20200501/.git/refs/heads/next-20200501-inno-hdmi-phy	1969-12-31 16:00:00.000000000 -0800
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/refs/heads/next-20200501-inno-hdmi-phy	2020-06-01 12:50:26.174778324 -0700
-@@ -0,0 +1 @@
-+29f68f058011692499526df09f4eafa204402984
-diff -uNr linux-next_next-20200501/.git/shallow linux-rockchip_next-20200501-inno-hdmi-phy/.git/shallow
---- linux-next_next-20200501/.git/shallow	2020-05-26 03:51:18.732816933 -0700
-+++ linux-rockchip_next-20200501-inno-hdmi-phy/.git/shallow	2020-06-01 12:49:23.145873261 -0700
-@@ -1 +1 @@
--fb9d670f57e3f6478602328bbbf71138be06ca4f
-+29f68f058011692499526df09f4eafa204402984
