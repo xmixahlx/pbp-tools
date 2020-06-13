@@ -1,10 +1,10 @@
 #!/bin/sh
 
 ### Package: pbp-build-kodi
-### Version: v20200610.2300
+### Version: v20200613.1245
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: ffmpeg-v4l2request
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
 
 ## VARS
 DEVDIR=`pwd`/upstream
@@ -38,7 +38,7 @@ cmake .. \
 -DENABLE_TESTING=OFF
 
 ## MAKE
-make -j6
+make -j `nproc`
 
 ## INSTALL
 sudo make install

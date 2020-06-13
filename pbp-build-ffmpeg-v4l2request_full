@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-ffmpeg-v4l2request_full
-### Version: v20200610.2300
+### Version: v20200613.1245
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux-hwaccel
@@ -9,24 +9,20 @@
 ## VARS
 RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
-GITREPO=https://git.ffmpeg.org
-GITTREE=ffmpeg
-GITBRANCH=n4.2.3
-PKGDIR=$GITTREE\_$GITBRANCH
+FFMPEGREL=4.2.3
 
 ## PREP
 set -e
 mkdir -p $DEVDIR
 cd $DEVDIR
+rm -Rf ffmpeg-$FFMPEGREL
 
-## GIT
-[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
-cd $PKGDIR
-git clean -f
-git reset --hard
-git pull
+## DOWNLOAD
+[ -f ffmpeg-$FFMPEGREL.tar.bz2 ] || wget https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
+tar xf ffmpeg-$FFMPEGREL.tar.bz2
 
 ## PATCH
+cd ffmpeg-$FFMPEGREL
 patch -p1 < $RESDIR/ffmpeg/4.2.2/ffmpeg_v4l2-request-hwaccel-4.2.2-rkvdec_20200610.diff
 
 ## CONFIGURE
@@ -50,7 +46,7 @@ patch -p1 < $RESDIR/ffmpeg/4.2.2/ffmpeg_v4l2-request-hwaccel-4.2.2-rkvdec_202006
 --libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
 
 ## BUILD
-make -j6
+make -j `nproc`
 
 ## INSTALL
 sudo make install

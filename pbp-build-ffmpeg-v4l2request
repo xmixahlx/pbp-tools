@@ -18,7 +18,7 @@ cd $DEVDIR
 rm -Rf ffmpeg-$FFMPEGREL
 
 ## DOWNLOAD
-[-f ffmpeg-$FFMPEGREL.tar.bz2 ] || wget https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
+[ -f ffmpeg-$FFMPEGREL.tar.bz2 ] || wget https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
 tar xf ffmpeg-$FFMPEGREL.tar.bz2
 
 ## PATCH
