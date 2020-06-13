@@ -1,0 +1,17 @@
+--- addon.xml.orig	2020-06-13 13:45:34.508697806 -0700
++++ addon.xml	2020-06-13 13:45:51.508708485 -0700
+@@ -4,13 +4,12 @@
+         version="0.5.7"
+         provider-name="Jellyfin Contributors, angelblue05">
+   <requires>
+-    <import addon="xbmc.python" version="2.25.0"/>
++    <import addon="xbmc.python" version="3.0.0"/>
+     <import addon="script.module.requests" version="2.22.0"/>
+     <import addon="script.module.dateutil" version="2.7.3"/>
+     <import addon="script.module.six" version="1.13.0"/>
+     <import addon="script.module.kodi-six" />
+     <import addon="script.module.addon.signals" version="0.0.1"/>
+-    <import addon="script.module.futures" version="2.2.0"/>
+   </requires>
+   <extension    point="xbmc.python.pluginsource"
+                 library="default.py">

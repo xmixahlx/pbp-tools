@@ -1,0 +1,43 @@
+#!/bin/sh
+
+### Package: pbp-build-jellyfin-kodi
+### Version: v20200613.1400
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+
+## VARS
+DATE=`date +%Y%m%d%H%S`
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/jellyfin
+GITTREE=jellyfin-kodi
+GITBRANCH=master
+PKGDIR=plugin.video.jellyfin
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## PATCH
+patch -p0 < $RESDIR/jellyfin-kodi/matrix/jellyfin-kodi_matrix.diff
+
+## ZIP
+cd ..
+zip -r plugin.video.jellyfin_git$DATE.zip plugin.video.jellyfin
+
+## EXIT
+exit
+
+## ENJOY
+
+## POST SCRIPT INSTALL
+# install zip package manually in kodi via ui
