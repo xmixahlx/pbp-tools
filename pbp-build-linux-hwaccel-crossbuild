@@ -1,0 +1,59 @@
+#!/bin/sh
+
+### Package: pbp-build-linux-hwaccel-crosscompile
+### Version: v20200613.2052
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+LINUXREL=5.7
+BUILDCONFIG="ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
+KERNELCONFIG="INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image"
+TCPU=cortex-a72.cortex-a53
+TOPTS=+crypto+crc+simd
+TARCH=armv8-a
+BUILDOPTS="-O2 -pipe"
+GCCARMPKG=gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu
+GCCARMDIR=$DEVDIR/$GCCARMPKG
+
+## PATH
+export PATH=$GCCARMDIR/bin:$PATH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GCC
+[ -f $GCCARMPKG.tar.xz ] || wget https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/$GCCARMPKG.tar.xz
+[ -d $GCCARMDIR ] || tar xf $GCCARMPKG.tar.xz
+
+## LINUX
+rm -Rf linux-$LINUXREL
+[ -f linux-$LINUXREL.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$LINUXREL.tar.xz
+tar xf linux-$LINUXREL.tar.xz
+cd linux-$LINUXREL
+
+## PATCH
+patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current.diff
+patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current-hwaccel.diff
+
+## CONFIG
+cp $RESDIR/linux/config_current .config
+
+## OLDCONFIG
+make -j `nproc` $BUILDCONFIG oldconfig
+
+## MENUCONFIG
+make -j `nproc` $BUILDCONFIG menuconfig
+
+## MAKE
+KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
+KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
+make -j `nproc` $BUILDCONFIG $KERNELCONFIG bindeb-pkg;
+
+## EXIT
+exit
