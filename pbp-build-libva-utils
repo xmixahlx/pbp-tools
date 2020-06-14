@@ -1,0 +1,45 @@
+#!/bin/sh
+
+### Package: pbp-build-libva-utils
+### Version: v20200613.2355
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/intel
+GITTREE=libva-utils
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## CONFIGURE
+meson pbp-build -Dprefix=/usr/local -Dbuildtype=release --libdir=/usr/local/lib/aarch64-linux-gnu
+
+## BUILD
+ninja -C pbp-build
+
+## INSTALL
+sudo ninja -C pbp-build install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
