@@ -5,6 +5,7 @@
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+### Script Optional: libudfread, jellyfin-kodi, kodi-inputstream-adaptive
 
 ## VARS
 DEVDIR=`pwd`/upstream

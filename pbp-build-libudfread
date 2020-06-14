@@ -1,16 +1,16 @@
 #!/bin/sh
 
-### Package: pbp-build-kodi-inputstream-adaptive
-### Version: v20200613.1245
+### Package: pbp-build-libudfread
+### Version: v20200613.2008
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request, kodi
+### Script Dependencies:  (none)
 
 ## VARS
 DEVDIR=`pwd`/upstream
-GITREPO=https://github.com/peak3d
-GITTREE=inputstream.adaptive
-GITBRANCH=Matrix
+GITREPO=https://code.videolan.org/videolan
+GITTREE=libudfread
+GITBRANCH=master
 PKGDIR=$GITTREE\_$GITBRANCH
 
 ## PREP
@@ -25,13 +25,9 @@ git clean -f
 git reset --hard
 git pull
 
-## CLEAN
-rm -Rf pbp-build
-
 ## CONFIGURE
-mkdir -p pbp-build
-cd pbp-build
-cmake .. -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Debug
+./bootstrap
+./configure --prefix=/usr/local
 
 ## MAKE
 make -j `nproc`

@@ -4,7 +4,7 @@
 ### Version: v20200613.1400
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request, kodi
 
 ## VARS
 DATE=`date +%Y%m%d%H%S`
