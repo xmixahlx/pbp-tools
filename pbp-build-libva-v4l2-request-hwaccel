@@ -1,0 +1,52 @@
+#!/bin/sh
+
+### Package: pbp-build-libva-v4l2-request-hwaccel
+### Version: v20200613.2119
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request, libva-hwaccel
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/bootlin
+GITTREE=libva-v4l2-request
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## PATCHES
+[ -f libva-v4l2-request_28.patch ] || wget https://patch-diff.githubusercontent.com/raw/bootlin/libva-v4l2-request/pull/28.patch -O libva-v4l2-request_28.patch
+[ -f libva-v4l2-request_29.patch ] || wget https://patch-diff.githubusercontent.com/raw/bootlin/libva-v4l2-request/pull/29.patch -O libva-v4l2-request_29.patch
+[ -f libva-v4l2-request_30.patch ] || wget https://patch-diff.githubusercontent.com/raw/bootlin/libva-v4l2-request/pull/30.patch -O libva-v4l2-request_30.patch
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## PATCH
+patch -p1 < ../libva-v4l2-request_28.patch
+patch -p1 < ../libva-v4l2-request_29.patch
+patch -p1 < ../libva-v4l2-request_30.patch
+
+## CONFIGURE
+meson pbp-build -Dprefix=/usr/local -Dbuildtype=release --libdir=/usr/local/lib/aarch64-linux-gnu
+
+## BUILD
+ninja -C pbp-build
+
+## INSTALL
+sudo ninja -C pbp-build install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
