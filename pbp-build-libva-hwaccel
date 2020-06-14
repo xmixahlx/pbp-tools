@@ -1,0 +1,56 @@
+#!/bin/sh
+
+### Package: pbp-build-libva-hwaccel
+### Version: v20200613.2132
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/intel
+GITTREE=libva
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## PATCHES
+[ -f libva-332.patch ] || wget https://patch-diff.githubusercontent.com/raw/intel/libva/pull/332.patch -O libva_332.patch
+[ -f libva-340.patch ] || wget https://patch-diff.githubusercontent.com/raw/intel/libva/pull/340.patch -O libva_340.patch
+
+## EDIT
+[ -f libva_332-edit.patch ] || head -n 134 libva_332.patch > libva_332-edit.patch
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## PATCH
+patch -p1 < ../libva_332-edit.patch
+patch -p1 < ../libva_340.patch
+
+## CONFIGURE
+meson pbp-build -Dprefix=/usr/local -Dbuildtype=release --libdir=/usr/local/lib/aarch64-linux-gnu
+
+## BUILD
+ninja -C pbp-build
+
+## INSTALL
+sudo ninja -C pbp-build install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
