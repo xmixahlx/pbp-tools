@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-linux-hwaccel
-### Version: v20200613.1245
+### Version: v20200613.2318
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -9,10 +9,11 @@
 ## VARS
 RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
-GITREPO=https://gitlab.manjaro.org/tsys
-GITTREE=linux-pinebook-pro
-GITBRANCH=v5.7
-PKGDIR=$GITTREE\_$GITBRANCH
+LINUXREL=5.7
+#GITREPO=https://gitlab.manjaro.org/tsys
+#GITTREE=linux-pinebook-pro
+#GITBRANCH=v5.7
+#PKGDIR=$GITTREE\_$GITBRANCH
 
 ## PREP
 set -e
@@ -20,17 +21,21 @@ mkdir -p $DEVDIR
 cd $DEVDIR
 
 ## GIT
-[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
-cd $PKGDIR
-git clean -f
-git reset --hard
-git pull
+#[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+#cd $PKGDIR
+#git clean -f
+#git reset --hard
+#git pull
 
-## CLEAN
-make mrproper
+## LINUX
+rm -Rf linux-$LINUXREL
+[ -f linux-$LINUXREL.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$LINUXREL.tar.xz
+tar xf linux-$LINUXREL.tar.xz
+cd linux-$LINUXREL
 
 ## PATCH
-patch -p1 < $RESDIR/linux/linux-pinebook-pro_v5.7_current-hwaccel.diff
+patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current.diff
+patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current-hwaccel.diff
 
 ## CONFIG
 cp $RESDIR/linux/config_current .config
