@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-linux-hwaccel
-### Version: v20200613.2318
+### Version: v20200613.2355
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -10,43 +10,32 @@
 RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
 LINUXREL=5.7
-#GITREPO=https://gitlab.manjaro.org/tsys
-#GITTREE=linux-pinebook-pro
-#GITBRANCH=v5.7
-#PKGDIR=$GITTREE\_$GITBRANCH
+
+## OVERRIDE stable with HWACCELREL=testing
+if [ -z $HWACCELREL ]; then
+ HWACCELREL=stable
+fi
 
 ## PREP
 set -e
 mkdir -p $DEVDIR
 cd $DEVDIR
 
-## GIT
-#[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
-#cd $PKGDIR
-#git clean -f
-#git reset --hard
-#git pull
-
-## LINUX
+## GET
 rm -Rf linux-$LINUXREL
 [ -f linux-$LINUXREL.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$LINUXREL.tar.xz
 tar xf linux-$LINUXREL.tar.xz
 cd linux-$LINUXREL
 
 ## PATCH
-patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current.diff
-patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current-hwaccel.diff
+patch -p1 < $RESDIR/linux/linux-pinebookpro-hwaccel_current-$HWACCELREL.diff
 
-## CONFIG
-cp $RESDIR/linux/config_current .config
-
-## OLDCONFIG
+## CONFIGURE
+cp $RESDIR/linux/hwaccel-config_current .config
 make oldconfig
-
-## MENUCONFIG
 make menuconfig
 
-## MAKE
+## BUILD
 make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
 
 ## EXIT
