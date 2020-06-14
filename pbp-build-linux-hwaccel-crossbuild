@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-linux-hwaccel-crosscompile
-### Version: v20200613.2052
+### Version: v20200613.2355
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -19,6 +19,11 @@ BUILDOPTS="-O2 -pipe"
 GCCARMPKG=gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu
 GCCARMDIR=$DEVDIR/$GCCARMPKG
 
+## OVERRIDE stable with HWACCELREL=testing
+if [ -z $HWACCELREL ]; then
+ HWACCELREL=stable
+fi
+
 ## PATH
 export PATH=$GCCARMDIR/bin:$PATH
 
@@ -31,26 +36,21 @@ cd $DEVDIR
 [ -f $GCCARMPKG.tar.xz ] || wget https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/$GCCARMPKG.tar.xz
 [ -d $GCCARMDIR ] || tar xf $GCCARMPKG.tar.xz
 
-## LINUX
+## GET
 rm -Rf linux-$LINUXREL
 [ -f linux-$LINUXREL.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$LINUXREL.tar.xz
 tar xf linux-$LINUXREL.tar.xz
-cd linux-$LINUXREL
 
 ## PATCH
-patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current.diff
-patch -p1 < $RESDIR/linux/linux-pinebook-pro_v${LINUXREL}_current-hwaccel.diff
+cd linux-$LINUXREL
+patch -p1 < $RESDIR/linux/linux-pinebookpro-hwaccel_current-$HWACCELREL.diff
 
-## CONFIG
-cp $RESDIR/linux/config_current .config
-
-## OLDCONFIG
+## CONFIGURE
+cp $RESDIR/linux/hwaccel-config_current .config
 make -j `nproc` $BUILDCONFIG oldconfig
-
-## MENUCONFIG
 make -j `nproc` $BUILDCONFIG menuconfig
 
-## MAKE
+## BUILD
 KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
 KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
 make -j `nproc` $BUILDCONFIG $KERNELCONFIG bindeb-pkg;

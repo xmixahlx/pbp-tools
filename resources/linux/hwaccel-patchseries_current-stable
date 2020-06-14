@@ -1,9 +1,8 @@
+resources/linux/5.7.0/linux-5.7_pinebookpro_20200610.diff 
 resources/linux/5.7.0/linux-rockchip_rockchip-5.7-from-5.8-v5.7_20200610.diff 
 resources/linux/5.7.0/linux-rockchip_drm-5.7-from-5.8-v5.7_20200610.diff 
 resources/linux/5.7.0/linux-rockchip_v4l2-5.7-from-5.8-v5.7_20200610.diff 
 resources/linux/5.7.0/linux-export-mm_trace_rss_stat.patch 
 resources/linux/media_tree_20200525/linux-rockchip_linuxtv-rkvdec-work-in-progress_20200610.diff 
-resources/linux/next-20200501/linux-rockchip_next-20200501-inno-hdmi-phy_20200610.diff 
-resources/linux/next-20200501/linux-rockchip_next-20200501-drm-rockchip_20200610.diff 
 resources/linux/5.7.y/linux-5.7.1_inc_5.7.0.diff 
 resources/linux/5.7.y/linux-5.7.2_inc_5.7.1.diff 
