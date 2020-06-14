@@ -1,16 +1,15 @@
 #!/bin/sh
 
 ### Package: pbp-update-systempartitions
-### Version: v20200610.2300
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: {linux,linux-hwaccel}
-### System Dependencies: git coreutils wget
+### Script Dependencies: linux
 ### USAGE: Pass $BLKDEV before command on terminal
 ### 		i.e. BLKDEV=/dev/nvme0n1 pbp-update-system-partitions
 
 ## VARS
-DATE=`date +%Y%m%d-%H%S`
+DATE=`date +%Y%m%d%H%S`
 DEVDIR=`pwd`/upstream
 PKGDIR=pbp-update-system-partitions_$DATE
 GITBRANCH=v2.0

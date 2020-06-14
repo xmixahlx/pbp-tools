@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-build-linux-hwaccel-crosscompile
-### Version: v20200613.2355
+### Package: pbp-build-linux-crosscompile
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -23,6 +23,8 @@ GCCARMDIR=$DEVDIR/$GCCARMPKG
 if [ -z $HWACCELREL ]; then
  HWACCELREL=stable
 fi
+
+echo "HWACCELREL selected is $HWACCELREL."
 
 ## PATH
 export PATH=$GCCARMDIR/bin:$PATH

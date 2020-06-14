@@ -1,10 +1,10 @@
 #!/bin/sh
 
-### Package: pbp-build-libva-hwaccel
-### Version: v20200613.2132
+### Package: pbp-build-libva
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
+### Script Dependencies: linux, ffmpeg
 
 ## VARS
 RESDIR=`pwd`/resources

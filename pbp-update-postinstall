@@ -1,10 +1,10 @@
 #!/bin/sh
 
 ### Package: pbp-update-postinstall
-### Version: v20200610.2300
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: {linux,linux-hwaccel}
+### Script Dependencies: linux
 
 ## VARS
 DEVDIR=`pwd`/upstream

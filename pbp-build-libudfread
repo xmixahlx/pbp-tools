@@ -4,7 +4,7 @@
 ### Version: v20200613.2008
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies:  (none)
+### Script Dependencies: (none)
 
 ## VARS
 DEVDIR=`pwd`/upstream

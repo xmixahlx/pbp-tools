@@ -1,18 +1,25 @@
 #!/bin/sh
 
 ### Package: pbp-update-ap6256-firmware
-### Version: v20200610.2300
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: {linux,linux-hwaccel}
+### Script Dependencies: linux
 
 ## VARS
-DATE=`date +%Y%m%d-%H%S`
+DATE=`date +%Y%m%d%H%S`
 DEVDIR=`pwd`/upstream
 GITREPO=https://gitlab.manjaro.org/manjaro-arm/packages/community
 GITTREE=ap6256-firmware
 GITBRANCH=master
 PKGDIR=$GITTREE\_$GITBRANCH\_$DATE
+
+## OVERRIDE stable with FIRMWARE=upstream
+if [ -z $FIRMWARE ];then
+ FIRMWARE=stable
+fi
+
+echo "FIRMWARE selected is $FIRMWARE."
 
 ## PREP
 set -e
@@ -27,7 +34,9 @@ git reset --hard
 git pull
 
 ## CHECKOUT OLD FIRMWARE
-git checkout a30bf312b268eab42d38fab0cc3ed3177895ff5d
+if [ $FIRMWARE = stable ];then
+ git checkout a30bf312b268eab42d38fab0cc3ed3177895ff5d
+fi
 
 ## INSTALL
 sudo mv -f /usr/lib/firmware/brcm /usr/lib/firmware/brcm-$DATE

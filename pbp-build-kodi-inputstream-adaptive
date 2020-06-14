@@ -1,10 +1,10 @@
 #!/bin/sh
 
 ### Package: pbp-build-kodi-inputstream-adaptive
-### Version: v20200613.1245
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request, kodi
+### Script Dependencies: linux, ffmpeg, kodi
 
 ## VARS
 DEVDIR=`pwd`/upstream

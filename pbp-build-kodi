@@ -1,11 +1,10 @@
 #!/bin/sh
 
 ### Package: pbp-build-kodi
-### Version: v20200613.1245
+### Version: v20200614.1420
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: linux-hwaccel, ffmpeg-v4l2request
-### Script Optional: libudfread, jellyfin-kodi, kodi-inputstream-adaptive
+### Script Dependencies: linux, ffmpeg
 
 ## VARS
 DEVDIR=`pwd`/upstream
