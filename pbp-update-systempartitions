@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-update-systempartitions
-### Version: v20200614.1420
+### Version: v20200615.0830
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -10,14 +10,16 @@
 
 ## VARS
 DATE=`date +%Y%m%d%H%S`
+RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
-PKGDIR=pbp-update-system-partitions_$DATE
 GITBRANCH=v2.0
+PKGDIR=pbp-update-systempartitions_$GITBRANCH
 
 ## DISPLAY BLKDEV
 lsblk -a
-echo "\n*** Select a device to write to, i.e. /dev/mmcblk1 or /dev/nvme0n1. \n"
-echo "\n*** You have selected $BLKDEV. \n"
+echo "\n*** Select a device to write to with BLKDEV variable on commandline, i.e. /dev/mmcblk1 or /dev/nvme0n1."
+echo "\n*** BLKDEV selected is $BLKDEV."
+echo "\n*** Writing system partitions {idbloader,trust,uboot} to ${BLKDEV}p1 to p3.\n"
 
 ## CONFIRM BLKDEV
 read -p "*** Continue to write to $BLKDEV ? Y/N:  " CONTINUE
@@ -33,27 +35,22 @@ mkdir -p $DEVDIR
 cd $DEVDIR
 
 ## WGET
-rm -Rf $PKGDIR
 mkdir -p $PKGDIR
 cd $PKGDIR
-wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/idbloader.img
-wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/trust.img
-wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/uboot.img
-
-## CREATE MD5
-echo "763b41dbc3fee4aaf26b720e7722b235  idbloader.img" > v2.0.md5
-echo "2ad66a3fc90823e48fdd081059543709  trust.img" >> v2.0.md5
-echo "c74d819aff8a55626754d55b82732b16  uboot.img" >> v2.0.md5
+[ -f idbloader.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/idbloader.img
+[ -f trust.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/trust.img
+[ -f uboot.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/uboot.img
 
 ## CHECK MD5
-if md5sum -c v2.0.md5 --quiet; then
+if md5sum -c $RESDIR/systempartitions/$GITBRANCH.md5 --quiet; then
  echo "\n*** MD5 checksum passed. Writing to device $BLKDEV. \n"
  sudo dd if=idbloader.img of=${BLKDEV}p1 bs=4096
  sudo dd if=uboot.img of=${BLKDEV}p2 bs=4096
  sudo dd if=trust.img of=${BLKDEV}p3 bs=4096
  echo "\n*** Wrote images to device $BLKDEV. Done. Exiting. \n"
 else
- echo "MD5 failed. Did NOT write images to device $BLKDEV. Exiting. \n"
+ echo "MD5 failed. Did NOT write images to device $BLKDEV. Deleting IMG files and exiting. \n"
+ rm idbloader.img trust.img uboot.img
 fi
 
 ## EXIT
