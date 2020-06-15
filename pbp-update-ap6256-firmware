@@ -12,14 +12,15 @@ DEVDIR=`pwd`/upstream
 GITREPO=https://gitlab.manjaro.org/manjaro-arm/packages/community
 GITTREE=ap6256-firmware
 GITBRANCH=master
-PKGDIR=$GITTREE\_$GITBRANCH\_$DATE
 
-## OVERRIDE stable with FIRMWARE=upstream
-if [ -z $FIRMWARE ];then
- FIRMWARE=stable
+## OVERRIDE with GITCHECKOUT=master or other commit
+if [ -z $GITCHECKOUT ];then
+ GITCHECKOUT=a30bf312b268eab42d38fab0cc3ed3177895ff5d
 fi
 
-echo "FIRMWARE selected is $FIRMWARE."
+PKGDIR=$GITTREE\_$GITBRANCH
+
+echo "\n*** GITCHECKOUT selected is $GITCHECKOUT.\n"
 
 ## PREP
 set -e
@@ -27,18 +28,16 @@ mkdir -p $DEVDIR
 cd $DEVDIR
 
 ## GIT
+echo "\n*** GIT.\n"
 [ -d $PKGDIR ] || git clone $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
 cd $PKGDIR
 git clean -f
-git reset --hard
-git pull
-
-## CHECKOUT OLD FIRMWARE
-if [ $FIRMWARE = stable ];then
- git checkout a30bf312b268eab42d38fab0cc3ed3177895ff5d
-fi
+git reset --hard HEAD
+git pull origin $GITBRANCH
+git checkout $GITCHECKOUT
 
 ## INSTALL
+echo "\n*** INSTALLING.\n"
 sudo mv -f /usr/lib/firmware/brcm /usr/lib/firmware/brcm-$DATE
 sudo mkdir -p /usr/lib/firmware/brcm
 sudo install -Dm644 "BCM4345C5.hcd" /usr/lib/firmware/brcm/
@@ -48,6 +47,7 @@ sudo install -Dm644 "brcmfmac43456-sdio.clm_blob" /usr/lib/firmware/brcm/brcmfma
 sudo ln -s /usr/lib/firmware/brcm/brcmfmac43456-sdio.txt /usr/lib/firmware/brcm/brcmfmac43456-sdio.pine64,pinebook-pro.txt
 
 ## EXIT
+echo "\n*** DONE."
 exit
 
 # ENJOY
