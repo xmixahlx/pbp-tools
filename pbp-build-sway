@@ -18,10 +18,12 @@ mkdir -p $DEVDIR
 cd $DEVDIR
 
 ## LOOP
-## GIT
 for GITTREE in wlroots sway swaybg swayidle swaylock;do
+ ## VAR
  PKGDIR=$GITTREE\_$GITBRANCH
- [ -d $GITTREE ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+
+ ## GIT
+ [ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
  cd $PKGDIR
  git clean -f
  git reset --hard
@@ -39,6 +41,7 @@ for GITTREE in wlroots sway swaybg swayidle swaylock;do
  ## INSTALL
  sudo ninja -C pbp-build install
  sudo ldconfig
+
  ## BACK
  cd ..
 done
