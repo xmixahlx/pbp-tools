@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-kodi
-### Version: v20200614.1420
+### Version: v20200615.2130
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux, ffmpeg
@@ -12,6 +12,21 @@ GITREPO=https://github.com/xbmc
 GITTREE=xbmc
 GITBRANCH=master
 PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y build-dep kodi
+ fi
+fi
+
+## OVERRIDES
+# Override external with BUILDCONFIG=internal to bypass unavailable system dependencies.
+if [ -z $BUILDCONFIG ]; then
+ BUILDCONFIG=external
+fi
+echo "\n*** BUILDCONFIG selected is $BUILDCONFIG.\n"
 
 ## PREP
 set -e
@@ -31,11 +46,34 @@ rm -Rf pbp-build
 ## CONFIGURE
 mkdir -p pbp-build
 cd pbp-build
-cmake .. \
--DCORE_PLATFORM_NAME=gbm \
--DGBM_RENDER_SYSTEM=gles \
--DFFMPEG_PATH=$SYSROOT_PREFIX/usr/local \
--DENABLE_TESTING=OFF
+
+if [ $BUILDCONFIG = external ]; then
+ echo "\n*** Building with external BUILDCONFIG.\n"
+ cmake .. \
+ -DCMAKE_INSTALL_PREFIX=/usr/local \
+ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib/aarch64-linux-gnu \
+ -DFFMPEG_PATH=/usr/local \
+ -DCORE_PLATFORM_NAME=gbm \
+ -DGBM_RENDER_SYSTEM=gles \
+ -DENABLE_TESTING=OFF \
+ -DENABLE_INTERNAL_CROSSGUID=OFF
+fi
+
+if [ $BUILDCONFIG = internal ]; then
+ echo "\n*** Building with internal BUILDCONFIG.\n"
+ cmake .. \
+ -DCMAKE_INSTALL_PREFIX=/usr/local \
+ -DCMAKE_INSTALL_LIBDIR=/usr/local/lib/aarch64-linux-gnu \
+ -DFFMPEG_PATH=/usr/local \
+ -DCORE_PLATFORM_NAME=gbm \
+ -DGBM_RENDER_SYSTEM=gles \
+ -DENABLE_TESTING=OFF \
+ -DENABLE_INTERNAL_FMT=ON \
+ -DENABLE_INTERNAL_CROSSGUID=ON \
+ -DENABLE_INTERNAL_FSTRCMP=ON \
+ -DENABLE_INTERNAL_FLATBUFFERS=ON \
+ -DENABLE_INTERNAL_SPDLOG=ON
+fi
 
 ## MAKE
 make -j `nproc`

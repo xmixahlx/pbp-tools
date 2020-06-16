@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-ffmpeg
-### Version: v20200614.1420
+### Version: v20200615.2130
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -11,12 +11,19 @@ RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
 FFMPEGREL=4.2.3
 
-## OVERRIDE basic with FFMPEGCONFIG=full
-if [ -z $FFMPEGCONFIG ]; then
- FFMPEGCONFIG=basic
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+ sudo apt-get build-dep ffmpeg
+ fi
 fi
 
-echo "FFMPEGCONFIG selected is $FFMPEGCONFIG."
+## OVERRIDE basic with BUILDCONFIG=full
+if [ -z $BUILDCONFIG ]; then
+ BUILDCONFIG=basic
+fi
+echo "\n*** BUILDCONFIG selected is $BUILDCONFIG.\n"
 
 ## PREP
 set -e
@@ -33,13 +40,29 @@ cd ffmpeg-$FFMPEGREL
 patch -p1 < $RESDIR/ffmpeg/4.2.2/ffmpeg_v4l2-request-hwaccel-4.2.2-rkvdec_20200610.diff
 
 ## CONFIGURE
-if [ $FFMPEGCONFIG = basic ];then
-  ./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic \
-  --enable-shared --prefix=/usr/local --incdir=/usr/local/include/aarch64-linux-gnu \
-  --libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
+if [ $BUILDCONFIG = basic ]; then
+ echo "\n*** Using basic BUILDCONFIG.\n"
+ ./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic --enable-shared \
+ --enable-avfilter --enable-postproc --enable-avresample --enable-pthreads --enable-gpl \
+ --enable-nonfree --enable-version3 \
+ --toolchain=hardened --prefix=/usr/local \
+ --libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
 fi
-
-if [ $FFMPEGCONFIG = full ];then
+if [ $BUILDCONFIG = standard ]; then
+ echo "\n*** Using standard BUILDCONFIG.\n"
+ ./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic --enable-shared \
+ --enable-avfilter --enable-gcrypt --enable-gpl --enable-libass --enable-libbluray --enable-libdav1d \
+ --enable-libfdk-aac --enable-libfontconfig --enable-libfreetype --enable-libmp3lame \
+ --enable-libopenh264 --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse \
+ --enable-librsvg --enable-libspeex --enable-libsrt --enable-libtheora --enable-libtwolame \
+ --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx265 \
+ --enable-libxml2 --enable-libxvid --enable-nonfree --enable-opengl --enable-openssl --enable-postproc \
+ --enable-pthreads --enable-version3 --enable-avresample --enable-libx264 \
+ --toolchain=hardened --prefix=/usr/local \
+ --libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
+fi
+if [ $BUILDCONFIG = full ]; then
+ echo "\n*** Using full BUILDCONFIG.\n"
  ./configure --enable-v4l2-request --enable-libdrm --enable-libudev --enable-pic --enable-shared \
  --disable-decoder=amrnb --disable-decoder=libopenjpeg --disable-gnutls --disable-libopencv \
  --disable-podpages --disable-sndio --disable-stripping --enable-avfilter --enable-gcrypt \
@@ -56,7 +79,7 @@ if [ $FFMPEGCONFIG = full ];then
  --enable-libzvbi --enable-lv2 --enable-nonfree --enable-openal --enable-opencl --enable-chromaprint \
  --enable-opengl --enable-openssl --enable-postproc --enable-pthreads --enable-version3 \
  --enable-avresample --enable-frei0r --enable-libx264 --enable-libiec61883 --enable-libdc1394 \
- --toolchain=hardened --prefix=/usr/local --incdir=/usr/local/include/aarch64-linux-gnu \
+ --toolchain=hardened --prefix=/usr/local \
  --libdir=/usr/local/lib/aarch64-linux-gnu --shlibdir=/usr/local/lib/aarch64-linux-gnu
 fi
 

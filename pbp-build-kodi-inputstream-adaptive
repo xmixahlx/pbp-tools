@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-kodi-inputstream-adaptive
-### Version: v20200614.1420
+### Version: v20200615.2130
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux, ffmpeg, kodi
@@ -31,7 +31,7 @@ rm -Rf pbp-build
 ## CONFIGURE
 mkdir -p pbp-build
 cd pbp-build
-cmake .. -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Debug
+cmake ..
 
 ## MAKE
 make -j `nproc`
