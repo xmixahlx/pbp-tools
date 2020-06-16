@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-libudfread
-### Version: v20200613.2008
+### Version: v20200615.2009
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -27,7 +27,7 @@ git pull
 
 ## CONFIGURE
 ./bootstrap
-./configure --prefix=/usr/local
+./configure --prefix=/usr/local --libdir=/usr/local/lib/aarch64-linux-gnu
 
 ## MAKE
 make -j `nproc`
