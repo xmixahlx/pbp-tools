@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-ffmpeg
-### Version: v20200615.2130
+### Version: v20200615.2230
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -15,7 +15,8 @@ FFMPEGREL=4.2.3
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
- sudo apt-get build-dep ffmpeg
+ sudo apt-get -y build-dep ffmpeg
+ sudo apt-get -y install wget tar bzip2 patch make
  fi
 fi
 
