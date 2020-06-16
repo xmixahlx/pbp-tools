@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-build-linux-crosscompile
-### Version: v20200614.1420
+### Version: v20200615.2230
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -19,12 +19,43 @@ BUILDOPTS="-O2 -pipe"
 GCCARMPKG=gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu
 GCCARMDIR=$DEVDIR/$GCCARMPKG
 
-## OVERRIDE stable with HWACCELREL=testing
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+ sudo apt-get -y install build-essential bc kmod cpio flex cpio libncurses-dev wget tar xz-utils patch make
+ fi
+fi
+
+## OVERRIDES
+# Override stable with testing.
 if [ -z $HWACCELREL ]; then
  HWACCELREL=stable
 fi
+echo "\n*** HWACCELREL selected is $HWACCELREL.\n"
 
-echo "HWACCELREL selected is $HWACCELREL."
+# Override debian with none to install your kernel your own way.
+if [ -z $MAKEDISTRO ]; then
+ MAKEDISTRO=debian
+fi
+echo "\n*** MAKEDISTRO selected is $MAKEDISTRO.\n"
+
+# Override default with configfilename and place in upstream directory to use your own.
+if [ -z $KERNELCONFIG ]; then
+ KERNELCONFIG=default
+fi
+echo "\n*** KERNELCONFIG selected is $KERNELCONFIG.\n"
+
+## CHECKS
+# Check if provided KERNELCONFIG actually exists.
+if [ $KERNELCONFIG != default ]; then
+ if [ ! -f $DEVDIR/$KERNELCONFIG ]; then
+  echo "\n*** KERNELCONFIG config file $KERNELCONFIG NOT found. Exiting.\n"
+  exit
+ else
+  echo "\n*** KERNELCONFIG config file $KERNELCONFIG found.\n"
+ fi
+fi
 
 ## PATH
 export PATH=$GCCARMDIR/bin:$PATH
@@ -47,15 +78,33 @@ tar xf linux-$LINUXREL.tar.xz
 cd linux-$LINUXREL
 patch -p1 < $RESDIR/linux/linux-pinebookpro-hwaccel_current-$HWACCELREL.diff
 
+## CONFIG
+if [ $KERNELCONFIG = default ];then
+ echo "\n*** Using default KERNELCONFIG.\n"
+ cp $RESDIR/linux/hwaccel-config_current .config
+else
+ echo "\n*** Using $KERNELCONFIG KERNELCONFIG.\n"
+ cp $DEVDIR/$KERNELCONFIG .config
+fi
+
 ## CONFIGURE
-cp $RESDIR/linux/hwaccel-config_current .config
 make -j `nproc` $BUILDCONFIG oldconfig
 make -j `nproc` $BUILDCONFIG menuconfig
 
 ## BUILD
 KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
 KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
-make -j `nproc` $BUILDCONFIG $KERNELCONFIG bindeb-pkg;
+if [ $MAKEDISTRO = debian ]; then
+ make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
+fi
+if [ $MAKEDISTRO = none ]; then
+ make -j `nproc`
+fi
 
 ## EXIT
 exit
+
+## ENJOY
+
+## POST SCRIPT
+# install manually
