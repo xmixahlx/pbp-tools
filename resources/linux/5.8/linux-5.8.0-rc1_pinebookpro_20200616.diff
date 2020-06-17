@@ -1,6 +1,6 @@
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399.dtsi linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 --- linux-5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-06-16 01:37:38.944687789 -0700
++++ linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399.dtsi	2020-06-16 11:20:41.000000000 -0700
 @@ -9,6 +9,7 @@
  #include <dt-bindings/interrupt-controller/irq.h>
  #include <dt-bindings/pinctrl/rockchip.h>
@@ -39,7 +39,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64
  };
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 --- linux-5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts	2020-06-16 01:37:38.944687789 -0700
++++ linux-pinebook-pro_v5.8-rc1/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts	2020-06-16 11:20:41.000000000 -0700
 @@ -19,15 +19,28 @@
  	compatible = "pine64,pinebook-pro", "rockchip,rk3399";
  
@@ -193,7 +193,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64
  
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64/configs/pinebook_pro_defconfig linux-pinebook-pro_v5.8-rc1/arch/arm64/configs/pinebook_pro_defconfig
 --- linux-5.8-rc1/arch/arm64/configs/pinebook_pro_defconfig	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/arch/arm64/configs/pinebook_pro_defconfig	2020-06-16 01:37:38.948687850 -0700
++++ linux-pinebook-pro_v5.8-rc1/arch/arm64/configs/pinebook_pro_defconfig	2020-06-16 11:20:41.000000000 -0700
 @@ -0,0 +1,2994 @@
 +CONFIG_LOCALVERSION="-MANJARO-ARM"
 +# CONFIG_LOCALVERSION_AUTO is not set
@@ -3191,7 +3191,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/arch/arm64
 +# CONFIG_RUNTIME_TESTING_MENU is not set
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/Documentation/devicetree/bindings/soc/rockchip/rockchip-pm-config.txt linux-pinebook-pro_v5.8-rc1/Documentation/devicetree/bindings/soc/rockchip/rockchip-pm-config.txt
 --- linux-5.8-rc1/Documentation/devicetree/bindings/soc/rockchip/rockchip-pm-config.txt	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/Documentation/devicetree/bindings/soc/rockchip/rockchip-pm-config.txt	2020-06-16 01:37:38.384679108 -0700
++++ linux-pinebook-pro_v5.8-rc1/Documentation/devicetree/bindings/soc/rockchip/rockchip-pm-config.txt	2020-06-16 11:20:34.000000000 -0700
 @@ -0,0 +1,39 @@
 +* the suspend mode config
 +
@@ -3234,7 +3234,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/Documentat
 +	};
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/bluetooth/hci_bcm.c linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_bcm.c
 --- linux-5.8-rc1/drivers/bluetooth/hci_bcm.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_bcm.c	2020-06-16 01:37:39.728699944 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_bcm.c	2020-06-16 11:20:50.000000000 -0700
 @@ -1469,6 +1469,23 @@
  	hci_uart_unregister_device(&bcmdev->serdev_hu);
  }
@@ -3269,7 +3269,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/bl
  		.of_match_table = of_match_ptr(bcm_bluetooth_of_match),
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/bluetooth/hci_serdev.c linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_serdev.c
 --- linux-5.8-rc1/drivers/bluetooth/hci_serdev.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_serdev.c	2020-06-16 01:37:39.732700005 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/bluetooth/hci_serdev.c	2020-06-16 11:20:50.000000000 -0700
 @@ -362,5 +362,7 @@
  
  	hu->proto->close(hu);
@@ -3280,7 +3280,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/bl
  EXPORT_SYMBOL_GPL(hci_uart_unregister_device);
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/firmware/Kconfig linux-pinebook-pro_v5.8-rc1/drivers/firmware/Kconfig
 --- linux-5.8-rc1/drivers/firmware/Kconfig	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/Kconfig	2020-06-16 01:37:39.920702919 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/Kconfig	2020-06-16 11:20:52.000000000 -0700
 @@ -251,6 +251,13 @@
  
  	  Say Y here to enable "download mode" by default.
@@ -3297,7 +3297,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/fi
  	depends on TI_MESSAGE_MANAGER
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/firmware/Makefile linux-pinebook-pro_v5.8-rc1/drivers/firmware/Makefile
 --- linux-5.8-rc1/drivers/firmware/Makefile	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/Makefile	2020-06-16 01:37:39.920702919 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/Makefile	2020-06-16 11:20:52.000000000 -0700
 @@ -28,6 +28,7 @@
  obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
  obj-$(CONFIG_EFI)		+= efi/
@@ -3308,7 +3308,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/fi
  obj-y				+= smccc/
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/firmware/rockchip_sip.c linux-pinebook-pro_v5.8-rc1/drivers/firmware/rockchip_sip.c
 --- linux-5.8-rc1/drivers/firmware/rockchip_sip.c	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/rockchip_sip.c	2020-06-16 01:37:39.928703044 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/firmware/rockchip_sip.c	2020-06-16 11:20:52.000000000 -0700
 @@ -0,0 +1,262 @@
 +/*
 + * This program is free software; you can redistribute it and/or modify
@@ -3574,7 +3574,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/fi
 +}
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/leds/led-core.c linux-pinebook-pro_v5.8-rc1/drivers/leds/led-core.c
 --- linux-5.8-rc1/drivers/leds/led-core.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/leds/led-core.c	2020-06-16 01:37:40.912718302 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/leds/led-core.c	2020-06-16 11:21:01.000000000 -0700
 @@ -175,6 +175,7 @@
  		     unsigned long *delay_off)
  {
@@ -3585,7 +3585,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/le
  		return;
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/leds/led-triggers.c linux-pinebook-pro_v5.8-rc1/drivers/leds/led-triggers.c
 --- linux-5.8-rc1/drivers/leds/led-triggers.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/leds/led-triggers.c	2020-06-16 01:37:40.912718302 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/leds/led-triggers.c	2020-06-16 11:21:01.000000000 -0700
 @@ -27,14 +27,80 @@
  
   /* Used by LED Class */
@@ -3801,7 +3801,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/le
  	read_unlock(&trig->leddev_list_lock);
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/mmc/core/pwrseq_simple.c linux-pinebook-pro_v5.8-rc1/drivers/mmc/core/pwrseq_simple.c
 --- linux-5.8-rc1/drivers/mmc/core/pwrseq_simple.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/mmc/core/pwrseq_simple.c	2020-06-16 01:37:41.244723452 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/mmc/core/pwrseq_simple.c	2020-06-16 11:21:02.000000000 -0700
 @@ -80,10 +80,8 @@
  		msleep(pwrseq->post_power_on_delay_ms);
  }
@@ -3848,7 +3848,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/mm
  		.of_match_table = mmc_pwrseq_simple_of_match,
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/phy/rockchip/phy-rockchip-typec.c linux-pinebook-pro_v5.8-rc1/drivers/phy/rockchip/phy-rockchip-typec.c
 --- linux-5.8-rc1/drivers/phy/rockchip/phy-rockchip-typec.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/phy/rockchip/phy-rockchip-typec.c	2020-06-16 01:37:42.016735426 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/phy/rockchip/phy-rockchip-typec.c	2020-06-16 11:21:07.000000000 -0700
 @@ -40,6 +40,7 @@
  #include <linux/clk-provider.h>
  #include <linux/delay.h>
@@ -3882,7 +3882,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/ph
  	pm_runtime_enable(dev);
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/regulator/core.c linux-pinebook-pro_v5.8-rc1/drivers/regulator/core.c
 --- linux-5.8-rc1/drivers/regulator/core.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/regulator/core.c	2020-06-16 01:37:42.128737164 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/regulator/core.c	2020-06-16 11:21:08.000000000 -0700
 @@ -5286,6 +5286,14 @@
  EXPORT_SYMBOL_GPL(regulator_unregister);
  
@@ -3958,7 +3958,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/re
  
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/soc/rockchip/Kconfig linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Kconfig
 --- linux-5.8-rc1/drivers/soc/rockchip/Kconfig	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Kconfig	2020-06-16 01:37:42.376741011 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Kconfig	2020-06-16 11:21:16.000000000 -0700
 @@ -26,4 +26,10 @@
  
            If unsure, say N.
@@ -3972,7 +3972,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/so
  endif
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/soc/rockchip/Makefile linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Makefile
 --- linux-5.8-rc1/drivers/soc/rockchip/Makefile	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Makefile	2020-06-16 01:37:42.380741073 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/Makefile	2020-06-16 11:21:16.000000000 -0700
 @@ -4,3 +4,4 @@
  #
  obj-$(CONFIG_ROCKCHIP_GRF) += grf.o
@@ -3980,7 +3980,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/so
 +obj-$(CONFIG_ROCKCHIP_SUSPEND_MODE) += rockchip_pm_config.o
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/soc/rockchip/rockchip_pm_config.c linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/rockchip_pm_config.c
 --- linux-5.8-rc1/drivers/soc/rockchip/rockchip_pm_config.c	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/rockchip_pm_config.c	2020-06-16 01:37:42.380741073 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/soc/rockchip/rockchip_pm_config.c	2020-06-16 12:58:18.615372372 -0700
 @@ -0,0 +1,212 @@
 +/*
 + * Rockchip Generic power configuration support.
@@ -4083,7 +4083,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/so
 +
 +	regulator_suspend_prepare(PM_SUSPEND_MEM);
 +
-+	error = disable_nonboot_cpus();
++	error = freeze_secondary_cpus(0);
 +	if (error) {
 +		pr_err("Disable nonboot cpus failed!\n");
 +		return;
@@ -4196,7 +4196,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/so
 +subsys_initcall(rockchip_pm_drv_register);
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/tty/serdev/core.c linux-pinebook-pro_v5.8-rc1/drivers/tty/serdev/core.c
 --- linux-5.8-rc1/drivers/tty/serdev/core.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/tty/serdev/core.c	2020-06-16 01:37:42.652745293 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/tty/serdev/core.c	2020-06-16 11:21:17.000000000 -0700
 @@ -432,11 +432,22 @@
  	return 0;
  }
@@ -4222,7 +4222,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/tt
  /**
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/usb/typec/altmodes/displayport.c linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/altmodes/displayport.c
 --- linux-5.8-rc1/drivers/usb/typec/altmodes/displayport.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/altmodes/displayport.c	2020-06-16 01:37:42.768747093 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/altmodes/displayport.c	2020-06-16 11:21:17.000000000 -0700
 @@ -9,6 +9,8 @@
   */
  
@@ -4326,7 +4326,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/us
  	if (ret)
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/usb/typec/bus.c linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/bus.c
 --- linux-5.8-rc1/drivers/usb/typec/bus.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/bus.c	2020-06-16 01:37:42.768747093 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/bus.c	2020-06-16 11:21:17.000000000 -0700
 @@ -154,8 +154,14 @@
   */
  void typec_altmode_attention(struct typec_altmode *adev, u32 vdo)
@@ -4345,7 +4345,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/us
  }
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/usb/typec/tcpm/tcpm.c linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/tcpm/tcpm.c
 --- linux-5.8-rc1/drivers/usb/typec/tcpm/tcpm.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/tcpm/tcpm.c	2020-06-16 01:37:42.772747154 -0700
++++ linux-pinebook-pro_v5.8-rc1/drivers/usb/typec/tcpm/tcpm.c	2020-06-16 11:21:17.000000000 -0700
 @@ -8,6 +8,7 @@
  #include <linux/completion.h>
  #include <linux/debugfs.h>
@@ -4582,7 +4582,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/drivers/us
  	mutex_unlock(&port->lock);
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/dt-bindings/suspend/rockchip-rk3399.h linux-pinebook-pro_v5.8-rc1/include/dt-bindings/suspend/rockchip-rk3399.h
 --- linux-5.8-rc1/include/dt-bindings/suspend/rockchip-rk3399.h	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/include/dt-bindings/suspend/rockchip-rk3399.h	2020-06-16 01:37:43.212753982 -0700
++++ linux-pinebook-pro_v5.8-rc1/include/dt-bindings/suspend/rockchip-rk3399.h	2020-06-16 11:21:19.000000000 -0700
 @@ -0,0 +1,60 @@
 +/*
 + * Header providing constants for Rockchip suspend bindings.
@@ -4646,7 +4646,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/dt
 +#endif
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/linux/leds.h linux-pinebook-pro_v5.8-rc1/include/linux/leds.h
 --- linux-5.8-rc1/include/linux/leds.h	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/include/linux/leds.h	2020-06-16 01:37:43.276754975 -0700
++++ linux-pinebook-pro_v5.8-rc1/include/linux/leds.h	2020-06-16 11:21:20.000000000 -0700
 @@ -75,6 +75,7 @@
  #define LED_BRIGHT_HW_CHANGED	BIT(21)
  #define LED_RETAIN_AT_SHUTDOWN	BIT(22)
@@ -4657,7 +4657,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/li
  	unsigned long		work_flags;
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/linux/regulator/driver.h linux-pinebook-pro_v5.8-rc1/include/linux/regulator/driver.h
 --- linux-5.8-rc1/include/linux/regulator/driver.h	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/include/linux/regulator/driver.h	2020-06-16 01:37:43.356756216 -0700
++++ linux-pinebook-pro_v5.8-rc1/include/linux/regulator/driver.h	2020-06-16 11:21:20.000000000 -0700
 @@ -465,6 +465,9 @@
  
  	/* time when this regulator was disabled last time */
@@ -4670,7 +4670,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/li
  struct regulator_dev *
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/linux/rockchip/rockchip_sip.h linux-pinebook-pro_v5.8-rc1/include/linux/rockchip/rockchip_sip.h
 --- linux-5.8-rc1/include/linux/rockchip/rockchip_sip.h	1969-12-31 16:00:00.000000000 -0800
-+++ linux-pinebook-pro_v5.8-rc1/include/linux/rockchip/rockchip_sip.h	2020-06-16 01:37:43.360756279 -0700
++++ linux-pinebook-pro_v5.8-rc1/include/linux/rockchip/rockchip_sip.h	2020-06-16 11:21:20.000000000 -0700
 @@ -0,0 +1,149 @@
 +/* Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
 + *
@@ -4823,7 +4823,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/li
 +#endif
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/linux/serdev.h linux-pinebook-pro_v5.8-rc1/include/linux/serdev.h
 --- linux-5.8-rc1/include/linux/serdev.h	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/include/linux/serdev.h	2020-06-16 01:37:43.368756402 -0700
++++ linux-pinebook-pro_v5.8-rc1/include/linux/serdev.h	2020-06-16 11:21:20.000000000 -0700
 @@ -63,6 +63,7 @@
  	struct device_driver driver;
  	int	(*probe)(struct serdev_device *);
@@ -4834,7 +4834,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/include/li
  static inline struct serdev_device_driver *to_serdev_device_driver(struct device_driver *d)
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/sound/soc/codecs/es8316.c linux-pinebook-pro_v5.8-rc1/sound/soc/codecs/es8316.c
 --- linux-5.8-rc1/sound/soc/codecs/es8316.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/sound/soc/codecs/es8316.c	2020-06-16 01:37:44.084767513 -0700
++++ linux-pinebook-pro_v5.8-rc1/sound/soc/codecs/es8316.c	2020-06-16 11:21:24.000000000 -0700
 @@ -687,7 +687,7 @@
  	snd_soc_component_update_bits(component, ES8316_GPIO_DEBOUNCE,
  				      ES8316_GPIO_ENABLE_INTERRUPT, 0);
@@ -4846,7 +4846,7 @@ diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/sound/soc/
  	}
 diff -uNr '--exclude=.git' '--exclude=include-prefixes' linux-5.8-rc1/sound/soc/soc-jack.c linux-pinebook-pro_v5.8-rc1/sound/soc/soc-jack.c
 --- linux-5.8-rc1/sound/soc/soc-jack.c	2020-06-14 12:45:04.000000000 -0700
-+++ linux-pinebook-pro_v5.8-rc1/sound/soc/soc-jack.c	2020-06-16 01:37:44.192769190 -0700
++++ linux-pinebook-pro_v5.8-rc1/sound/soc/soc-jack.c	2020-06-16 11:21:24.000000000 -0700
 @@ -216,8 +216,6 @@
  	int report;
  
