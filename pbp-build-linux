@@ -172,7 +172,7 @@ if [ $CROSSBUILD = no ]; then
  if [ $MAKEDISTRO = none ]; then
   make -j `nproc`
  fi
-if
+fi
 
 ## EXIT
 exit
