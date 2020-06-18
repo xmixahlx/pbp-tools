@@ -23,7 +23,9 @@ GCCARMDIR=$DEVDIR/$GCCARMPKG
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
- sudo apt-get -y install build-essential libncurses-dev wget tar xz-utils patch
+  sudo apt-get -y install \
+   build-essential libncurses-dev wget tar xz-utils patch \
+   bison flex bc rsync libssl-dev
  fi
 fi
 
