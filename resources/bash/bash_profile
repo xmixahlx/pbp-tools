@@ -1,0 +1,25 @@
+## libva
+export LIBVA_DRIVER_NAME=v4l2_request
+export LIBVA_V4L2_REQUEST_MEDIA_PATH=/dev/media0
+export LIBVA_V4L2_REQUEST_VIDEO_PATH=/dev/video0
+
+## wayland
+#export GDK_BACKEND=wayland
+#export CLUTTER_BACKEND=wayland
+
+## mesa
+export PAN_MESA_DEBUG=gles3
+
+## firefox
+export MOZ_ENABLE_WAYLAND=1
+#export MOZ_DBUS_REMOTE=1
+
+## gstreamer
+#export GST_VAAPI_ALL_DRIVERS=1
+#export GST_GL_WINDOW=wayland
+
+## dotnet
+export DOTNET_ROOT=/usr/local/dotnet
+
+## PATH
+export PATH=~/bin:~/go/bin:/usr/local/dotnet:$PATH
