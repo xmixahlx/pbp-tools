@@ -1,15 +1,16 @@
 # pbp-tools
 
-**pbp-tools: pinebook pro tools**
+## pbp-tools: pinebook pro tools 
 
-management and build tools for system management, hardware acceleration, and wayland environment for the pinebook pro.
+tools for system management, hardware acceleration, and wayland environment for the pinebook pro.
 
 **system:**<br>
 pbp-update-ap6256-firmware<br>
 pbp-update-postinstall<br>
-pbp-update-systempartitions<br>
+pbp-update-boot<br>
 
 **hwaccel:**<br>
+pbp-build-alacritty<br>
 pbp-build-ffmpeg<br>
 pbp-build-gstreamer<br>
 pbp-build-jellyfin-kodi<br>
@@ -30,16 +31,17 @@ pbp-build-wdisplays<br>
 pbp-build-wlogout<br>
 
 **notes:**<br>
-system management tools borrow manjaro configurations for mainline kernel and mrfixit2001 uboot.<br>
-some scripts have variable override via commandline (ffmpeg, kodi, linux, etc.).<br>
-recommended core hwaccel setup includes, in order: linux, mesa, ffmpeg, and kodi.<br>
-libudfread is an optional kodi dependency.<br>
-kodi addons include jellyfin-kodi and kodi-inputstream-adaptive.<br>
-libva, libva-utils, and libva-v4l2-request are VAAPI related packages that have some use, but are currently less useful due to an ffmpeg bug.<br>
-gstreamer includes v4l2codecs from upstream and VAAPI is enabled, so depends on VAAPI packages.<br>
-to use sway, first build the sway suite (wlroots, sway, swaybg, swaylock, and swayidle), then optional wayland tools: dmenu-wayland, waybar, wdisplays, and wlogout.<br>
-please feel free to modify and adapt to your own distro, and contribute changes.<br>
-REVIEW EACH SCRIPT PRIOR TO USAGE.<br>
+* system management tools borrow manjaro configurations for mainline kernel and mrfixit2001 boot images.<br>
+* many scripts have variable override via commandline (ffmpeg, kodi, linux, etc.).<br>
+* recommended core hwaccel setup includes, in build order: linux, mesa, ffmpeg, and kodi.<br>
+* libudfread is an optional kodi dependency.<br>
+* kodi addons include jellyfin-kodi and kodi-inputstream-adaptive.<br>
+* libva, libva-utils, and libva-v4l2-request are VAAPI related packages that have some use, but are currently less useful due to an ffmpeg bug.<br>
+* gstreamer includes v4l2codecs from upstream and VAAPI is enabled, so depends on VAAPI packages.<br>
+* alacritty is a GL(ES) enhanced terminal.<br>
+* to use sway, first build the sway suite (wlroots, sway, swaybg, swaylock, and swayidle), then optional wayland tools: dmenu-wayland, waybar, wdisplays, and wlogout.<br>
+* please feel free to modify and adapt to your own distro, and contribute changes.<br>
+* REVIEW EACH SCRIPT PRIOR TO USAGE.<br>
 
 **discussion:**<br>
 [pbp-tools forum thread at pine64](https://forum.pine64.org/showthread.php?tid=10190)<br>
