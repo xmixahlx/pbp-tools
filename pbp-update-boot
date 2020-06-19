@@ -1,0 +1,113 @@
+#!/bin/sh
+
+### Package: pbp-update-boot
+### Version: v20200618.2315
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux
+### USAGE: Provide DEVTARGET and BLKDEV with ./command
+
+## VARS
+DATE=`date +%Y%m%d%H%S`
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITBRANCH=v2.0
+PKGDIR=pbp-update-boot_$GITBRANCH
+
+## OVERRIDES
+# You MUST provide a DEVTARGET, either partitions or device.
+if [ -z $DEVTARGET ]; then
+ echo "\n*** You MUST specify a DEVTARGET. Either partitions or device.\n"
+ exit
+fi
+echo "\n*** DEVTARGET selected is $DEVTARGET.\n"
+
+## OVERRIDES
+# You MUST provide a BLKDEV, such as /dev/mmcblk2, /dev/nvme0n1, etc.
+if [ -z $BLKDEV ]; then
+ echo "\n*** You MUST specify a BLKDEV. i.e. /dev/mmcblk2, /dev/nvme0n1, etc..\n"
+ exit
+fi
+echo "\n*** BLKDEV selected is $BLKDEV.\n"
+
+## CHECKS
+# Check if provided DEVTARGET is partitions or device.
+if [ $DEVTARGET ]; then
+ if [ $DEVTARGET != device -a $DEVTARGET != partitions ]; then
+  echo "\n*** DEVTARGET MUST be partitions or device. Exiting.\n"
+  exit
+ else
+  echo "\n*** DEVTARGET $DEVTARGET checked.\n"
+ fi
+fi
+# Check if provided BLKDEV actually exists.
+if [ $BLKDEV ]; then
+ if [ ! -b $BLKDEV ]; then
+  echo "\n*** BLKDEV $BLKDEV NOT found. Exiting.\n"
+  exit
+ else
+  echo "\n*** BLKDEV $BLKDEV found.\n"
+ fi
+fi
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install \
+  util-linux coreutils wget sudo
+ fi
+fi
+
+## DISPLAY BLKDEV
+echo "\n*** Displaying block devices to help confirm.\n"
+lsblk -a
+
+## CONFIRM BLKDEV
+echo "\n*** Continue to write to $BLKDEV $DEVTARGET ?\n"
+read -p "Yes or No:  " CONTINUE
+case $CONTINUE in
+ [Yy]* ) echo "\n*** YES selected. Continuing.\n" ;;
+ [Nn]* ) echo "\n*** NO selected. Exiting.\n" && exit ;;
+ * ) echo "\n***Select YES or NO. Exiting.\n" && exit ;;
+esac
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GET
+mkdir -p $PKGDIR
+cd $PKGDIR
+[ -f idbloader.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/idbloader.img
+[ -f trust.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/trust.img
+[ -f uboot.img ] || wget https://github.com/mrfixit2001/updates_repo/raw/$GITBRANCH/pinebook/filesystem/uboot.img
+
+## CHECK
+if md5sum -c $RESDIR/boot/$GITBRANCH.md5 --quiet; then
+ # Check passed. Write.
+ if [ $DEVTARGET = partitions ]; then
+  echo "\n*** MD5 checksum passed. Writing to $BLKDEV partitions.\n"
+  sudo dd if=idbloader.img of=${BLKDEV}p1 bs=4096
+  sudo dd if=uboot.img of=${BLKDEV}p2 bs=4096
+  sudo dd if=trust.img of=${BLKDEV}p3 bs=4096
+  echo "\n*** Wrote images to $BLKDEV $DEVTARGET. Done. Exiting.\n"
+ fi
+ if [ $DEVTARGET = device ]; then
+  echo "\n*** MD5 checksum passed. Writing to $BLKDEV device.\n"
+  sudo dd if=idbloader.img of=${BLKDEV} seek=64 conv=notrunc
+  sudo dd if=uboot.img of=${BLKDEV} seek=16384 conv=notrunc
+  sudo dd if=trust.img of=${BLKDEV} seek=24576 conv=notrunc
+  echo "\n*** Wrote images to $BLKDEV device. Done. Exiting.\n"
+ fi
+else
+ # Check failed. Exit.
+ echo "\n*** MD5 failed. Did NOT write images to device $BLKDEV. Deleting IMG files and exiting.\n"
+ rm idbloader.img trust.img uboot.img
+fi
+
+## EXIT
+exit
+
+## ENJOY
