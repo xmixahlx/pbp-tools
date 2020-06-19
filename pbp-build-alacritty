@@ -1,0 +1,84 @@
+#!/bin/sh
+
+### Package: pbp-build-alacritty
+### Version: v20200618.2315
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/alacritty
+GITTREE=alacritty
+
+## OVERRIDES
+# Override v0.4.2 with <branch>
+if [ -z $GITBRANCH ];then
+ GITBRANCH=v0.4.2
+fi
+echo "\n*** GITBRANCH selected is $GITBRANCH.\n"
+
+# Override gles2 with gles3
+if [ -z $GLESVER ];then
+ GLESVER=gles2
+fi
+echo "\n*** GLESVER selected is $GLESVER.\n"
+
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install \
+  libfontconfig-dev libfreetype-dev libxcb1-dev libgcc-9-dev libc6-dev libexpat1-dev \
+  libuuid1 uuid-dev libpng-dev zlib1g-dev-dev libxau-dev libxdmcp-dev libbsd-dev \
+  ncurses-bin libncurses-dev fish cargo wget patch
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GLES
+if [ $GLESVER = gles2 ]; then
+ [ -f $GITTREE\_$GLESVER.patch ] || wget https://github.com/cyclopsian/alacritty/commit/2e15b476ea1125c6fa6c0a694e8a911079577da7.patch -O $GITTREE\_$GLESVER.patch
+fi
+if [ $GLESVER = gles3 ]; then
+ [ -f $GITTREE\_$GLESVER.patch ] || wget https://github.com/cyclopsian/alacritty/commit/4a659169bd69312ec59fa283b069f6710088a688.patch -O $GITTREE\_$GLESVER.patch
+fi
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard HEAD
+git pull
+
+## CLEAN
+cargo clean
+
+## PATCH
+patch -p1 < $DEVDIR/$GITTREE\_$GLESVER.patch
+
+## BUILD
+cargo build --release
+
+## INSTALL
+sudo desktop-file-install -m 644 --dir "/usr/local/share/applications/" "extra/linux/Alacritty.desktop"
+sudo install -D -m644 "alacritty.yml" "/usr/local/share/doc/alacritty/example/alacritty.yml"
+sudo install -D -m644 "extra/alacritty.man" "/usr/local/share/man/man1/alacritty.1"
+sudo install -D -m644 "extra/completions/alacritty.bash" "/usr/local/share/bash-completion/completions/alacritty"
+sudo install -D -m644 "extra/completions/_alacritty" "/usr/local/share/zsh/site-functions/_alacritty"
+sudo install -D -m644 "extra/completions/alacritty.fish" "/usr/local/share/fish/vendor_completions.d/alacritty.fish"
+sudo install -D -m644 "extra/linux/io.alacritty.Alacritty.appdata.xml" "/usr/local/share/appdata/io.alacritty.Alacritty.appdata.xml"
+sudo install -D -m644 "extra/logo/alacritty-term.svg" "/usr/local/share/pixmaps/Alacritty.svg"
+sudo install -D -m755 "target/release/alacritty" "/usr/local/bin/alacritty"
+
+
+## EXIT
+exit
+
+# ENJOY
