@@ -1,0 +1,67 @@
+#!/bin/sh
+
+### Package: pbp-install-sway
+### Version: v20200619.1820
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/swaywm
+GITBRANCH=master
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install build-essential coreutils libc-bin git meson \
+  wayland-protocols libwayland-dev libwayland-egl-backend-dev \
+  libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev libinput-dev libxkbcommon-dev \
+  libudev-dev libpixman-1-dev libx11-xcb-dev libxcb-xinput-dev libxcb-xfixes0-dev \
+  libxcb-composite0-dev libxcb-render0-dev libpcap-dev libsystemd-dev libxcb-icccm4-dev \
+  libpng-dev libavutil-dev libavcodec-dev libavformat-dev libjson-c-dev libpcre3-dev \
+  libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev libevdev-dev libinput-dev \
+  bash-completion fish scdoc libpam-dev libcrypt-dev
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## LOOP
+for GITTREE in wlroots sway swaybg swayidle swaylock;do
+ ## VAR
+ PKGDIR=$GITTREE\_$GITBRANCH
+
+ ## GIT
+ [ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+ cd $PKGDIR
+ git clean -f
+ git reset --hard
+ git pull
+
+ ## CLEAN
+ rm -Rf pbp-build
+
+ ## CONFIGURE
+ meson pbp-build -Dprefix=/usr/local -Dbuildtype=release --libdir=/usr/local/lib/aarch64-linux-gnu
+
+ ## BUILD
+ ninja -C pbp-build
+
+ ## INSTALL
+ sudo ninja -C pbp-build install
+ sudo ldconfig
+
+ ## BACK
+ cd ..
+done
+
+## EXIT
+exit
+
+## ENJOY

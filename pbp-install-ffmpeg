@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-build-ffmpeg
-### Version: v20200615.2230
+### Package: pbp-install-ffmpeg
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -11,20 +11,22 @@ RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
 FFMPEGREL=4.2.3
 
-## DEPS
-# Provide INSTALLDEPS=debian to install dependencies.
-if [ $INSTALLDEPS ]; then
- if [ $INSTALLDEPS = debian ]; then
- sudo apt-get -y build-dep ffmpeg
- sudo apt-get -y install wget tar bzip2 patch make
- fi
-fi
-
-## OVERRIDE basic with BUILDCONFIG=full
+## OVERRIDES
+# Override basic with standard or full
 if [ -z $BUILDCONFIG ]; then
  BUILDCONFIG=basic
 fi
 echo "\n*** BUILDCONFIG selected is $BUILDCONFIG.\n"
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y build-dep ffmpeg
+  sudo apt-get -y install build-essential coreutils libc-bin wget tar bzip2 patch make \
+  libudev-dev libdrm-dev
+ fi
+fi
 
 ## PREP
 set -e

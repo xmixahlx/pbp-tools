@@ -1,0 +1,56 @@
+#!/bin/sh
+
+### Package: pbp-install-gstreamer
+### Version: v20200619.1820
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux, ffmpeg
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://gitlab.freedesktop.org/gstreamer
+GITTREE=gst-build
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+ sudo apt-get -y build-dep gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+ gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-vaapi gstreamer1.0-rtsp \
+ gstreamer1.0-libav
+ sudo apt-get -y install build-essential coreutils libc-bin git meson
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## CONFIGURE
+meson pbp-build -Dprefix=/usr/local -Dbuildtype=release --libdir=/usr/local/lib/aarch64-linux-gnu -Dvaapi=enabled
+
+## BUILD
+ninja -C pbp-build
+
+## INSTALL
+sudo ninja -C pbp-build install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY

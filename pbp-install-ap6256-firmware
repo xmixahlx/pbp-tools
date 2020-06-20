@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-update-ap6256-firmware
-### Version: v20200614.1420
+### Package: pbp-install-ap6256-firmware
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -12,15 +12,21 @@ DEVDIR=`pwd`/upstream
 GITREPO=https://gitlab.manjaro.org/manjaro-arm/packages/community
 GITTREE=ap6256-firmware
 GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
 
 ## OVERRIDE with GITCHECKOUT=master or other commit
 if [ -z $GITCHECKOUT ];then
  GITCHECKOUT=a30bf312b268eab42d38fab0cc3ed3177895ff5d
 fi
-
-PKGDIR=$GITTREE\_$GITBRANCH
-
 echo "\n*** GITCHECKOUT selected is $GITCHECKOUT.\n"
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install coreutils git
+ fi
+fi
 
 ## PREP
 set -e

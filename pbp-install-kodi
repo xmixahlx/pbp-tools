@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-build-kodi
-### Version: v20200615.2230
+### Package: pbp-install-kodi
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux, ffmpeg
@@ -18,7 +18,7 @@ PKGDIR=$GITTREE\_$GITBRANCH
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
   sudo apt-get -y build-dep kodi
-  sudo apt-get -y install git cmake make
+  sudo apt-get -y install build-essential coreutils libc-bin git cmake make
  fi
 fi
 

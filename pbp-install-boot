@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-update-boot
-### Version: v20200618.2315
+### Package: pbp-install-boot
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -12,7 +12,7 @@ DATE=`date +%Y%m%d%H%S`
 RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
 GITBRANCH=v2.0
-PKGDIR=pbp-update-boot_$GITBRANCH
+PKGDIR=pbp-install-boot_$GITBRANCH
 
 ## OVERRIDES
 # You MUST provide a DEVTARGET, either partitions or device.
@@ -22,7 +22,6 @@ if [ -z $DEVTARGET ]; then
 fi
 echo "\n*** DEVTARGET selected is $DEVTARGET.\n"
 
-## OVERRIDES
 # You MUST provide a BLKDEV, such as /dev/mmcblk2, /dev/nvme0n1, etc.
 if [ -z $BLKDEV ]; then
  echo "\n*** You MUST specify a BLKDEV. i.e. /dev/mmcblk2, /dev/nvme0n1, etc..\n"
@@ -54,8 +53,7 @@ fi
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
-  sudo apt-get -y install \
-  util-linux coreutils wget sudo
+  sudo apt-get -y install util-linux coreutils wget
  fi
 fi
 

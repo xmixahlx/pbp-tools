@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-build-libva-v4l2-request
-### Version: v20200614.1420
+### Package: pbp-install-libva-v4l2-request
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux, ffmpeg, libva
@@ -13,6 +13,14 @@ GITREPO=https://github.com/bootlin
 GITTREE=libva-v4l2-request
 GITBRANCH=master
 PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install build-essential coreutils libc-bin wget git patch meson
+ fi
+fi
 
 ## PREP
 set -e

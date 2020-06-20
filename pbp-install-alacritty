@@ -1,7 +1,7 @@
 #!/bin/sh
 
-### Package: pbp-build-alacritty
-### Version: v20200618.2315
+### Package: pbp-install-alacritty
+### Version: v20200619.1820
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -30,10 +30,10 @@ PKGDIR=$GITTREE\_$GITBRANCH
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
-  sudo apt-get -y install \
+  sudo apt-get -y install build-essential coreutils libc-bin wget patch \
   libfontconfig-dev libfreetype-dev libxcb1-dev libgcc-9-dev libc6-dev libexpat1-dev \
   libuuid1 uuid-dev libpng-dev zlib1g-dev-dev libxau-dev libxdmcp-dev libbsd-dev \
-  ncurses-bin libncurses-dev fish cargo wget patch
+  ncurses-bin libncurses-dev fish cargo
  fi
 fi
 
