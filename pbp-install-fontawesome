@@ -1,0 +1,36 @@
+#!/bin/sh
+
+### Package: pbp-install-fontawesome
+### Version: v20200619.1800
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/fortawesome
+GITTREE=font-awesome
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## INSTALL
+sudo mkdir -p /usr/local/share/fonts/TTF
+sudo mkdir -p /usr/local/share/fonts/OTF
+sudo install -Dm644 webfonts/*.ttf /usr/local/share/fonts/TTF/
+sudo install -Dm644 otfs/*.otf /usr/local/share/fonts/OTF/
+echo "\n*** Install complete.\n"
+
+## EXIT
+exit
