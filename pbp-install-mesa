@@ -17,6 +17,11 @@ if [ -z $GITBRANCH ];then
 fi
 echo "GITBRANCH selected is $GITBRANCH."
 
+if [ -z $PATCHES ];then
+ PATCHES=no
+fi
+echo "PATCHES selected is $PATCHES."
+
 PKGDIR=$GITTREE\_$GITBRANCH
 
 ## DEPS
@@ -32,15 +37,25 @@ set -e
 mkdir -p $DEVDIR
 cd $DEVDIR
 
+## PATCHES
+if [ $PATCHES = yes ];then
+ [ -f mesa_5584.patch ] || wget https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/5584.patch -O mesa_5584.patch
+fi
+
 ## GIT
 [ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
 cd $PKGDIR
 git clean -f
-git reset --hard
+git reset --hard HEAD
 git pull
 
 ## CLEAN
 rm -Rf pbp-build
+
+## PATCHES
+if [ $PATCHES = yes ];then
+ patch -p1 < $DEVDIR/mesa_5584.patch
+fi
 
 ## CONFIGURE
 meson pbp-build --prefix=/usr/local --buildtype=release \
@@ -58,4 +73,4 @@ sudo ldconfig
 ## EXIT
 exit
 
-# ENJOY
+## ENJOY

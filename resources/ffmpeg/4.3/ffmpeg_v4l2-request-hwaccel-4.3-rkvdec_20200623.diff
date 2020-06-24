@@ -1,7 +1,7 @@
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4.2.2/configure
---- ffmpeg_n4.2.2/configure	2020-05-21 20:25:05.153847173 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/configure	2020-06-10 23:18:57.036974457 -0700
-@@ -271,6 +271,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/configure ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/configure
+--- ffmpeg-4.3.orig/configure	2020-06-15 11:54:23.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/configure	2020-06-23 18:28:02.037512602 -0700
+@@ -274,6 +274,7 @@
    --enable-libtls          enable LibreSSL (via libtls), needed for https support
                             if openssl, gnutls or mbedtls is not used [no]
    --enable-libtwolame      enable MP2 encoding via libtwolame [no]
@@ -9,7 +9,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
    --enable-libv4l2         enable libv4l2/v4l-utils [no]
    --enable-libvidstab      enable video stabilization using vid.stab [no]
    --enable-libvmaf         enable vmaf filter via libvmaf [no]
-@@ -337,6 +338,7 @@
+@@ -342,6 +343,7 @@
    --enable-omx-rpi         enable OpenMAX IL code for Raspberry Pi [no]
    --enable-rkmpp           enable Rockchip Media Process Platform code [no]
    --disable-v4l2-m2m       disable V4L2 mem2mem code [autodetect]
@@ -17,7 +17,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
    --disable-vaapi          disable Video Acceleration API (mainly Unix/Intel) code [autodetect]
    --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
    --disable-videotoolbox   disable VideoToolbox code [autodetect]
-@@ -1797,6 +1799,7 @@
+@@ -1807,6 +1809,7 @@
      libtesseract
      libtheora
      libtwolame
@@ -25,15 +25,15 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
      libv4l2
      libvorbis
      libvpx
-@@ -1851,6 +1854,7 @@
+@@ -1861,6 +1864,7 @@
      mmal
      omx
      opencl
 +    v4l2_request
+     vulkan
  "
  
- DOCUMENT_LIST="
-@@ -2873,6 +2877,7 @@
+@@ -2903,6 +2907,7 @@
  dxva2_deps="dxva2api_h DXVA2_ConfigPictureDecode ole32 user32"
  ffnvcodec_deps_any="libdl LoadLibrary"
  nvdec_deps="ffnvcodec"
@@ -41,7 +41,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  vaapi_x11_deps="xlib"
  videotoolbox_hwaccel_deps="videotoolbox pthreads"
  videotoolbox_hwaccel_extralibs="-framework QuartzCore"
-@@ -2890,6 +2895,8 @@
+@@ -2920,6 +2925,8 @@
  h264_dxva2_hwaccel_select="h264_decoder"
  h264_nvdec_hwaccel_deps="nvdec"
  h264_nvdec_hwaccel_select="h264_decoder"
@@ -50,7 +50,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  h264_vaapi_hwaccel_deps="vaapi"
  h264_vaapi_hwaccel_select="h264_decoder"
  h264_vdpau_hwaccel_deps="vdpau"
-@@ -2904,6 +2911,8 @@
+@@ -2934,6 +2941,8 @@
  hevc_dxva2_hwaccel_select="hevc_decoder"
  hevc_nvdec_hwaccel_deps="nvdec"
  hevc_nvdec_hwaccel_select="hevc_decoder"
@@ -59,7 +59,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  hevc_vaapi_hwaccel_deps="vaapi VAPictureParameterBufferHEVC"
  hevc_vaapi_hwaccel_select="hevc_decoder"
  hevc_vdpau_hwaccel_deps="vdpau VdpPictureInfoHEVC"
-@@ -2932,6 +2941,8 @@
+@@ -2962,6 +2971,8 @@
  mpeg2_dxva2_hwaccel_select="mpeg2video_decoder"
  mpeg2_nvdec_hwaccel_deps="nvdec"
  mpeg2_nvdec_hwaccel_select="mpeg2video_decoder"
@@ -68,7 +68,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  mpeg2_vaapi_hwaccel_deps="vaapi"
  mpeg2_vaapi_hwaccel_select="mpeg2video_decoder"
  mpeg2_vdpau_hwaccel_deps="vdpau"
-@@ -2962,6 +2973,8 @@
+@@ -2992,6 +3003,8 @@
  vc1_vdpau_hwaccel_select="vc1_decoder"
  vp8_nvdec_hwaccel_deps="nvdec"
  vp8_nvdec_hwaccel_select="vp8_decoder"
@@ -77,7 +77,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  vp8_vaapi_hwaccel_deps="vaapi"
  vp8_vaapi_hwaccel_select="vp8_decoder"
  vp9_d3d11va_hwaccel_deps="d3d11va DXVA_PicParams_VP9"
-@@ -2972,6 +2985,8 @@
+@@ -3002,6 +3015,8 @@
  vp9_dxva2_hwaccel_select="vp9_decoder"
  vp9_nvdec_hwaccel_deps="nvdec"
  vp9_nvdec_hwaccel_select="vp9_decoder"
@@ -85,8 +85,8 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
 +vp9_v4l2request_hwaccel_select="vp9_decoder"
  vp9_vaapi_hwaccel_deps="vaapi VADecPictureParameterBufferVP9_bit_depth"
  vp9_vaapi_hwaccel_select="vp9_decoder"
- wmv3_d3d11va_hwaccel_select="vc1_d3d11va_hwaccel"
-@@ -6270,6 +6285,7 @@
+ vp9_vdpau_hwaccel_deps="vdpau VdpPictureInfoVP9"
+@@ -6376,6 +6391,7 @@
  enabled libtwolame        && require libtwolame twolame.h twolame_init -ltwolame &&
                               { check_lib libtwolame twolame.h twolame_encode_buffer_float32_interleaved -ltwolame ||
                                 die "ERROR: libtwolame must be installed and version must be >= 0.3.10"; }
@@ -94,7 +94,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  enabled libv4l2           && require_pkg_config libv4l2 libv4l2 libv4l2.h v4l2_ioctl
  enabled libvidstab        && require_pkg_config libvidstab "vidstab >= 0.98" vid.stab/libvidstab.h vsMotionDetectInit
  enabled libvmaf           && require_pkg_config libvmaf "libvmaf >= 1.3.9" libvmaf.h compute_vmaf
-@@ -6365,6 +6381,10 @@
+@@ -6475,6 +6491,10 @@
                                 { enabled libdrm ||
                                   die "ERROR: rkmpp requires --enable-libdrm"; }
                               }
@@ -105,9 +105,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  enabled vapoursynth       && require_pkg_config vapoursynth "vapoursynth-script >= 42" VSScript.h vsscript_init
  
  
-@@ -6444,6 +6464,13 @@
- check_cc vp8_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP8;"
- check_cc vp9_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP9;"
+@@ -6556,6 +6576,13 @@
+     check_cc vp9_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP9;"
+ fi
  
 +check_func_headers "linux/media.h linux/videodev2.h" v4l2_timeval_to_ns
 +check_cc h264_v4l2_request linux/videodev2.h "int i = V4L2_PIX_FMT_H264_SLICE;"
@@ -119,9 +119,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/configure ffmpeg_v4l2-request-hwaccel-4
  check_headers sys/videoio.h
  test_code cc sys/videoio.h "struct v4l2_frmsizeenum vfse; vfse.discrete.width = 0;" && enable_sanitized struct_v4l2_frmivalenum_discrete
  
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/ffbuild/common.mak ffmpeg_v4l2-request-hwaccel-4.2.2/ffbuild/common.mak
---- ffmpeg_n4.2.2/ffbuild/common.mak	2020-05-21 20:25:05.183846597 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/ffbuild/common.mak	2020-06-10 23:18:57.086973659 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/ffbuild/common.mak ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/ffbuild/common.mak
+--- ffmpeg-4.3.orig/ffbuild/common.mak	2020-06-15 11:54:23.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/ffbuild/common.mak	2020-06-23 18:28:02.097531190 -0700
 @@ -79,7 +79,7 @@
  
  %.o: %.asm
@@ -131,9 +131,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/ffbuild/common.mak ffmpeg_v4l2-request-
  
  %.o: %.rc
  	$(WINDRES) $(IFLAGS) --preprocessor "$(DEPWINDRES) -E -xc-header -DRC_INVOKED $(CC_DEPFLAGS)" -o $@ $<
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/ffbuild/version.sh ffmpeg_v4l2-request-hwaccel-4.2.2/ffbuild/version.sh
---- ffmpeg_n4.2.2/ffbuild/version.sh	2020-05-21 20:25:05.183846597 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/ffbuild/version.sh	2020-06-10 23:18:57.086973659 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/ffbuild/version.sh ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/ffbuild/version.sh
+--- ffmpeg-4.3.orig/ffbuild/version.sh	2020-05-21 08:55:30.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/ffbuild/version.sh	2020-06-23 18:28:02.097531190 -0700
 @@ -2,6 +2,7 @@
  
  # Usage: version.sh <ffmpeg-root-dir> <output-version.h> <extra-version>
@@ -150,9 +150,37 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/ffbuild/version.sh ffmpeg_v4l2-request-
  
  # no revision number found
  test "$revision" || revision=$(cd "$1" && cat RELEASE 2> /dev/null)
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/dxva2.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/dxva2.c
---- ffmpeg_n4.2.2/libavcodec/dxva2.c	2020-05-21 20:25:05.303844291 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/dxva2.c	2020-06-10 23:18:57.216971586 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/avcodec.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/avcodec.h
+--- ffmpeg-4.3.orig/libavcodec/avcodec.h	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/avcodec.h	2020-06-23 18:28:02.177555975 -0700
+@@ -2511,6 +2511,11 @@
+     int (*end_frame)(AVCodecContext *avctx);
+ 
+     /**
++     * Called when frame is returned to api user.
++     */
++    int (*output_frame)(AVCodecContext *avctx, AVFrame *frame);
++
++    /**
+      * Size of per-frame hardware accelerator private data.
+      *
+      * Private data is allocated with av_mallocz() before
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/decode.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/decode.c
+--- ffmpeg-4.3.orig/libavcodec/decode.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/decode.c	2020-06-23 18:28:02.217568367 -0700
+@@ -359,6 +359,9 @@
+     emms_c();
+     actual_got_frame = got_frame;
+ 
++    if (got_frame && avctx->hwaccel && avctx->hwaccel->output_frame)
++        avctx->hwaccel->output_frame(avctx, frame);
++
+     if (avctx->codec->type == AVMEDIA_TYPE_VIDEO) {
+         if (frame->flags & AV_FRAME_FLAG_DISCARD)
+             got_frame = 0;
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/dxva2.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/dxva2.c
+--- ffmpeg-4.3.orig/libavcodec/dxva2.c	2020-05-21 08:55:31.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/dxva2.c	2020-06-23 18:28:02.227571465 -0700
 @@ -771,16 +771,18 @@
  #if CONFIG_D3D11VA
      if (avctx->pix_fmt == AV_PIX_FMT_D3D11)
@@ -176,9 +204,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/dxva2.c ffmpeg_v4l2-request-
      }
  #endif
  
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/dxva2_h264.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/dxva2_h264.c
---- ffmpeg_n4.2.2/libavcodec/dxva2_h264.c	2020-05-21 20:25:05.313844099 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/dxva2_h264.c	2020-06-10 23:18:57.216971586 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/dxva2_h264.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/dxva2_h264.c
+--- ffmpeg-4.3.orig/libavcodec/dxva2_h264.c	2020-05-21 08:55:31.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/dxva2_h264.c	2020-06-23 18:28:02.227571465 -0700
 @@ -504,6 +504,14 @@
  
      if (ctx_pic->slice_count <= 0 || ctx_pic->bitstream_size <= 0)
@@ -194,10 +222,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/dxva2_h264.c ffmpeg_v4l2-req
      ret = ff_dxva2_common_end_frame(avctx, h->cur_pic_ptr->f,
                                      &ctx_pic->pp, sizeof(ctx_pic->pp),
                                      &ctx_pic->qm, sizeof(ctx_pic->qm),
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264-ctrls.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264-ctrls.h
---- ffmpeg_n4.2.2/libavcodec/h264-ctrls.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264-ctrls.h	2020-06-10 23:18:57.246971107 -0700
-@@ -0,0 +1,218 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/h264-ctrls.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264-ctrls.h
+--- ffmpeg-4.3.orig/libavcodec/h264-ctrls.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264-ctrls.h	2020-06-23 18:28:02.257580760 -0700
+@@ -0,0 +1,219 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * These are the H.264 state controls for use with stateless H.264
@@ -388,11 +416,12 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264-ctrls.h ffmpeg_v4l2-req
 +	__u32 flags;
 +};
 +
-+#define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
-+#define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
++#define V4L2_H264_DPB_ENTRY_FLAG_TOP_REF	0x01
++#define V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_REF	0x02
++#define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		(0x01|0x02)
 +#define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
-+#define V4L2_H264_DPB_ENTRY_FLAG_FIELD		0x08
-+#define V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD	0x10
++#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PIC	0x08
++#define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x10
 +
 +struct v4l2_h264_dpb_entry {
 +	__u64 reference_ts;
@@ -416,10 +445,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264-ctrls.h ffmpeg_v4l2-req
 +};
 +
 +#endif
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264dec.c
---- ffmpeg_n4.2.2/libavcodec/h264dec.c	2020-05-21 20:25:05.343843522 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264dec.c	2020-06-10 23:18:57.246971107 -0700
-@@ -486,6 +486,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/h264dec.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264dec.c
+--- ffmpeg-4.3.orig/libavcodec/h264dec.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264dec.c	2020-06-23 18:28:02.257580760 -0700
+@@ -467,6 +467,7 @@
  
      h->next_outputed_poc = INT_MIN;
      h->prev_interlaced_frame = 1;
@@ -427,7 +456,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.c ffmpeg_v4l2-reques
      idr(h);
  
      h->poc.prev_frame_num = -1;
-@@ -1081,6 +1082,9 @@
+@@ -1102,6 +1103,9 @@
  #if CONFIG_H264_VIDEOTOOLBOX_HWACCEL
                                 HWACCEL_VIDEOTOOLBOX(h264),
  #endif
@@ -436,11 +465,11 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.c ffmpeg_v4l2-reques
 +#endif
                                 NULL
                             },
-     .caps_internal         = FF_CODEC_CAP_INIT_THREADSAFE | FF_CODEC_CAP_EXPORTS_CROPPING,
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264dec.h
---- ffmpeg_n4.2.2/libavcodec/h264dec.h	2020-05-21 20:25:05.343843522 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264dec.h	2020-06-10 23:18:57.246971107 -0700
-@@ -184,6 +184,8 @@
+     .caps_internal         = FF_CODEC_CAP_INIT_THREADSAFE | FF_CODEC_CAP_EXPORTS_CROPPING |
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/h264dec.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264dec.h
+--- ffmpeg-4.3.orig/libavcodec/h264dec.h	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264dec.h	2020-06-23 18:28:02.257580760 -0700
+@@ -190,6 +190,8 @@
      int slice_type_nos;         ///< S free slice type (SI/SP are remapped to I/P)
      int slice_type_fixed;
  
@@ -449,7 +478,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.h ffmpeg_v4l2-reques
      int qscale;
      int chroma_qp[2];   // QPc
      int qp_thresh;      ///< QP threshold to skip loopfilter
-@@ -322,11 +324,13 @@
+@@ -328,11 +330,13 @@
      MMCO mmco[MAX_MMCO_COUNT];
      int  nb_mmco;
      int explicit_ref_marking;
@@ -463,7 +492,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.h ffmpeg_v4l2-reques
      int curr_pic_num;
      int max_pic_num;
  } H264SliceContext;
-@@ -533,6 +537,8 @@
+@@ -539,6 +543,8 @@
       * slices) anymore */
      int setup_finished;
  
@@ -472,10 +501,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264dec.h ffmpeg_v4l2-reques
      int cur_chroma_format_idc;
      int cur_bit_depth_luma;
      int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264_slice.c
---- ffmpeg_n4.2.2/libavcodec/h264_slice.c	2020-05-21 20:25:05.343843522 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/h264_slice.c	2020-06-10 23:18:57.246971107 -0700
-@@ -765,6 +765,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/h264_slice.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264_slice.c
+--- ffmpeg-4.3.orig/libavcodec/h264_slice.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/h264_slice.c	2020-06-23 18:28:02.257580760 -0700
+@@ -759,6 +759,7 @@
  #define HWACCEL_MAX (CONFIG_H264_DXVA2_HWACCEL + \
                       (CONFIG_H264_D3D11VA_HWACCEL * 2) + \
                       CONFIG_H264_NVDEC_HWACCEL + \
@@ -483,7 +512,37 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
                       CONFIG_H264_VAAPI_HWACCEL + \
                       CONFIG_H264_VIDEOTOOLBOX_HWACCEL + \
                       CONFIG_H264_VDPAU_HWACCEL)
-@@ -850,6 +851,9 @@
+@@ -784,10 +785,17 @@
+                 *fmt++ = AV_PIX_FMT_GBRP10;
+             } else
+                 *fmt++ = AV_PIX_FMT_YUV444P10;
+-        } else if (CHROMA422(h))
++        } else if (CHROMA422(h)) {
++#if CONFIG_H264_V4L2REQUEST_HWACCEL
++            *fmt++ = AV_PIX_FMT_DRM_PRIME;
++#endif
+             *fmt++ = AV_PIX_FMT_YUV422P10;
+-        else
++        } else {
++#if CONFIG_H264_V4L2REQUEST_HWACCEL
++            *fmt++ = AV_PIX_FMT_DRM_PRIME;
++#endif
+             *fmt++ = AV_PIX_FMT_YUV420P10;
++        }
+         break;
+     case 12:
+         if (CHROMA444(h)) {
+@@ -826,6 +834,9 @@
+             else
+                 *fmt++ = AV_PIX_FMT_YUV444P;
+         } else if (CHROMA422(h)) {
++#if CONFIG_H264_V4L2REQUEST_HWACCEL
++                *fmt++ = AV_PIX_FMT_DRM_PRIME;
++#endif
+             if (h->avctx->color_range == AVCOL_RANGE_JPEG)
+                 *fmt++ = AV_PIX_FMT_YUVJ422P;
+             else
+@@ -844,6 +855,9 @@
  #if CONFIG_H264_VIDEOTOOLBOX_HWACCEL
              *fmt++ = AV_PIX_FMT_VIDEOTOOLBOX;
  #endif
@@ -493,7 +552,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
              if (h->avctx->codec->pix_fmts)
                  choices = h->avctx->codec->pix_fmts;
              else if (h->avctx->color_range == AVCOL_RANGE_JPEG)
-@@ -936,6 +940,7 @@
+@@ -928,6 +942,7 @@
  
      h->first_field           = 0;
      h->prev_interlaced_frame = 1;
@@ -501,7 +560,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
  
      init_scan_tables(h);
      ret = ff_h264_alloc_tables(h);
-@@ -1731,7 +1736,7 @@
+@@ -1735,7 +1750,7 @@
      unsigned int slice_type, tmp, i;
      int field_pic_flag, bottom_field_flag;
      int first_slice = sl == h->slice_ctx && !h->current_slice;
@@ -510,7 +569,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
  
      if (first_slice)
          av_assert0(!h->setup_finished);
-@@ -1819,8 +1824,9 @@
+@@ -1817,8 +1832,9 @@
      }
  
      if (nal->type == H264_NAL_IDR_SLICE)
@@ -521,7 +580,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
      if (sps->poc_type == 0) {
          sl->poc_lsb = get_bits(&sl->gb, sps->log2_max_poc_lsb);
  
-@@ -1834,6 +1840,7 @@
+@@ -1832,6 +1848,7 @@
          if (pps->pic_order_present == 1 && picture_structure == PICT_FRAME)
              sl->delta_poc[1] = get_se_golomb(&sl->gb);
      }
@@ -529,7 +588,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
  
      sl->redundant_pic_count = 0;
      if (pps->redundant_pic_cnt_present)
-@@ -1873,9 +1880,11 @@
+@@ -1871,9 +1888,11 @@
  
      sl->explicit_ref_marking = 0;
      if (nal->ref_idc) {
@@ -541,10 +600,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/h264_slice.c ffmpeg_v4l2-req
      }
  
      if (sl->slice_type_nos != AV_PICTURE_TYPE_I && pps->cabac) {
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hevc-ctrls.h
---- ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hevc-ctrls.h	2020-06-10 23:18:57.256970948 -0700
-@@ -0,0 +1,229 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/hevc-ctrls.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hevc-ctrls.h
+--- ffmpeg-4.3.orig/libavcodec/hevc-ctrls.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hevc-ctrls.h	2020-06-23 18:28:02.267583858 -0700
+@@ -0,0 +1,238 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * These are the HEVC state controls for use with stateless HEVC
@@ -603,6 +662,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +/* The controls are not stable at the moment and will likely be reworked. */
 +struct v4l2_ctrl_hevc_sps {
 +	/* ISO/IEC 23008-2, ITU-T Rec. H.265: Sequence parameter set */
++	__u8	video_parameter_set_id;
++	__u8	seq_parameter_set_id;
++	__u8	chroma_format_idc;
 +	__u16	pic_width_in_luma_samples;
 +	__u16	pic_height_in_luma_samples;
 +	__u8	bit_depth_luma_minus8;
@@ -623,9 +685,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +	__u8	log2_diff_max_min_pcm_luma_coding_block_size;
 +	__u8	num_short_term_ref_pic_sets;
 +	__u8	num_long_term_ref_pics_sps;
-+	__u8	chroma_format_idc;
 +
-+	__u8	padding;
++	__u8	num_slices;
++	__u8	padding[6];
 +
 +	__u64	flags;
 +};
@@ -652,7 +714,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +
 +struct v4l2_ctrl_hevc_pps {
 +	/* ISO/IEC 23008-2, ITU-T Rec. H.265: Picture parameter set */
++	__u8	pic_parameter_set_id;
 +	__u8	num_extra_slice_header_bits;
++	__u8	num_ref_idx_l0_default_active_minus1;
++	__u8	num_ref_idx_l1_default_active_minus1;
 +	__s8	init_qp_minus26;
 +	__u8	diff_cu_qp_delta_depth;
 +	__s8	pps_cb_qp_offset;
@@ -665,7 +730,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +	__s8	pps_tc_offset_div2;
 +	__u8	log2_parallel_merge_level_minus2;
 +
-+	__u8	padding[4];
++	__u8	padding;
 +	__u64	flags;
 +};
 +
@@ -751,7 +816,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +	__u8	num_rps_poc_st_curr_after;
 +	__u8	num_rps_poc_lt_curr;
 +
-+	__u8	padding;
++	__u16	short_term_ref_pic_set_size;
++	__u16	long_term_ref_pic_set_size;
++
++	__u8	padding[5];
 +
 +	__u32	entry_point_offset_minus1[256];
 +
@@ -774,10 +842,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevc-ctrls.h ffmpeg_v4l2-req
 +};
 +
 +#endif
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevcdec.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hevcdec.c
---- ffmpeg_n4.2.2/libavcodec/hevcdec.c	2020-05-21 20:25:05.353843330 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hevcdec.c	2020-06-10 23:18:57.256970948 -0700
-@@ -373,6 +373,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/hevcdec.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hevcdec.c
+--- ffmpeg-4.3.orig/libavcodec/hevcdec.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hevcdec.c	2020-06-23 18:28:02.267583858 -0700
+@@ -372,6 +372,7 @@
  #define HWACCEL_MAX (CONFIG_HEVC_DXVA2_HWACCEL + \
                       CONFIG_HEVC_D3D11VA_HWACCEL * 2 + \
                       CONFIG_HEVC_NVDEC_HWACCEL + \
@@ -785,7 +853,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevcdec.c ffmpeg_v4l2-reques
                       CONFIG_HEVC_VAAPI_HWACCEL + \
                       CONFIG_HEVC_VIDEOTOOLBOX_HWACCEL + \
                       CONFIG_HEVC_VDPAU_HWACCEL)
-@@ -400,6 +401,9 @@
+@@ -399,6 +400,9 @@
  #if CONFIG_HEVC_VIDEOTOOLBOX_HWACCEL
          *fmt++ = AV_PIX_FMT_VIDEOTOOLBOX;
  #endif
@@ -795,7 +863,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevcdec.c ffmpeg_v4l2-reques
          break;
      case AV_PIX_FMT_YUV420P10:
  #if CONFIG_HEVC_DXVA2_HWACCEL
-@@ -418,6 +422,9 @@
+@@ -417,6 +421,9 @@
  #if CONFIG_HEVC_NVDEC_HWACCEL
          *fmt++ = AV_PIX_FMT_CUDA;
  #endif
@@ -805,7 +873,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevcdec.c ffmpeg_v4l2-reques
          break;
      case AV_PIX_FMT_YUV444P:
  #if CONFIG_HEVC_VDPAU_HWACCEL
-@@ -3593,6 +3600,9 @@
+@@ -3589,6 +3596,9 @@
  #if CONFIG_HEVC_VIDEOTOOLBOX_HWACCEL
                                 HWACCEL_VIDEOTOOLBOX(hevc),
  #endif
@@ -815,20 +883,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hevcdec.c ffmpeg_v4l2-reques
                                 NULL
                             },
  };
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hwaccel.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hwaccel.h
---- ffmpeg_n4.2.2/libavcodec/hwaccel.h	2020-05-21 20:25:05.363843138 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hwaccel.h	2020-06-10 23:18:57.266970788 -0700
-@@ -80,5 +80,7 @@
-     HW_CONFIG_HWACCEL(0, 0, 1, D3D11VA_VLD,  NONE,         ff_ ## codec ## _d3d11va_hwaccel)
- #define HWACCEL_XVMC(codec) \
-     HW_CONFIG_HWACCEL(0, 0, 1, XVMC,         NONE,         ff_ ## codec ## _xvmc_hwaccel)
-+#define HWACCEL_V4L2REQUEST(codec) \
-+    HW_CONFIG_HWACCEL(1, 0, 0, DRM_PRIME,    DRM,          ff_ ## codec ## _v4l2request_hwaccel)
- 
- #endif /* AVCODEC_HWACCEL_H */
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hwaccels.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hwaccels.h
---- ffmpeg_n4.2.2/libavcodec/hwaccels.h	2020-05-21 20:25:05.363843138 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/hwaccels.h	2020-06-10 23:18:57.266970788 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/hwaccels.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hwaccels.h
+--- ffmpeg-4.3.orig/libavcodec/hwaccels.h	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hwaccels.h	2020-06-23 18:28:02.277586956 -0700
 @@ -27,6 +27,7 @@
  extern const AVHWAccel ff_h264_d3d11va2_hwaccel;
  extern const AVHWAccel ff_h264_dxva2_hwaccel;
@@ -865,12 +922,24 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/hwaccels.h ffmpeg_v4l2-reque
  extern const AVHWAccel ff_vp9_nvdec_hwaccel;
 +extern const AVHWAccel ff_vp9_v4l2request_hwaccel;
  extern const AVHWAccel ff_vp9_vaapi_hwaccel;
+ extern const AVHWAccel ff_vp9_vdpau_hwaccel;
  extern const AVHWAccel ff_wmv3_d3d11va_hwaccel;
- extern const AVHWAccel ff_wmv3_d3d11va2_hwaccel;
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/Makefile ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/Makefile
---- ffmpeg_n4.2.2/libavcodec/Makefile	2020-05-21 20:25:05.193846405 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/Makefile	2020-06-10 23:18:57.096973500 -0700
-@@ -147,6 +147,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/hwconfig.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hwconfig.h
+--- ffmpeg-4.3.orig/libavcodec/hwconfig.h	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/hwconfig.h	2020-06-23 18:28:02.277586956 -0700
+@@ -80,6 +80,8 @@
+     HW_CONFIG_HWACCEL(0, 0, 1, D3D11VA_VLD,  NONE,         ff_ ## codec ## _d3d11va_hwaccel)
+ #define HWACCEL_XVMC(codec) \
+     HW_CONFIG_HWACCEL(0, 0, 1, XVMC,         NONE,         ff_ ## codec ## _xvmc_hwaccel)
++#define HWACCEL_V4L2REQUEST(codec) \
++    HW_CONFIG_HWACCEL(1, 0, 0, DRM_PRIME,    DRM,          ff_ ## codec ## _v4l2request_hwaccel)
+ 
+ #define HW_CONFIG_ENCODER(device, frames, ad_hoc, format, device_type_) \
+     &(const AVCodecHWConfigInternal) { \
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/Makefile ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/Makefile
+--- ffmpeg-4.3.orig/libavcodec/Makefile	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/Makefile	2020-06-23 18:28:02.107534288 -0700
+@@ -153,6 +153,7 @@
  OBJS-$(CONFIG_VP56DSP)                 += vp56dsp.o
  OBJS-$(CONFIG_VP8DSP)                  += vp8dsp.o
  OBJS-$(CONFIG_V4L2_M2M)                += v4l2_m2m.o v4l2_context.o v4l2_buffers.o v4l2_fmt.o
@@ -878,7 +947,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/Makefile ffmpeg_v4l2-request
  OBJS-$(CONFIG_WMA_FREQS)               += wma_freqs.o
  OBJS-$(CONFIG_WMV2DSP)                 += wmv2dsp.o
  
-@@ -871,6 +872,7 @@
+@@ -902,6 +903,7 @@
  OBJS-$(CONFIG_H264_DXVA2_HWACCEL)         += dxva2_h264.o
  OBJS-$(CONFIG_H264_NVDEC_HWACCEL)         += nvdec_h264.o
  OBJS-$(CONFIG_H264_QSV_HWACCEL)           += qsvdec_h2645.o
@@ -886,15 +955,15 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/Makefile ffmpeg_v4l2-request
  OBJS-$(CONFIG_H264_VAAPI_HWACCEL)         += vaapi_h264.o
  OBJS-$(CONFIG_H264_VDPAU_HWACCEL)         += vdpau_h264.o
  OBJS-$(CONFIG_H264_VIDEOTOOLBOX_HWACCEL)  += videotoolbox.o
-@@ -878,6 +880,7 @@
+@@ -909,6 +911,7 @@
  OBJS-$(CONFIG_HEVC_DXVA2_HWACCEL)         += dxva2_hevc.o
  OBJS-$(CONFIG_HEVC_NVDEC_HWACCEL)         += nvdec_hevc.o
  OBJS-$(CONFIG_HEVC_QSV_HWACCEL)           += qsvdec_h2645.o
 +OBJS-$(CONFIG_HEVC_V4L2REQUEST_HWACCEL)   += v4l2_request_hevc.o
- OBJS-$(CONFIG_HEVC_VAAPI_HWACCEL)         += vaapi_hevc.o
+ OBJS-$(CONFIG_HEVC_VAAPI_HWACCEL)         += vaapi_hevc.o h265_profile_level.o
  OBJS-$(CONFIG_HEVC_VDPAU_HWACCEL)         += vdpau_hevc.o
  OBJS-$(CONFIG_MJPEG_NVDEC_HWACCEL)        += nvdec_mjpeg.o
-@@ -890,6 +893,7 @@
+@@ -921,6 +924,7 @@
  OBJS-$(CONFIG_MPEG2_DXVA2_HWACCEL)        += dxva2_mpeg2.o
  OBJS-$(CONFIG_MPEG2_NVDEC_HWACCEL)        += nvdec_mpeg12.o
  OBJS-$(CONFIG_MPEG2_QSV_HWACCEL)          += qsvdec_other.o
@@ -902,7 +971,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/Makefile ffmpeg_v4l2-request
  OBJS-$(CONFIG_MPEG2_VAAPI_HWACCEL)        += vaapi_mpeg2.o
  OBJS-$(CONFIG_MPEG2_VDPAU_HWACCEL)        += vdpau_mpeg12.o
  OBJS-$(CONFIG_MPEG2_VIDEOTOOLBOX_HWACCEL) += videotoolbox.o
-@@ -905,10 +909,12 @@
+@@ -936,10 +940,12 @@
  OBJS-$(CONFIG_VC1_VAAPI_HWACCEL)          += vaapi_vc1.o
  OBJS-$(CONFIG_VC1_VDPAU_HWACCEL)          += vdpau_vc1.o
  OBJS-$(CONFIG_VP8_NVDEC_HWACCEL)          += nvdec_vp8.o
@@ -913,12 +982,12 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/Makefile ffmpeg_v4l2-request
  OBJS-$(CONFIG_VP9_NVDEC_HWACCEL)          += nvdec_vp9.o
 +OBJS-$(CONFIG_VP9_V4L2REQUEST_HWACCEL)    += v4l2_request_vp9.o
  OBJS-$(CONFIG_VP9_VAAPI_HWACCEL)          += vaapi_vp9.o
+ OBJS-$(CONFIG_VP9_VDPAU_HWACCEL)          += vdpau_vp9.o
  OBJS-$(CONFIG_VP8_QSV_HWACCEL)            += qsvdec_other.o
- 
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/mpeg12dec.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/mpeg12dec.c
---- ffmpeg_n4.2.2/libavcodec/mpeg12dec.c	2020-05-21 20:25:05.453841409 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/mpeg12dec.c	2020-06-10 23:18:57.356969353 -0700
-@@ -1157,6 +1157,9 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/mpeg12dec.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/mpeg12dec.c
+--- ffmpeg-4.3.orig/libavcodec/mpeg12dec.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/mpeg12dec.c	2020-06-23 18:28:02.377617937 -0700
+@@ -1155,6 +1155,9 @@
  #if CONFIG_MPEG2_VIDEOTOOLBOX_HWACCEL
      AV_PIX_FMT_VIDEOTOOLBOX,
  #endif
@@ -928,7 +997,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/mpeg12dec.c ffmpeg_v4l2-requ
      AV_PIX_FMT_YUV420P,
      AV_PIX_FMT_NONE
  };
-@@ -2942,6 +2945,9 @@
+@@ -2953,6 +2956,9 @@
  #if CONFIG_MPEG2_XVMC_HWACCEL
                          HWACCEL_XVMC(mpeg2),
  #endif
@@ -938,9 +1007,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/mpeg12dec.c ffmpeg_v4l2-requ
                          NULL
                      },
  };
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/mpeg2-ctrls.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/mpeg2-ctrls.h
---- ffmpeg_n4.2.2/libavcodec/mpeg2-ctrls.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/mpeg2-ctrls.h	2020-06-10 23:18:57.356969353 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/mpeg2-ctrls.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/mpeg2-ctrls.h
+--- ffmpeg-4.3.orig/libavcodec/mpeg2-ctrls.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/mpeg2-ctrls.h	2020-06-23 18:28:02.377617937 -0700
 @@ -0,0 +1,82 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
@@ -1024,10 +1093,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/mpeg2-ctrls.h ffmpeg_v4l2-re
 +};
 +
 +#endif
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,984 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,1055 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -1058,7 +1127,16 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +
 +#include "decode.h"
 +#include "internal.h"
++#include "libavutil/pixdesc.h"
 +#include "v4l2_request.h"
++
++#ifndef DRM_FORMAT_NV15
++#define DRM_FORMAT_NV15 fourcc_code('N', 'V', '1', '5')
++#endif
++
++#ifndef DRM_FORMAT_NV20
++#define DRM_FORMAT_NV20 fourcc_code('N', 'V', '2', '0')
++#endif
 +
 +uint64_t ff_v4l2_request_get_capture_timestamp(AVFrame *frame)
 +{
@@ -1213,10 +1291,26 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +    return 0;
 +}
 +
-+const uint32_t v4l2_request_capture_pixelformats[] = {
++const uint32_t v4l2_request_capture_pixelformats_420[] = {
 +    V4L2_PIX_FMT_NV12,
 +#ifdef DRM_FORMAT_MOD_ALLWINNER_TILED
 +    V4L2_PIX_FMT_SUNXI_TILED_NV12,
++#endif
++};
++
++const uint32_t v4l2_request_capture_pixelformats_420_10[] = {
++#ifdef V4L2_PIX_FMT_NV15
++    V4L2_PIX_FMT_NV15,
++#endif
++};
++
++const uint32_t v4l2_request_capture_pixelformats_422[] = {
++    V4L2_PIX_FMT_NV16,
++};
++
++const uint32_t v4l2_request_capture_pixelformats_422_10[] = {
++#ifdef V4L2_PIX_FMT_NV20
++    V4L2_PIX_FMT_NV20,
 +#endif
 +};
 +
@@ -1235,6 +1329,22 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +    case V4L2_PIX_FMT_SUNXI_TILED_NV12:
 +        layer->format = DRM_FORMAT_NV12;
 +        desc->objects[0].format_modifier = DRM_FORMAT_MOD_ALLWINNER_TILED;
++        break;
++#endif
++#ifdef V4L2_PIX_FMT_NV15
++    case V4L2_PIX_FMT_NV15:
++        layer->format = DRM_FORMAT_NV15;
++        desc->objects[0].format_modifier = DRM_FORMAT_MOD_LINEAR;
++        break;
++#endif
++    case V4L2_PIX_FMT_NV16:
++        layer->format = DRM_FORMAT_NV16;
++        desc->objects[0].format_modifier = DRM_FORMAT_MOD_LINEAR;
++        break;
++#ifdef V4L2_PIX_FMT_NV20
++    case V4L2_PIX_FMT_NV20:
++        layer->format = DRM_FORMAT_NV20;
++        desc->objects[0].format_modifier = DRM_FORMAT_MOD_LINEAR;
 +        break;
 +#endif
 +    default:
@@ -1375,6 +1485,15 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +    return v4l2_request_queue_decode(avctx, frame, control, count, 1, 1);
 +}
 +
++int ff_v4l2_request_output_frame(AVCodecContext *avctx, AVFrame *frame)
++{
++    V4L2RequestContext *ctx = avctx->internal->hwaccel_priv_data;
++    V4L2RequestDescriptor *req = (V4L2RequestDescriptor*)frame->data[0];
++
++    av_log(avctx, AV_LOG_DEBUG, "%s: avctx=%p used=%u index=%d fd=%d request_fd=%d\n", __func__, avctx, req->output.used, req->capture.index, req->capture.fd, req->request_fd);
++    return 0;
++}
++
 +static int v4l2_request_try_format(AVCodecContext *avctx, enum v4l2_buf_type type, uint32_t pixelformat)
 +{
 +    V4L2RequestContext *ctx = avctx->internal->hwaccel_priv_data;
@@ -1472,10 +1591,31 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +        fmtdesc.index++;
 +    }
 +#else
-+    for (int i = 0; i < FF_ARRAY_ELEMS(v4l2_request_capture_pixelformats); i++) {
-+        uint32_t pixelformat = v4l2_request_capture_pixelformats[i];
-+        if (!v4l2_request_try_format(avctx, type, pixelformat))
-+            return v4l2_request_set_format(avctx, type, pixelformat, 0);
++    av_log(avctx, AV_LOG_DEBUG, "%s: avctx=%p pix_fmt=%s sw_pix_fmt=%s\n", __func__, avctx, av_get_pix_fmt_name(avctx->pix_fmt), av_get_pix_fmt_name(avctx->sw_pix_fmt));
++    if (avctx->sw_pix_fmt == AV_PIX_FMT_YUV420P || avctx->sw_pix_fmt == AV_PIX_FMT_YUVJ420P) {
++        for (int i = 0; i < FF_ARRAY_ELEMS(v4l2_request_capture_pixelformats_420); i++) {
++            uint32_t pixelformat = v4l2_request_capture_pixelformats_420[i];
++            if (!v4l2_request_try_format(avctx, type, pixelformat))
++                return v4l2_request_set_format(avctx, type, pixelformat, 0);
++        }
++    } else if (avctx->sw_pix_fmt == AV_PIX_FMT_YUV420P10) {
++        for (int i = 0; i < FF_ARRAY_ELEMS(v4l2_request_capture_pixelformats_420_10); i++) {
++            uint32_t pixelformat = v4l2_request_capture_pixelformats_420_10[i];
++            if (!v4l2_request_try_format(avctx, type, pixelformat))
++                return v4l2_request_set_format(avctx, type, pixelformat, 0);
++        }
++    } else if (avctx->sw_pix_fmt == AV_PIX_FMT_YUV422P || avctx->sw_pix_fmt == AV_PIX_FMT_YUVJ422P) {
++        for (int i = 0; i < FF_ARRAY_ELEMS(v4l2_request_capture_pixelformats_422); i++) {
++            uint32_t pixelformat = v4l2_request_capture_pixelformats_422[i];
++            if (!v4l2_request_try_format(avctx, type, pixelformat))
++                return v4l2_request_set_format(avctx, type, pixelformat, 0);
++        }
++    } else if (avctx->sw_pix_fmt == AV_PIX_FMT_YUV422P10) {
++        for (int i = 0; i < FF_ARRAY_ELEMS(v4l2_request_capture_pixelformats_422_10); i++) {
++            uint32_t pixelformat = v4l2_request_capture_pixelformats_422_10[i];
++            if (!v4l2_request_try_format(avctx, type, pixelformat))
++                return v4l2_request_set_format(avctx, type, pixelformat, 0);
++        }
 +    }
 +#endif
 +
@@ -2012,10 +2152,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.c ffmpeg_v4l2-r
 +
 +    return 0;
 +}
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request.h
---- ffmpeg_n4.2.2/libavcodec/v4l2_request.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request.h	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,77 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request.h
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request.h	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,79 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -2086,6 +2226,8 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.h ffmpeg_v4l2-r
 +
 +int ff_v4l2_request_decode_frame(AVCodecContext *avctx, AVFrame *frame, struct v4l2_ext_control *control, int count);
 +
++int ff_v4l2_request_output_frame(AVCodecContext *avctx, AVFrame *frame);
++
 +int ff_v4l2_request_init(AVCodecContext *avctx, uint32_t pixelformat, uint32_t buffersize, struct v4l2_ext_control *control, int count);
 +
 +int ff_v4l2_request_uninit(AVCodecContext *avctx);
@@ -2093,10 +2235,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request.h ffmpeg_v4l2-r
 +int ff_v4l2_request_frame_params(AVCodecContext *avctx, AVBufferRef *hw_frames_ctx);
 +
 +#endif /* AVCODEC_V4L2_REQUEST_H */
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_h264.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_h264.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,468 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request_h264.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_h264.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request_h264.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_h264.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,467 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -2116,7 +2258,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c ffmpeg_v
 + */
 +
 +#include "h264dec.h"
-+#include "hwaccel.h"
++#include "hwconfig.h"
 +#include "v4l2_request.h"
 +#include "h264-ctrls.h"
 +
@@ -2166,16 +2308,14 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c ffmpeg_v
 +    entry->frame_num = pic->frame_num;
 +    entry->pic_num = pic->pic_id;
 +    entry->flags = V4L2_H264_DPB_ENTRY_FLAG_VALID;
-+    if (pic->reference) {
-+        entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_ACTIVE;
-+        if (pic->reference != PICT_FRAME) {
-+            entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_FIELD;
-+            if (pic->reference == PICT_BOTTOM_FIELD)
-+                entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD;
-+        }
-+    }
++    if (pic->reference & PICT_TOP_FIELD)
++        entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_TOP_REF;
++    if (pic->reference & PICT_BOTTOM_FIELD)
++        entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_REF;
 +    if (pic->long_ref)
 +        entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM;
++    if (pic->field_picture)
++        entry->flags |= V4L2_H264_DPB_ENTRY_FLAG_FIELD_PIC;
 +    if (pic->field_poc[0] != INT_MAX)
 +        entry->top_field_order_cnt = pic->field_poc[0];
 +    if (pic->field_poc[1] != INT_MAX)
@@ -2558,6 +2698,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c ffmpeg_v
 +    .start_frame    = v4l2_request_h264_start_frame,
 +    .decode_slice   = v4l2_request_h264_decode_slice,
 +    .end_frame      = v4l2_request_h264_end_frame,
++    .output_frame   = ff_v4l2_request_output_frame,
 +    .frame_priv_data_size = sizeof(V4L2RequestControlsH264),
 +    .init           = v4l2_request_h264_init,
 +    .uninit         = ff_v4l2_request_uninit,
@@ -2565,10 +2706,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_h264.c ffmpeg_v
 +    .frame_params   = ff_v4l2_request_frame_params,
 +    .caps_internal  = HWACCEL_CAP_ASYNC_SAFE,
 +};
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_hevc.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_hevc.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,568 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request_hevc.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_hevc.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request_hevc.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_hevc.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,581 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -2588,7 +2729,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 + */
 +
 +#include "hevcdec.h"
-+#include "hwaccel.h"
++#include "hwconfig.h"
 +#include "v4l2_request.h"
 +#include "hevc-ctrls.h"
 +
@@ -2740,6 +2881,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +        .num_rps_poc_st_curr_before = h->rps[ST_CURR_BEF].nb_refs,
 +        .num_rps_poc_st_curr_after = h->rps[ST_CURR_AFT].nb_refs,
 +        .num_rps_poc_lt_curr = h->rps[LT_CURR].nb_refs,
++
++        .short_term_ref_pic_set_size = sh->short_term_ref_pic_set_size,
++        .long_term_ref_pic_set_size = sh->long_term_ref_pic_set_size,
 +    };
 +
 +    if (sh->slice_sample_adaptive_offset_flag[0])
@@ -2810,9 +2954,12 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +static void fill_sps(struct v4l2_ctrl_hevc_sps *ctrl, const HEVCContext *h)
 +{
 +    const HEVCSPS *sps = h->ps.sps;
++    const HEVCPPS *pps = h->ps.pps;
 +
 +    /* ISO/IEC 23008-2, ITU-T Rec. H.265: Sequence parameter set */
 +    *ctrl = (struct v4l2_ctrl_hevc_sps) {
++        .video_parameter_set_id = sps->vps_id,
++        .seq_parameter_set_id = pps->sps_id,
 +        .chroma_format_idc = sps->chroma_format_idc,
 +        .pic_width_in_luma_samples = sps->width,
 +        .pic_height_in_luma_samples = sps->height,
@@ -2871,6 +3018,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +    const HEVCContext *h = avctx->priv_data;
 +    const HEVCSPS *sps = h->ps.sps;
 +    const HEVCPPS *pps = h->ps.pps;
++    const SliceHeader *sh = &h->sh;
 +    const ScalingList *sl = pps->scaling_list_data_present_flag ?
 +                            &pps->scaling_list :
 +                            sps->scaling_list_enable_flag ?
@@ -2897,6 +3045,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +
 +    /* ISO/IEC 23008-2, ITU-T Rec. H.265: Picture parameter set */
 +    controls->pps = (struct v4l2_ctrl_hevc_pps) {
++        .pic_parameter_set_id = sh->pps_id,
++        .num_ref_idx_l0_default_active_minus1 = pps->num_ref_idx_l0_default_active - 1,
++        .num_ref_idx_l1_default_active_minus1 = pps->num_ref_idx_l1_default_active - 1,
 +        .num_extra_slice_header_bits = pps->num_extra_slice_header_bits,
 +        .init_qp_minus26 = pps->pic_init_qp_minus26,
 +        .diff_cu_qp_delta_depth = pps->diff_cu_qp_delta_depth,
@@ -3012,6 +3163,8 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +
 +    if (ctx->decode_mode == V4L2_MPEG_VIDEO_HEVC_DECODE_MODE_SLICE_BASED)
 +        return ff_v4l2_request_decode_slice(avctx, h->ref->frame, control, FF_ARRAY_ELEMS(control), controls->first_slice, last_slice);
++
++    controls->sps.num_slices = controls->num_slices;
 +
 +    return ff_v4l2_request_decode_frame(avctx, h->ref->frame, control, FF_ARRAY_ELEMS(control));
 +}
@@ -3130,6 +3283,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +    .start_frame    = v4l2_request_hevc_start_frame,
 +    .decode_slice   = v4l2_request_hevc_decode_slice,
 +    .end_frame      = v4l2_request_hevc_end_frame,
++    .output_frame   = ff_v4l2_request_output_frame,
 +    .frame_priv_data_size = sizeof(V4L2RequestControlsHEVC),
 +    .init           = v4l2_request_hevc_init,
 +    .uninit         = ff_v4l2_request_uninit,
@@ -3137,10 +3291,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_hevc.c ffmpeg_v
 +    .frame_params   = ff_v4l2_request_frame_params,
 +    .caps_internal  = HWACCEL_CAP_ASYNC_SAFE,
 +};
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_mpeg2.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_mpeg2.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request_mpeg2.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_mpeg2.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,155 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request_mpeg2.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_mpeg2.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request_mpeg2.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_mpeg2.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,156 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -3159,7 +3313,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_mpeg2.c ffmpeg_
 + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+#include "hwaccel.h"
++#include "hwconfig.h"
 +#include "mpegvideo.h"
 +#include "v4l2_request.h"
 +#include "mpeg2-ctrls.h"
@@ -3289,6 +3443,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_mpeg2.c ffmpeg_
 +    .start_frame    = v4l2_request_mpeg2_start_frame,
 +    .decode_slice   = v4l2_request_mpeg2_decode_slice,
 +    .end_frame      = v4l2_request_mpeg2_end_frame,
++    .output_frame   = ff_v4l2_request_output_frame,
 +    .frame_priv_data_size = sizeof(V4L2RequestControlsMPEG2),
 +    .init           = v4l2_request_mpeg2_init,
 +    .uninit         = ff_v4l2_request_uninit,
@@ -3296,10 +3451,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_mpeg2.c ffmpeg_
 +    .frame_params   = ff_v4l2_request_frame_params,
 +    .caps_internal  = HWACCEL_CAP_ASYNC_SAFE,
 +};
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp8.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_vp8.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request_vp8.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_vp8.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,181 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request_vp8.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_vp8.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request_vp8.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_vp8.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,182 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -3318,7 +3473,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp8.c ffmpeg_v4
 + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+#include "hwaccel.h"
++#include "hwconfig.h"
 +#include "v4l2_request.h"
 +#include "vp8.h"
 +#include "vp8-ctrls.h"
@@ -3474,6 +3629,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp8.c ffmpeg_v4
 +    .start_frame    = v4l2_request_vp8_start_frame,
 +    .decode_slice   = v4l2_request_vp8_decode_slice,
 +    .end_frame      = v4l2_request_vp8_end_frame,
++    .output_frame   = ff_v4l2_request_output_frame,
 +    .frame_priv_data_size = sizeof(V4L2RequestControlsVP8),
 +    .init           = v4l2_request_vp8_init,
 +    .uninit         = ff_v4l2_request_uninit,
@@ -3481,10 +3637,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp8.c ffmpeg_v4
 +    .frame_params   = ff_v4l2_request_frame_params,
 +    .caps_internal  = HWACCEL_CAP_ASYNC_SAFE,
 +};
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp9.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_vp9.c
---- ffmpeg_n4.2.2/libavcodec/v4l2_request_vp9.c	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/v4l2_request_vp9.c	2020-06-10 23:18:57.466967598 -0700
-@@ -0,0 +1,353 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/v4l2_request_vp9.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_vp9.c
+--- ffmpeg-4.3.orig/libavcodec/v4l2_request_vp9.c	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/v4l2_request_vp9.c	2020-06-23 18:28:02.487652016 -0700
+@@ -0,0 +1,354 @@
 +/*
 + * This file is part of FFmpeg.
 + *
@@ -3503,7 +3659,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp9.c ffmpeg_v4
 + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+#include "hwaccel.h"
++#include "hwconfig.h"
 +#include "v4l2_request.h"
 +#include "vp9dec.h"
 +#include "vp9-ctrls.h"
@@ -3831,6 +3987,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp9.c ffmpeg_v4
 +    .start_frame    = v4l2_request_vp9_start_frame,
 +    .decode_slice   = v4l2_request_vp9_decode_slice,
 +    .end_frame      = v4l2_request_vp9_end_frame,
++    .output_frame   = ff_v4l2_request_output_frame,
 +    .frame_priv_data_size = sizeof(V4L2RequestControlsVP9),
 +    .init           = v4l2_request_vp9_init,
 +    .uninit         = ff_v4l2_request_uninit,
@@ -3838,9 +3995,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/v4l2_request_vp9.c ffmpeg_v4
 +    .frame_params   = ff_v4l2_request_frame_params,
 +    .caps_internal  = HWACCEL_CAP_ASYNC_SAFE,
 +};
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vaapi_h264.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vaapi_h264.c
---- ffmpeg_n4.2.2/libavcodec/vaapi_h264.c	2020-05-21 20:25:05.563839295 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vaapi_h264.c	2020-06-10 23:18:57.466967598 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vaapi_h264.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vaapi_h264.c
+--- ffmpeg-4.3.orig/libavcodec/vaapi_h264.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vaapi_h264.c	2020-06-23 18:28:02.487652016 -0700
 @@ -314,6 +314,11 @@
      H264SliceContext *sl = &h->slice_ctx[0];
      int ret;
@@ -3853,9 +4010,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vaapi_h264.c ffmpeg_v4l2-req
      ret = ff_vaapi_decode_issue(avctx, pic);
      if (ret < 0)
          goto finish;
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp8.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp8.c
---- ffmpeg_n4.2.2/libavcodec/vp8.c	2020-05-21 20:25:05.583838911 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp8.c	2020-06-10 23:18:57.486967279 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vp8.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp8.c
+--- ffmpeg-4.3.orig/libavcodec/vp8.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp8.c	2020-06-23 18:28:02.507658212 -0700
 @@ -176,6 +176,9 @@
  #if CONFIG_VP8_NVDEC_HWACCEL
          AV_PIX_FMT_CUDA,
@@ -3875,7 +4032,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp8.c ffmpeg_v4l2-request-hw
          s->pix_fmt = get_pixel_format(s);
          if (s->pix_fmt < 0)
              return AVERROR(EINVAL);
-@@ -2982,6 +2985,9 @@
+@@ -2969,6 +2972,9 @@
  #if CONFIG_VP8_NVDEC_HWACCEL
                                 HWACCEL_NVDEC(vp8),
  #endif
@@ -3884,10 +4041,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp8.c ffmpeg_v4l2-request-hw
 +#endif
                                 NULL
                             },
- };
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp8-ctrls.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp8-ctrls.h
---- ffmpeg_n4.2.2/libavcodec/vp8-ctrls.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp8-ctrls.h	2020-06-10 23:18:57.486967279 -0700
+     .caps_internal         = FF_CODEC_CAP_ALLOCATE_PROGRESS,
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vp8-ctrls.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp8-ctrls.h
+--- ffmpeg-4.3.orig/libavcodec/vp8-ctrls.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp8-ctrls.h	2020-06-23 18:28:02.507658212 -0700
 @@ -0,0 +1,112 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
@@ -4001,18 +4158,18 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp8-ctrls.h ffmpeg_v4l2-requ
 +};
 +
 +#endif
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9.c
---- ffmpeg_n4.2.2/libavcodec/vp9.c	2020-05-21 20:25:05.583838911 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9.c	2020-06-10 23:18:57.496967120 -0700
-@@ -173,6 +173,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vp9.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9.c
+--- ffmpeg-4.3.orig/libavcodec/vp9.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9.c	2020-06-23 18:28:02.517661310 -0700
+@@ -191,6 +191,7 @@
  #define HWACCEL_MAX (CONFIG_VP9_DXVA2_HWACCEL + \
                       CONFIG_VP9_D3D11VA_HWACCEL * 2 + \
                       CONFIG_VP9_NVDEC_HWACCEL + \
 +                     CONFIG_VP9_V4L2REQUEST_HWACCEL + \
-                      CONFIG_VP9_VAAPI_HWACCEL)
+                      CONFIG_VP9_VAAPI_HWACCEL + \
+                      CONFIG_VP9_VDPAU_HWACCEL)
      enum AVPixelFormat pix_fmts[HWACCEL_MAX + 2], *fmtp = pix_fmts;
-     VP9Context *s = avctx->priv_data;
-@@ -202,6 +203,9 @@
+@@ -224,6 +225,9 @@
  #if CONFIG_VP9_VAAPI_HWACCEL
              *fmtp++ = AV_PIX_FMT_VAAPI;
  #endif
@@ -4022,7 +4179,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9.c ffmpeg_v4l2-request-hw
              break;
          case AV_PIX_FMT_YUV420P12:
  #if CONFIG_VP9_NVDEC_HWACCEL
-@@ -210,6 +214,9 @@
+@@ -232,6 +236,9 @@
  #if CONFIG_VP9_VAAPI_HWACCEL
              *fmtp++ = AV_PIX_FMT_VAAPI;
  #endif
@@ -4032,7 +4189,7 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9.c ffmpeg_v4l2-request-hw
              break;
          }
  
-@@ -672,7 +679,8 @@
+@@ -700,7 +707,8 @@
                                           get_bits(&s->gb, 8) : 255;
          }
  
@@ -4042,9 +4199,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9.c ffmpeg_v4l2-request-hw
              s->s.h.segmentation.absolute_vals = get_bits1(&s->gb);
              for (i = 0; i < 8; i++) {
                  if ((s->s.h.segmentation.feat[i].q_enabled = get_bits1(&s->gb)))
-@@ -1817,6 +1825,9 @@
- #if CONFIG_VP9_VAAPI_HWACCEL
-                                HWACCEL_VAAPI(vp9),
+@@ -1910,6 +1918,9 @@
+ #if CONFIG_VP9_VDPAU_HWACCEL
+                                HWACCEL_VDPAU(vp9),
  #endif
 +#if CONFIG_VP9_V4L2REQUEST_HWACCEL
 +                               HWACCEL_V4L2REQUEST(vp9),
@@ -4052,9 +4209,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9.c ffmpeg_v4l2-request-hw
                                 NULL
                             },
  };
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9-ctrls.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9-ctrls.h
---- ffmpeg_n4.2.2/libavcodec/vp9-ctrls.h	1969-12-31 16:00:00.000000000 -0800
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9-ctrls.h	2020-06-10 23:18:57.496967120 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vp9-ctrls.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9-ctrls.h
+--- ffmpeg-4.3.orig/libavcodec/vp9-ctrls.h	1969-12-31 16:00:00.000000000 -0800
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9-ctrls.h	2020-06-23 18:28:02.507658212 -0700
 @@ -0,0 +1,485 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
@@ -4541,9 +4698,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9-ctrls.h ffmpeg_v4l2-requ
 +};
 +
 +#endif /* _VP9_CTRLS_H_ */
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9shared.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9shared.h
---- ffmpeg_n4.2.2/libavcodec/vp9shared.h	2020-05-21 20:25:05.593838719 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavcodec/vp9shared.h	2020-06-10 23:18:57.496967120 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavcodec/vp9shared.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9shared.h
+--- ffmpeg-4.3.orig/libavcodec/vp9shared.h	2020-05-21 08:55:31.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavcodec/vp9shared.h	2020-06-23 18:28:02.517661310 -0700
 @@ -131,6 +131,7 @@
          uint8_t temporal;
          uint8_t absolute_vals;
@@ -4552,65 +4709,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavcodec/vp9shared.h ffmpeg_v4l2-requ
          uint8_t prob[7];
          uint8_t pred_prob[3];
          struct {
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavformat/rtsp.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavformat/rtsp.c
---- ffmpeg_n4.2.2/libavformat/rtsp.c	2020-05-21 20:25:05.823834299 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavformat/rtsp.c	2020-06-10 23:18:57.726963451 -0700
-@@ -2334,7 +2334,9 @@
-     RTSPStream *rtsp_st;
-     int size, i, err;
-     char *content;
-+    const char *p, *sp="", *sources="", *sp2, *sources2;
-     char url[1024];
-+    char sources_buf[1024];
- 
-     if (!ff_network_init())
-         return AVERROR(EIO);
-@@ -2360,6 +2362,16 @@
-     av_freep(&content);
-     if (err) goto fail;
- 
-+    /* Search for sources= tag in original URL for rtp protocol only */
-+    if (strncmp(s->url, "rtp://", 6) == 0) {
-+        p = strchr(s->url, '?');
-+        if (p && av_find_info_tag(sources_buf, sizeof(sources_buf), "sources", p)) {
-+            /* av_log(s, AV_LOG_VERBOSE, "sdp_read_header found sources %s\n", sources_buf);  */
-+            sp = sources_buf;
-+            sources = "&sources=";
-+        }
-+    }
-+
-     /* open each RTP stream */
-     for (i = 0; i < rt->nb_rtsp_streams; i++) {
-         char namebuf[50];
-@@ -2377,12 +2389,22 @@
-                 av_dict_free(&opts);
-                 goto fail;
-             }
-+
-+            /* Prepare to add sources to the url to be opened.
-+               Otherwise the join to the source specific muliticast will be missing */
-+            sources2 = sources;
-+            sp2 = sp;
-+            /* ignore sources from original URL, when sources are already set in rtsp_st */
-+            if (rtsp_st->nb_include_source_addrs > 0)
-+                sources2 = sp2 = "";
-+
-             ff_url_join(url, sizeof(url), "rtp", NULL,
-                         namebuf, rtsp_st->sdp_port,
--                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d",
-+                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d%s%s",
-                         rtsp_st->sdp_port, rtsp_st->sdp_ttl,
-                         rt->rtsp_flags & RTSP_FLAG_FILTER_SRC ? 1 : 0,
--                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0);
-+                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0,
-+                        sources2, sp2);
- 
-             append_source_addrs(url, sizeof(url), "sources",
-                                 rtsp_st->nb_include_source_addrs,
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/buffer.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/buffer.c
---- ffmpeg_n4.2.2/libavutil/buffer.c	2020-05-21 20:25:05.863833530 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/buffer.c	2020-06-10 23:18:57.766962813 -0700
-@@ -272,6 +272,19 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavutil/buffer.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/buffer.c
+--- ffmpeg-4.3.orig/libavutil/buffer.c	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/buffer.c	2020-06-23 18:28:02.807751155 -0700
+@@ -273,6 +273,19 @@
      av_freep(&pool);
  }
  
@@ -4630,10 +4732,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/buffer.c ffmpeg_v4l2-request-
  void av_buffer_pool_uninit(AVBufferPool **ppool)
  {
      AVBufferPool *pool;
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/buffer.h ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/buffer.h
---- ffmpeg_n4.2.2/libavutil/buffer.h	2020-05-21 20:25:05.863833530 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/buffer.h	2020-06-10 23:18:57.766962813 -0700
-@@ -267,6 +267,11 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavutil/buffer.h ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/buffer.h
+--- ffmpeg-4.3.orig/libavutil/buffer.h	2020-06-15 11:54:24.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/buffer.h	2020-06-23 18:28:02.807751155 -0700
+@@ -268,6 +268,11 @@
                                     void (*pool_free)(void *opaque));
  
  /**
@@ -4645,9 +4747,9 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/buffer.h ffmpeg_v4l2-request-
   * Mark the pool as being available for freeing. It will actually be freed only
   * once all the allocated buffers associated with the pool are released. Thus it
   * is safe to call this function while some of the allocated buffers are still
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/hwcontext_drm.c ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/hwcontext_drm.c
---- ffmpeg_n4.2.2/libavutil/hwcontext_drm.c	2020-05-21 20:25:05.873833338 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/libavutil/hwcontext_drm.c	2020-06-10 23:18:57.776962654 -0700
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/libavutil/hwcontext_drm.c ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/hwcontext_drm.c
+--- ffmpeg-4.3.orig/libavutil/hwcontext_drm.c	2020-05-21 08:55:31.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/libavutil/hwcontext_drm.c	2020-06-23 18:28:02.817754253 -0700
 @@ -43,6 +43,11 @@
      AVDRMDeviceContext *hwctx = hwdev->hwctx;
      drmVersionPtr version;
@@ -4660,10 +4762,10 @@ diff -uNr '--exclude=.git' ffmpeg_n4.2.2/libavutil/hwcontext_drm.c ffmpeg_v4l2-r
      hwctx->fd = open(device, O_RDWR);
      if (hwctx->fd < 0)
          return AVERROR(errno);
-diff -uNr '--exclude=.git' ffmpeg_n4.2.2/Makefile ffmpeg_v4l2-request-hwaccel-4.2.2/Makefile
---- ffmpeg_n4.2.2/Makefile	2020-05-21 20:25:05.143847365 -0700
-+++ ffmpeg_v4l2-request-hwaccel-4.2.2/Makefile	2020-06-10 23:18:57.016974776 -0700
-@@ -117,7 +117,7 @@
+diff -uNr '--exclude=.git' '--exclude=.gitignore' '--exclude=.gitattributes' ffmpeg-4.3.orig/Makefile ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/Makefile
+--- ffmpeg-4.3.orig/Makefile	2020-06-15 11:54:23.000000000 -0700
++++ ffmpeg_v4l2-request-hwaccel-4.3-rkvdec/Makefile	2020-06-23 18:28:02.027509504 -0700
+@@ -120,7 +120,7 @@
  .version: M=@
  
  libavutil/ffversion.h .version:
