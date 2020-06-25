@@ -1,0 +1,58 @@
+#!/bin/sh
+
+### Package: pbp-install-kodi-p8-platform
+### Version: v20200624.1900
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux, ffmpeg, kodi
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/xbmc
+GITTREE=xbmc-platform
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y build-dep kodi
+  sudo apt-get -y install build-essential coreutils libc-bin git cmake make
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CLEAN
+rm -Rf pbp-build
+
+## CONFIGURE
+mkdir -p pbp-build
+cd pbp-build
+cmake .. \
+-DCMAKE_INSTALL_PREFIX=/usr/local \
+-DCMAKE_INSTALL_LIBDIR=/usr/local/lib/aarch64-linux-gnu \
+-DCMAKE_INSTALL_LIBDIR_NOARCH=/usr/local/lib/aarch64-linux-gnu \
+
+## MAKE
+make -j `nproc`
+
+## INSTALL
+sudo make install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY

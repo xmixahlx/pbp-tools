@@ -16,6 +16,8 @@ pbp-install-gstreamer<br>
 pbp-install-jellyfin-kodi<br>
 pbp-install-kodi<br>
 pbp-install-kodi-inputstream-adaptive<br>
+pbp-install-kodi-p8-platform<br>
+pbp-install-kodi-platform<br>
 pbp-install-libudfread<br>
 pbp-install-libva<br>
 pbp-install-libva-utils<br>
@@ -36,7 +38,7 @@ pbp-install-wlogout<br>
 * many scripts have variable override via commandline (ffmpeg, kodi, linux, etc.).<br>
 * recommended core hwaccel setup includes, in build order: linux, mesa, ffmpeg, and kodi.<br>
 * libudfread is an optional kodi dependency.<br>
-* kodi addons include jellyfin-kodi and kodi-inputstream-adaptive.<br>
+* kodi addons include kodi-platform, kodi-p8-platform, jellyfin-kodi and kodi-inputstream-adaptive.<br>
 * libva, libva-utils, and libva-v4l2-request are VAAPI related packages that have some use, but are currently less useful due to an ffmpeg bug.<br>
 * gstreamer includes v4l2codecs from upstream and VAAPI is enabled, so depends on VAAPI packages.<br>
 * alacritty is a GL(ES) enhanced terminal.<br>
