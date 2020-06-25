@@ -1,0 +1,55 @@
+#!/bin/sh
+
+### Package: pbp-install-xdg-desktop-portal
+### Version: v20200624.2100
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+RESDIR=`pwd`/resources
+DEVDIR=`pwd`/upstream
+GITREPO=https://github.com/flatpak
+GITTREE=xdg-desktop-portal
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install build-essential coreutils libc-bin git make \
+  docbook-xml docbook-xsl gir1.2-flatpak-1.0 gir1.2-geoclue-2.0 gir1.2-json-1.0 \
+  gir1.2-ostree-1.0 libflatpak-dev libflatpak0 libfuse-dev libgeoclue-2-0 \
+  libgeoclue-2-dev libjson-glib-dev libostree-1-1 libostree-dev libxml2-dev \
+  sgml-data xmlto xsltproc libportal-dev
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard
+git pull
+
+## CONFIGURE
+./autogen.sh
+./configure --prefix=/usr/local --libdir=/usr/local/lib/aarch64-linux-gnu/
+
+## BUILD
+make -j `nproc`
+
+## INSTALL
+sudo make install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY

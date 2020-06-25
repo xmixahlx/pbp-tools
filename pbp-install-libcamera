@@ -1,0 +1,55 @@
+#!/bin/sh
+
+### Package: pbp-install-libcamera
+### Version: v20200624.2100
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## VARS
+DEVDIR=`pwd`/upstream
+GITREPO=git://git.linuxtv.org
+GITTREE=libcamera
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install build-essential coreutils libc-bin git meson \
+  python3-sphinx doxygen python3-yaml pkg-config libudev-dev libgnutls28-dev \
+  openssl libboost-dev qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard HEAD
+git pull
+
+## CLEAN
+rm -Rf tmpbuild
+
+## CONFIGURE
+meson tmpbuild --buildtype=release --prefix=/usr/local --libdir=/usr/local/lib/aarch64-linux-gnu \
+-Ddocumentation=true -Dqcam=enabled -Dgstreamer=enabled -Dv4l2=true
+
+## BUILD
+ninja -C tmpbuild
+
+## INSTALL
+sudo ninja -C tmpbuild install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
