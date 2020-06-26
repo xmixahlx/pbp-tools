@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-linux
-### Version: v20200619.1820
+### Version: v20200626.1500
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -50,7 +50,7 @@ if [ -z $HWACCELREL ]; then
 fi
 echo "\n*** HWACCELREL selected is $HWACCELREL.\n"
 
-# Override debian with none to build your kernel your own way.
+# Override debian with redhat or none to build your kernel your own way.
 if [ -z $MAKEDISTRO ]; then
  MAKEDISTRO=debian
 fi
@@ -160,6 +160,11 @@ if [ $CROSSBUILD = yes ]; then
   KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
   make -j `nproc` $BUILDCONFIG INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
  fi
+ if [ $MAKEDISTRO = redhat ]; then
+  KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
+  KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
+  make -j `nproc` $BUILDCONFIG INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image binrpm-pkg
+ fi
  if [ $MAKEDISTRO = none ]; then
   KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
   KCPPFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
@@ -170,8 +175,11 @@ if [ $CROSSBUILD = no ]; then
  if [ $MAKEDISTRO = debian ]; then
   make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
  fi
+ if [ $MAKEDISTRO = redhat ]; then
+  make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image binrpm-pkg
+ fi
  if [ $MAKEDISTRO = none ]; then
-  make -j `nproc`
+  make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image
  fi
 fi
 
