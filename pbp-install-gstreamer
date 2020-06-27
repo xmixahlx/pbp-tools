@@ -21,7 +21,8 @@ if [ $INSTALLDEPS ]; then
  sudo apt-get -y build-dep gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
  gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-vaapi gstreamer1.0-rtsp \
  gstreamer1.0-libav
- sudo apt-get -y install build-essential coreutils libc-bin git meson
+ sudo apt-get -y install build-essential coreutils libc-bin git meson \
+ libcgroup-dev
  fi
 fi
 
