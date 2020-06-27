@@ -4,6 +4,9 @@
 
 tools for system management, hardware acceleration, and wayland environment for the pinebook pro.
 
+**desktop:**<br>
+pbp-install-desktop-debian
+
 **system:**<br>
 pbp-install-ap6256-firmware<br>
 pbp-install-postinstall<br>
@@ -18,12 +21,16 @@ pbp-install-kodi<br>
 pbp-install-kodi-inputstream-adaptive<br>
 pbp-install-kodi-p8-platform<br>
 pbp-install-kodi-platform<br>
-pbp-install-libudfread<br>
 pbp-install-libva<br>
 pbp-install-libva-utils<br>
 pbp-install-libva-v4l2-request<br>
 pbp-install-linux<br>
 pbp-install-mesa<br>
+
+**media:**<br>
+pbp-install-libcamera<br>
+pbp-install-libudfread<br>
+pbp-install-pipewire<br>
 
 **wayland:**<br>
 pbp-install-dmenu-wayland<br>
@@ -32,6 +39,8 @@ pbp-install-sway<br>
 pbp-install-waybar<br>
 pbp-install-wdisplays<br>
 pbp-install-wlogout<br>
+pbp-install-xdg-desktop-portal<br>
+pbp-install-xdg-desktop-portal-wlr<br>
 
 **notes:**<br>
 * system management tools borrow manjaro configurations for mainline kernel and mrfixit2001 boot images.<br>

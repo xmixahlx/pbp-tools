@@ -1,0 +1,3 @@
+## DEBIAN MULTIMEDIA
+deb https://www.deb-multimedia.org unstable main non-free
+deb-src https://www.deb-multimedia.org unstable main non-free

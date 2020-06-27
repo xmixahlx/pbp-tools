@@ -1,0 +1,210 @@
+#!/bin/sh
+
+### Package: pbp-install-desktop-debian
+### Version: v20200627.2000
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux
+### Notes: Requres linux with hwaccel patches to be installed manually first.
+
+## VARS
+INSTALL="sudo apt-get -y install"
+
+## OVERRIDES
+# Provide stable, testing, or unstable.
+if [ $DEBRELEASE ]; then
+ if [ $DEBRELEASE = stable ]; then
+  echo "\n*** DEBRELEASE selected is stable.\n"
+ elif [ $DEBRELEASE = testing ]; then
+  echo "\n*** DEBRELEASE selected is testing.\n"
+ elif [ $DEBRELEASE = unstable ]; then
+  echo "\n*** DEBRELEASE selected is unstable.\n"
+ else
+  echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+  exit
+ fi
+fi
+if [ -z $DEBRELEASE ]; then
+ echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+ exit
+fi
+
+# Override yes with no to NOT install apt sources.list and preferences.
+if [ -z $APTSOURCES ]; then
+ APTSOURCES=yes
+fi
+echo "\n*** APTSOURCES selected is $APTSOURCES.\n"
+
+# Override yes with no to NOT use deb-multimedia.org packages.
+if [ -z $DEBMULTIMEDIA ]; then
+ DEBMULTIMEDIA=yes
+fi
+echo "\n*** DEBMULTIMEDIA selected is $DEBMULTIMEDIA.\n"
+
+# Override yes with no to NOT install sway, waybar and bash configs.
+if [ -z $USERCONFIGS ]; then
+ USERCONFIGS=yes
+fi
+echo "\n*** USERCONFIGS selected is $USERCONFIGS.\n"
+
+# Override yes with no to NOT install sway desktop.
+if [ -z $BASE ]; then
+ BASE=yes
+fi
+echo "\n*** BASE selected is $BASE.\n"
+
+# Override sway with none for no desktop.
+if [ -z $DESKTOP ]; then
+ DESKTOP=sway
+fi
+echo "\n*** DESKTOP selected is $DESKTOP.\n"
+
+# Override yes with no to NOT install system.
+if [ -z $SYSTEM ]; then
+ SYSTEM=yes
+fi
+echo "\n*** SYSTEM selected is $SYSTEM.\n"
+
+# Override yes with no to NOT install hwaccel.
+if [ -z $HWACCEL ]; then
+ HWACCEL=yes
+fi
+echo "\n*** HWACCEL selected is $HWACCEL.\n"
+
+# Override yes with no to NOT install wayland.
+if [ -z $WAYLAND ]; then
+ WAYLAND=yes
+fi
+echo "\n*** WAYLAND selected is $WAYLAND.\n"
+
+# Override yes with no to NOT install media.
+if [ -z $MEDIA ]; then
+ MEDIA=yes
+fi
+echo "\n*** MEDIA selected is $MEDIA.\n"
+
+## CONTINUE
+echo "\n*** Continue to install the above configurations? \n"
+read -p "Yes or No:  " CONTINUE
+case $CONTINUE in
+ [Yy]* ) echo "\n*** YES selected. Continuing.\n" ;;
+ [Nn]* ) echo "\n*** NO selected. Exiting.\n" && exit ;;
+ * ) echo "\n***YES or NO not selected. Exiting.\n" && exit ;;
+esac
+
+## APT HTTPS
+sudo apt-get -y update
+sudo apt-get -y install apt-transport-https
+
+## APTSOURCES
+if [ $APTSOURCES = yes ]; then
+ sudo install -Dm644 resources/apt/preferences-$DEBRELEASE /etc/apt/preferences
+ sudo install -Dm644 resources/apt/sources.list-$DEBRELEASE /etc/apt/sources.list
+fi
+
+## DEBIAN MULTIMEDIA
+if [ $DEBMULTIMEDIA = yes ]; then
+ sudo mkdir -p /etc/apt/sources.list.d/
+ sudo install -Dm644 resources/apt/deb-multimedia-$DEBRELEASE.list /etc/apt/sources.list.d/deb-multimedia-$DEBRELEASE.list
+ sudo apt-get -y update -oAcquire::AllowInsecureRepositories=true
+ sudo apt-get -y install deb-multimedia-keyring --allow-unauthenticated
+fi
+
+## APT DIST-UPGRADE
+sudo apt-get -y update
+sudo apt-get -y dist-upgrade
+
+## USERCONFIGS
+if [ $USERCONFIGS = yes ]; then
+ mkdir -p ~/.config/sway
+ mkdir -p ~/.config/waybar
+ cp resources/sway/config ~/.config/sway/config
+ cp resources/waybar/config ~/.config/waybar/config
+ cp resources/bash/bash_profile ~/.bash_profile
+fi
+
+## BASE
+if [ $BASE = yes ]; then
+ # system
+ $INSTALL udev p7zip-full lrzip zip zstd bzip2 hdparm hddtemp smartmontools curl
+ # build
+ $INSTALL coreutils build-essential bison flex make cmake meson git wget patch make autoconf automake
+ # fonts
+ $INSTALL fonts-dejavu fonts-freefont-ttf fonts-liberation fonts-roboto ttf-bitstream-vera
+ # x
+ $INSTALL xserver-xorg
+ # power
+ $INSTALL upower linux-cpupower brightnessctl brightness-udev light
+ # audio
+ $INSTALL pulseaudio pulseaudio-utils pulseaudio-module-bluetooth pavucontrol alsa-utils alsa-tools
+ # networking
+ $INSTALL bluez bluez-obexd bluetooth blueman network-manager
+ # internet
+ $INSTALL chromium firefox
+ # graphics
+ $INSTALL inkscape gimp
+ # media
+ $INSTALL vlc mpv audacity mediainfo mediainfo-gui
+ # office
+ $INSTALL libreoffice
+ # remote
+ $INSTALL rdesktop
+fi
+
+## DESKTOP
+if [ $DESKTOP = sway ]; then
+  # wayland
+ $INSTALL xwayland grim slurp imv mako-notifier wl-clipboard
+ # files
+ $INSTALL thunar gvfs gvfs-backends gvfs-bin gvfs-fuse fuse3 mousepad
+ # misc
+ $INSTALL pasystray network-manager-gnome gftp gftp-gtk
+fi
+
+## SYSTEM
+if [ $SYSTEM = yes ]; then
+ # install pbp-install-boot manually
+ INSTALLDEPS=debian ./pbp-install-ap6256-firmware
+ INSTALLDEPS=debian ./pbp-install-postinstall
+fi
+
+## HWACCEL
+if [ $HWACCEL = yes ]; then
+ # install pbp-install-linux manually
+ INSTALLDEPS=debian ./pbp-install-mesa
+ INSTALLDEPS=debian ./pbp-install-libva
+ INSTALLDEPS=debian ./pbp-install-libva-v4l2-request
+ INSTALLDEPS=debian ./pbp-install-libva-utils
+ INSTALLDEPS=debian ./pbp-install-ffmpeg
+ INSTALLDEPS=debian ./pbp-install-libudfread
+ INSTALLDEPS=debian ./pbp-install-gstreamer
+ INSTALLDEPS=debian ./pbp-install-kodi
+ INSTALLDEPS=debian ./pbp-install-jellyfin-kodi
+ INSTALLDEPS=debian ./pbp-install-kodi-inputstream-adaptive
+ INSTALLDEPS=debian ./pbp-install-kodi-p8-platform
+ INSTALLDEPS=debian ./pbp-install-kodi-platform
+ INSTALLDEPS=debian ./pbp-install-alacritty
+fi
+
+## WAYLAND
+if [ $WAYLAND = yes ]; then
+ INSTALLDEPS=debian ./pbp-install-xdg-desktop-portal
+ INSTALLDEPS=debian ./pbp-install-xdg-desktop-portal-wlr
+ INSTALLDEPS=debian ./pbp-install-fontawesome
+ INSTALLDEPS=debian ./pbp-install-sway
+ INSTALLDEPS=debian ./pbp-install-dmenu-wayland
+ INSTALLDEPS=debian ./pbp-install-waybar
+ INSTALLDEPS=debian ./pbp-install-wdisplays
+ INSTALLDEPS=debian ./pbp-install-wlogout
+fi
+
+## MEDIA
+if [ $MEDIA = yes ]; then
+ INSTALLDEPS=debian ./pbp-install-libcamera
+ INSTALLDEPS=debian ./pbp-install-pipewire
+fi
+
+## EXIT
+exit
+
+## ENJOY
