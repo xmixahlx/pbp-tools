@@ -1,22 +1,25 @@
 #!/bin/sh
 
 ### Package: pbp-install-linux
-### Version: v20200626.1500
+### Version: v20200628.1100
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
+### Notes: Currently builds v5.7.{0-4} and v5.8-{rc2-rc3}
 
 ## VARS
 RESDIR=`pwd`/resources
 DEVDIR=`pwd`/upstream
 
 ## CROSSBUILD VARS
-BUILDCONFIG="ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
+#BUILDCONFIG="ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
+BUILDCONFIG="ARCH=arm64 CROSS_COMPILE=aarch64-linux-"
 TCPU=cortex-a72.cortex-a53
 TOPTS=+crypto+crc+simd
 TARCH=armv8-a
 BUILDOPTS="-O2 -pipe"
-GCCARMPKG=gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu
+#GCCARMPKG=gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu
+GCCARMPKG=aarch64--glibc--bleeding-edge-2020.02-2
 GCCARMDIR=$DEVDIR/$GCCARMPKG
 
 ## OVERRIDES
@@ -90,11 +93,14 @@ cd $DEVDIR
 ## CROSSBUILD ENV
 if [ $CROSSBUILD = yes ]; then
  ## PATH
- export PATH=$GCCARMDIR/bin:$PATH
+ export PATH=/opt/$GCCARMPKG/bin:$PATH
 
  ## GCC
- [ -f $GCCARMPKG.tar.xz ] || wget https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/$GCCARMPKG.tar.xz
- [ -d $GCCARMDIR ] || tar xf $GCCARMPKG.tar.xz
+ if [ ! -d /opt/$GCCARMPKG ]; then
+  [ -f $GCCARMPKG.tar.bz2 ] || wget https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/$GCCARMPKG.tar.bz2
+  [ -d $GCCARMPKG ] || tar xf $GCCARMPKG.tar.bz2
+  sudo mv $GCCARMPKG /opt/$GCCARMPKG
+ fi
 fi
 
 ## GET
