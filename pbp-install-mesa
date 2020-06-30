@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-mesa
-### Version: v20200619.1820
+### Version: v20200629.2200
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -28,6 +28,7 @@ PKGDIR=$GITTREE\_$GITBRANCH
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y build-dep mesa
   sudo apt-get -y install build-essential coreutils libc-bin git meson
  fi
 fi

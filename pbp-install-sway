@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-sway
-### Version: v20200619.1820
+### Version: v20200629.2200
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
@@ -12,19 +12,39 @@ DEVDIR=`pwd`/upstream
 GITREPO=https://github.com/swaywm
 GITBRANCH=master
 
+## OVERRIDES
+# Override debian with none to skip dependencies.
+if [ -z $INSTALLDEPS ]; then
+ INSTALLDEPS=debian
+fi
+echo "\n*** INSTALLDEPS selected is $INSTALLDEPS.\n"
+
+# Override no with yes or git to install config.
+if [ -z $INSTALLCONFIG ]; then
+ INSTALLCONFIG=no
+fi
+echo "\n*** INSTALLCONFIG selected is $INSTALLCONFIG.\n"
+
 ## DEPS
-# Provide INSTALLDEPS=debian to install dependencies.
-if [ $INSTALLDEPS ]; then
- if [ $INSTALLDEPS = debian ]; then
-  sudo apt-get -y install build-essential coreutils libc-bin git meson \
-  wayland-protocols libwayland-dev libwayland-egl-backend-dev \
-  libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev libinput-dev libxkbcommon-dev \
-  libudev-dev libpixman-1-dev libx11-xcb-dev libxcb-xinput-dev libxcb-xfixes0-dev \
-  libxcb-composite0-dev libxcb-render0-dev libpcap-dev libsystemd-dev libxcb-icccm4-dev \
-  libpng-dev libavutil-dev libavcodec-dev libavformat-dev libjson-c-dev libpcre3-dev \
-  libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev libevdev-dev libinput-dev \
-  bash-completion fish scdoc libpam-dev libcrypt-dev
- fi
+if [ $INSTALLDEPS = debian ]; then
+ sudo apt-get -y install build-essential coreutils libc-bin git meson \
+ wayland-protocols libwayland-dev libwayland-egl-backend-dev \
+ libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev libinput-dev libxkbcommon-dev \
+ libudev-dev libpixman-1-dev libx11-xcb-dev libxcb-xinput-dev libxcb-xfixes0-dev \
+ libxcb-composite0-dev libxcb-render0-dev libpcap-dev libsystemd-dev libxcb-icccm4-dev \
+ libpng-dev libavutil-dev libavcodec-dev libavformat-dev libjson-c-dev libpcre3-dev \
+ libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev libevdev-dev libinput-dev \
+ bash-completion fish scdoc libpam-dev libcrypt-dev
+fi
+
+## CONFIG
+if [ $INSTALLCONFIG = yes ]; then
+ mkdir -p ~/.config/sway
+ cp $RESDIR/sway/config ~/.config/sway/config
+fi
+if [ $INSTALLCONFIG = git ]; then
+ mkdir -p ~/.config/sway
+ cp $DEVDIR/sway_master/config.in ~/.config/sway/config
 fi
 
 ## PREP

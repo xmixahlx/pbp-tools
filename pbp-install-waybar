@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-waybar
-### Version: v20200619.1820
+### Version: v20200629.2200
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: sway
@@ -18,7 +18,10 @@ PKGDIR=$GITTREE\_$GITBRANCH
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
-  sudo apt-get -y install build-essential coreutils libc-bin git meson
+  sudo apt-get -y install build-essential coreutils libc-bin git meson \
+  libfmt-dev libspdlog-dev libgtkmm-3.0-dev libdbusmenu-gtk3-dev libjsoncpp-dev \
+  libnl-3-dev libnl-genl-3-dev libmpdclient-dev libgtk-layer-shell-dev \
+  clang-tidy cmake
  fi
 fi
 
