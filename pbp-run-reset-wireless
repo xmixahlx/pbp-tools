@@ -1,0 +1,18 @@
+#!/bin/sh
+
+### Package: pbp-run-reset-wireless
+### Version: v20200629.2200
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## RUN
+echo "\n*** Resetting wireless.\n"
+echo "fe310000.mmc" | sudo tee /sys/bus/platform/drivers/dwmmc_rockchip/unbind > /dev/null
+sleep 3
+echo "fe310000.mmc" | sudo tee /sys/bus/platform/drivers/dwmmc_rockchip/bind > /dev/null
+
+## EXIT
+exit
+
+# ENJOY
