@@ -1,13 +1,18 @@
 #!/bin/sh
 
 ### Package: pbp-install-alacritty
-### Version: v20200629.2200
+### Version: v20200630.2300
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
 
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
 ## VARS
-DEVDIR=`pwd`/upstream
+DEVDIR=$PBPTOOLSDIR/upstream
 GITREPO=https://github.com/alacritty
 GITTREE=alacritty
 

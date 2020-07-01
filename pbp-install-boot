@@ -1,16 +1,21 @@
 #!/bin/sh
 
 ### Package: pbp-install-boot
-### Version: v20200619.1820
+### Version: v20200630.2300
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
-### USAGE: Provide DEVTARGET and BLKDEV with ./command
+### Usage: Provide DEVTARGET and BLKDEV with command
+
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
 
 ## VARS
-DATE=`date +%Y%m%d%H%S`
-RESDIR=`pwd`/resources
-DEVDIR=`pwd`/upstream
+DATE=`date +%Y%m%d%H%M%S`
+RESDIR=$PBPTOOLSDIR/resources
+DEVDIR=$PBPTOOLSDIR/upstream
 GITBRANCH=v2.0
 PKGDIR=pbp-install-boot_$GITBRANCH
 

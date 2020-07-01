@@ -1,15 +1,21 @@
 #!/bin/sh
 
 ### Package: pbp-install-linux
-### Version: v20200628.1100
+### Version: v20200630.2300
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
 ### Notes: Currently builds v5.7.{0-4} and v5.8-{rc2-rc3}
 
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
 ## VARS
-RESDIR=`pwd`/resources
-DEVDIR=`pwd`/upstream
+DATE=`date +%Y%m%d%H%M%S`
+RESDIR=$PBPTOOLSDIR/resources
+DEVDIR=$PBPTOOLSDIR/upstream
 
 ## CROSSBUILD VARS
 #BUILDCONFIG="ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"

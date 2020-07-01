@@ -1,13 +1,20 @@
 #!/bin/sh
 
 ### Package: pbp-install-libudfread
-### Version: v20200619.1820
+### Version: v20200630.2300
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
 
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
 ## VARS
-DEVDIR=`pwd`/upstream
+DATE=`date +%Y%m%d%H%M%S`
+RESDIR=$PBPTOOLSDIR/resources
+DEVDIR=$PBPTOOLSDIR/upstream
 GITREPO=https://code.videolan.org/videolan
 GITTREE=libudfread
 GITBRANCH=master

@@ -1,0 +1,226 @@
+#!/bin/sh
+
+### Package: pbp-install-desktop
+### Version: v20200630.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: linux
+
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
+## VARS
+DATE=`date +%Y%m%d%H%M%S`
+INSTALL="sudo apt-get -y install"
+
+## OVERRIDES
+# Override debian.
+if [ -z $INSTALLDEPS ]; then
+ INSTALLDEPS=debian
+fi
+echo "\n*** INSTALLDEPS selected is $INSTALLDEPS.\n"
+
+## DEBIAN OPTIONS LOOP
+if [ $INSTALLDEPS = debian ]; then
+ # Provide stable, testing, or unstable.
+ if [ $DEBRELEASE ]; then
+  if [ $DEBRELEASE = stable ]; then
+   echo "\n*** DEBRELEASE selected is stable.\n"
+  elif [ $DEBRELEASE = testing ]; then
+   echo "\n*** DEBRELEASE selected is testing.\n"
+  elif [ $DEBRELEASE = unstable ]; then
+   echo "\n*** DEBRELEASE selected is unstable.\n"
+  else
+   echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+   exit
+  fi
+ fi
+ if [ -z $DEBRELEASE ]; then
+  echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+  exit
+ fi
+
+ # Override yes with no to NOT install apt sources.list and preferences.
+ if [ -z $APTCONFIG ]; then
+  APTCONFIG=yes
+ fi
+ echo "\n*** APTCONFIG selected is $APTCONFIG.\n"
+
+ # Override yes with no to NOT use deb-multimedia.org packages.
+ if [ -z $DEBMULTIMEDIA ]; then
+  DEBMULTIMEDIA=yes
+ fi
+ echo "\n*** DEBMULTIMEDIA selected is $DEBMULTIMEDIA.\n"
+fi
+
+# Override yes with no to NOT install sway, waybar and bash configs.
+if [ -z $USERCONFIGS ]; then
+ USERCONFIGS=yes
+fi
+echo "\n*** USERCONFIGS selected is $USERCONFIGS.\n"
+
+# Override yes with no.
+if [ -z $SYSTEM ]; then
+ SYSTEM=yes
+fi
+echo "\n*** SYSTEM selected is $SYSTEM.\n"
+
+# Override yes with no.
+if [ -z $OPTS ]; then
+ OPTS=yes
+fi
+echo "\n*** OPTS selected is $OPTS.\n"
+
+# Override yes with no.
+if [ -z $XFCE ]; then
+ XFCE=yes
+fi
+echo "\n*** XFCE selected is $XFCE.\n"
+
+# Override yes with no.
+if [ -z $SWAY ]; then
+ SWAY=yes
+fi
+echo "\n*** SWAY selected is $SWAY.\n"
+
+# Override yes with no to NOT install hwaccel.
+if [ -z $HWACCEL ]; then
+ HWACCEL=yes
+fi
+echo "\n*** HWACCEL selected is $HWACCEL.\n"
+
+# Override no with yes to install kodi.
+if [ -z $KODI ]; then
+ KODI=no
+fi
+echo "\n*** KODI selected is $KODI.\n"
+
+# Override yes with no to NOT install wayland.
+if [ -z $WAYLAND ]; then
+ WAYLAND=yes
+fi
+echo "\n*** WAYLAND selected is $WAYLAND.\n"
+
+# Override no with yes to install media.
+if [ -z $MEDIA ]; then
+ MEDIA=no
+fi
+echo "\n*** MEDIA selected is $MEDIA.\n"
+
+## CONTINUE
+echo "\n*** Continue to install the above configurations? \n"
+read -p "Yes or No:  " CONTINUE
+case $CONTINUE in
+ [Yy]* ) echo "\n*** YES selected. Continuing.\n" ;;
+ [Nn]* ) echo "\n*** NO selected. Exiting.\n" && exit ;;
+ * ) echo "\n***YES or NO not selected. Exiting.\n" && exit ;;
+esac
+
+## USERCONFIGS
+if [ $USERCONFIGS = yes ]; then
+ [ -f ~/.config/sway/config ] || cp ~/.config/sway/config ~/.config/sway/config.$DATE
+ [ -f ~/.config/waybar/config ] || cp ~/.config/waybary/config ~/.config/sway/config.$DATE
+ [ -f ~/.bash_profile ] || cp ~/.bash_profile ~/.bash_profile.$DATE
+ mkdir -p ~/.config/{sway,waybar}
+ cp resources/sway/config ~/.config/sway/config
+ cp resources/waybar/config ~/.config/waybar/config
+ cp resources/bash/bash_profile ~/.bash_profile
+fi
+
+## DEBIAN CONFIG
+if [ $INSTALLDEPS = debian ]; then
+ ## APTCONFIG
+ if [ $APTCONFIG = yes ]; then
+  sudo install -Dm644 resources/apt/preferences-$DEBRELEASE /etc/apt/preferences
+  sudo install -Dm644 resources/apt/sources.list-$DEBRELEASE /etc/apt/sources.list
+ fi
+
+ ## DEBIAN MULTIMEDIA
+ if [ $DEBMULTIMEDIA = yes ]; then
+  sudo mkdir -p /etc/apt/sources.list.d/
+  sudo install -Dm644 resources/apt/deb-multimedia-$DEBRELEASE.list /etc/apt/sources.list.d/deb-multimedia-$DEBRELEASE.list
+  sudo apt-get -y update -oAcquire::AllowInsecureRepositories=true
+  sudo apt-get -y install deb-multimedia-keyring --allow-unauthenticated
+ fi
+
+ ## APT DIST-UPGRADE
+ sudo apt-get -y update
+ sudo apt-get -y dist-upgrade
+fi
+
+## DEBIAN INSTALL
+if [ $INSTALLDEPS = debian ]; then
+ ## SYSTEM
+ if [ $SYSTEM = yes ]; then
+  sudo apt-get -y install udev p7zip-full lrzip zip zstd bzip2 hdparm hddtemp smartmontools curl \
+  coreutils build-essential bison flex make cmake meson git wget patch make autoconf automake \
+  fonts-dejavu fonts-freefont-ttf fonts-liberation fonts-roboto ttf-bitstream-vera \
+  upower linux-cpupower brightnessctl brightness-udev light pulseaudio pulseaudio-utils \
+  pulseaudio-module-bluetooth pavucontrol pasystray alsa-utils alsa-tools \
+  bluez bluez-obexd bluetooth blueman network-manager-gnome xserver-xorg \
+  gvfs gvfs-backends gvfs-bin gvfs-fuse fuse3 termit lightdm
+ fi
+
+ ## OPTS
+ if [ $OPTS = yes ]; then
+  sudo apt-get -y install chromium firefox inkscape gimp vlc mpv audacity mediainfo \
+  mediainfo-gui libreoffice rdesktop gftp-gtk qalculate-gtk
+ fi
+
+ ## XFCE
+ if [ $XFCE = yes ]; then
+  sudo apt-get -y install xfce4 xfce4-terminal xfce4-power-manager xfce4-clipboard
+ fi
+
+ ## SWAY
+ if [ $SWAY = yes ]; then
+   sudo apt-get -y install xwayland sway sway-backgrounds swaybg swayidle swaylock \
+   grim slurp imv mako-notifier wl-clipboard xwayland
+ fi
+fi
+
+## HWACCEL
+if [ $HWACCEL = yes ]; then
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva-v4l2-request
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva-utils
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-mesa
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-ffmpeg
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-alacritty
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-gstreamer
+fi
+
+## KODI
+if [ $KODI = yes ]; then
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-libudfread
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-jellyfin-kodi
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-inputstream-adaptive
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-p8-platform
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-platform
+fi
+
+## WAYLAND
+if [ $WAYLAND = yes ]; then
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-xdg-desktop-portal
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-xdg-desktop-portal-wlr
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-fontawesome
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-sway
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-dmenu-wayland
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-waybar
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-wdisplays
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-wlogout
+fi
+
+## MEDIA
+if [ $MEDIA = yes ]; then
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-libcamera
+ INSTALLDEPS=$INSTALLDEPS ./pbp-install-pipewire
+fi
+
+## EXIT
+exit
+
+## ENJOY

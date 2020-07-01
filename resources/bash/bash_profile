@@ -1,3 +1,6 @@
+## pbp-tools
+export PBPTOOLSDIR=~/Development/pbp-tools
+
 ## libva
 export LIBVA_DRIVER_NAME=v4l2_request
 export LIBVA_V4L2_REQUEST_MEDIA_PATH=/dev/media0
@@ -18,8 +21,5 @@ export MOZ_ENABLE_WAYLAND=1
 #export GST_VAAPI_ALL_DRIVERS=1
 #export GST_GL_WINDOW=wayland
 
-## dotnet
-export DOTNET_ROOT=/usr/local/dotnet
-
 ## PATH
-export PATH=~/bin:~/go/bin:/usr/local/dotnet:$PATH
+export PATH=$PBPTOOLSDIR:~/bin:$PATH
