@@ -1,0 +1,19 @@
+## DEBIAN BULLSEYE
+deb https://deb.debian.org/debian bullseye main contrib non-free
+deb-src https://deb.debian.org/debian bullseye main contrib non-free
+
+## DEBIAN BULLSEYE UPDATES
+deb https://deb.debian.org/debian bullseye-updates main contrib non-free
+deb-src https://deb.debian.org/debian bullseye-updates main contrib non-free
+
+## DEBIAN BULLSEYE SECURITY
+deb http://security.debian.org/debian-security bullseye-security/updates main contrib non-free
+deb-src http://security.debian.org/debian-security bullseye-security/updates main contrib non-free
+
+## DEBIAN SID
+deb https://deb.debian.org/debian sid main contrib non-free
+deb-src https://deb.debian.org/debian sid main contrib non-free
+
+## DEBIAN EXPERIMENTAL
+deb https://deb.debian.org/debian experimental main contrib non-free
+deb-src https://deb.debian.org/debian experimental main contrib non-free

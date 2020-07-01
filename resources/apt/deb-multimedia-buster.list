@@ -1,0 +1,7 @@
+## DEBIAN MULTIMEDIA BUSTER
+deb https://www.deb-multimedia.org buster main non-free
+deb-src https://www.deb-multimedia.org buster main non-free
+
+## DEBIAN MULTIMEDIA BUSTER BACKPORTS
+deb https://www.deb-multimedia.org buster-backports main
+deb-src https://www.deb-multimedia.org buster-backports main

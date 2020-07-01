@@ -1,0 +1,3 @@
+## DEBIAN MULTIMEDIA BULLSEYE
+deb https://www.deb-multimedia.org bullseye main non-free
+deb-src https://www.deb-multimedia.org bullseye main non-free

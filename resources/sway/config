@@ -14,7 +14,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty
+set $term x-terminal-emulator
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -271,5 +271,5 @@ exec waybar
 exec blueman-tray
 exec nm-applet --indicator
 exec pasystray
-exec alacritty
-exec firefox
+exec x-terminal-emulator
+exec x-www-browser

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-desktop
-### Version: v20200630.2300
+### Version: v20200630.2330
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -24,21 +24,21 @@ echo "\n*** INSTALLDEPS selected is $INSTALLDEPS.\n"
 
 ## DEBIAN OPTIONS LOOP
 if [ $INSTALLDEPS = debian ]; then
- # Provide stable, testing, or unstable.
+ # Provide buster, bullseye, or sid.
  if [ $DEBRELEASE ]; then
-  if [ $DEBRELEASE = stable ]; then
-   echo "\n*** DEBRELEASE selected is stable.\n"
-  elif [ $DEBRELEASE = testing ]; then
-   echo "\n*** DEBRELEASE selected is testing.\n"
-  elif [ $DEBRELEASE = unstable ]; then
-   echo "\n*** DEBRELEASE selected is unstable.\n"
+  if [ $DEBRELEASE = buster ]; then
+   echo "\n*** DEBRELEASE selected is buster.\n"
+  elif [ $DEBRELEASE = bullseye ]; then
+   echo "\n*** DEBRELEASE selected is bullseye.\n"
+  elif [ $DEBRELEASE = sid ]; then
+   echo "\n*** DEBRELEASE selected is sid.\n"
   else
-   echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+   echo "\n*** DEBRELEASE must be passed on commandline as buster, bullseye, or sid.\n"
    exit
   fi
  fi
  if [ -z $DEBRELEASE ]; then
-  echo "\n*** DEBRELEASE must be passed on commandline as stable, testing, or unstable.\n"
+  echo "\n*** DEBRELEASE must be passed on commandline as buster, bullseye, or sid.\n"
   exit
  fi
 
@@ -85,9 +85,9 @@ if [ -z $SWAY ]; then
 fi
 echo "\n*** SWAY selected is $SWAY.\n"
 
-# Override yes with no to NOT install hwaccel.
+# Override no with yes to install hwaccel.
 if [ -z $HWACCEL ]; then
- HWACCEL=yes
+ HWACCEL=no
 fi
 echo "\n*** HWACCEL selected is $HWACCEL.\n"
 
@@ -97,9 +97,9 @@ if [ -z $KODI ]; then
 fi
 echo "\n*** KODI selected is $KODI.\n"
 
-# Override yes with no to NOT install wayland.
+# Override no with yes to install wayland.
 if [ -z $WAYLAND ]; then
- WAYLAND=yes
+ WAYLAND=no
 fi
 echo "\n*** WAYLAND selected is $WAYLAND.\n"
 
@@ -120,9 +120,17 @@ esac
 
 ## USERCONFIGS
 if [ $USERCONFIGS = yes ]; then
- [ -f ~/.config/sway/config ] || cp ~/.config/sway/config ~/.config/sway/config.$DATE
- [ -f ~/.config/waybar/config ] || cp ~/.config/waybary/config ~/.config/sway/config.$DATE
- [ -f ~/.bash_profile ] || cp ~/.bash_profile ~/.bash_profile.$DATE
+ if [ -f ~/.config/sway/config ]; then
+  cp ~/.config/sway/config ~/.config/sway/config.$DATE
+ fi
+ if
+  [ -f ~/.config/waybar/config ]; then
+  cp ~/.config/waybary/config ~/.config/sway/config.$DATE
+ fi
+ if
+  [ -f ~/.bash_profile ]; then
+   cp ~/.bash_profile ~/.bash_profile.$DATE
+ if
  mkdir -p ~/.config/{sway,waybar}
  cp resources/sway/config ~/.config/sway/config
  cp resources/waybar/config ~/.config/waybar/config
@@ -133,8 +141,8 @@ fi
 if [ $INSTALLDEPS = debian ]; then
  ## APTCONFIG
  if [ $APTCONFIG = yes ]; then
-  sudo install -Dm644 resources/apt/preferences-$DEBRELEASE /etc/apt/preferences
-  sudo install -Dm644 resources/apt/sources.list-$DEBRELEASE /etc/apt/sources.list
+  sudo install -Dm644 resources/apt/preferences.$DEBRELEASE /etc/apt/preferences
+  sudo install -Dm644 resources/apt/sources.list.$DEBRELEASE /etc/apt/sources.list
  fi
 
  ## DEBIAN MULTIMEDIA
@@ -156,28 +164,29 @@ if [ $INSTALLDEPS = debian ]; then
  if [ $SYSTEM = yes ]; then
   sudo apt-get -y install udev p7zip-full lrzip zip zstd bzip2 hdparm hddtemp smartmontools curl \
   coreutils build-essential bison flex make cmake meson git wget patch make autoconf automake \
-  fonts-dejavu fonts-freefont-ttf fonts-liberation fonts-roboto ttf-bitstream-vera \
+  pkg-config fonts-dejavu fonts-freefont-ttf fonts-liberation fonts-roboto ttf-bitstream-vera \
   upower linux-cpupower brightnessctl brightness-udev light pulseaudio pulseaudio-utils \
   pulseaudio-module-bluetooth pavucontrol pasystray alsa-utils alsa-tools \
   bluez bluez-obexd bluetooth blueman network-manager-gnome xserver-xorg \
-  gvfs gvfs-backends gvfs-bin gvfs-fuse fuse3 termit lightdm
+  gvfs gvfs-backends gvfs-bin gvfs-fuse fuse3 termit sddm i3 feh \
+  task-laptop task-ssh-server ssh-askpass
  fi
 
  ## OPTS
  if [ $OPTS = yes ]; then
   sudo apt-get -y install chromium firefox inkscape gimp vlc mpv audacity mediainfo \
-  mediainfo-gui libreoffice rdesktop gftp-gtk qalculate-gtk
+  mediainfo-gui libreoffice libreoffice-gtk3 rdesktop gftp-gtk qalculate-gtk
  fi
 
  ## XFCE
  if [ $XFCE = yes ]; then
-  sudo apt-get -y install xfce4 xfce4-terminal xfce4-power-manager xfce4-clipboard
+  sudo apt-get -y install xfce4 xfce4-goodies
  fi
 
  ## SWAY
  if [ $SWAY = yes ]; then
    sudo apt-get -y install xwayland sway sway-backgrounds swaybg swayidle swaylock \
-   grim slurp imv mako-notifier wl-clipboard xwayland
+   grim slurp imv mako-notifier wl-clipboard
  fi
 fi
 

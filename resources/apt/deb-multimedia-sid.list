@@ -1,0 +1,3 @@
+## DEBIAN MULTIMEDIA SID
+deb https://www.deb-multimedia.org sid main non-free
+deb-src https://www.deb-multimedia.org sid main non-free
