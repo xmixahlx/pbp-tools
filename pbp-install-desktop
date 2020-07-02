@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-desktop
-### Version: v20200630.2330
+### Version: v20200701.1830
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -13,7 +13,6 @@ fi
 
 ## VARS
 DATE=`date +%Y%m%d%H%M%S`
-INSTALL="sudo apt-get -y install"
 
 ## OVERRIDES
 # Override debian.
@@ -125,15 +124,22 @@ if [ $USERCONFIGS = yes ]; then
  fi
  if
   [ -f ~/.config/waybar/config ]; then
-  cp ~/.config/waybary/config ~/.config/sway/config.$DATE
+  cp ~/.config/waybar/config ~/.config/sway/config.$DATE
+ fi
+ if
+  [ -f ~/.config/i3/config ]; then
+  cp ~/.config/i3/config ~/.config/i3/config.$DATE
  fi
  if
   [ -f ~/.bash_profile ]; then
    cp ~/.bash_profile ~/.bash_profile.$DATE
- if
- mkdir -p ~/.config/{sway,waybar}
+ fi
+ mkdir -p ~/.config/sway
+ mkdir -p ~/.config/waybar
+ mkdir -p ~/.config/i3
  cp resources/sway/config ~/.config/sway/config
  cp resources/waybar/config ~/.config/waybar/config
+ cp resources/i3/config ~/.config/i3/config
  cp resources/bash/bash_profile ~/.bash_profile
 fi
 
@@ -169,7 +175,7 @@ if [ $INSTALLDEPS = debian ]; then
   pulseaudio-module-bluetooth pavucontrol pasystray alsa-utils alsa-tools \
   bluez bluez-obexd bluetooth blueman network-manager-gnome xserver-xorg \
   gvfs gvfs-backends gvfs-bin gvfs-fuse fuse3 termit sddm i3 feh \
-  task-laptop task-ssh-server ssh-askpass
+  task-laptop task-ssh-server ssh-askpass rename
  fi
 
  ## OPTS
