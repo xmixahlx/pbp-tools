@@ -87,7 +87,7 @@ fi
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
   sudo apt-get -y install build-essential coreutils libc-bin wget tar xz-utils patch \
-   libncurses-dev bison flex bc rsync libssl-dev
+   libncurses-dev bison flex bc rsync libssl-dev fakeroot
  fi
 fi
 
