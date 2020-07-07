@@ -1,0 +1,151 @@
+#!/bin/sh
+
+### Package: pbp-config-cpupower
+### Version: v20200706.2000
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+### Usage: Provide GOVERNOR, BIGFREQ, and LITTLEFREQ
+
+## STATUS
+pbp-info-cpupower
+
+## PROFILE
+# If PROFILE is passed on commandline, then reset to defaults.
+if [ $PROFILE ]; then
+ BIGGOV=$PROFILE
+ LITTLEGOV=$PROFILE
+ BIGMAX=2.00GHz
+ BIGMIN=408MHz
+ LITTLEMAX=1.42GHz
+ LITTLEMIN=408MHz
+ echo "\n*** PROFILE selected is $PROFILE.\n"
+fi
+
+## GOVERNOR
+if [ -z $PROFILE ]; then
+ echo "\nAvailable CPU governors:\n"
+ echo "1: conservative."
+ echo "2: ondemand."
+ echo "3: performance."
+ echo "4: powersave."
+ echo "5: schedutil."
+ echo "6: userspace.\n"
+
+ read -p "Select new big CPU governor: (1-6) " BIGGOVSEL
+ case $BIGGOVSEL in
+  [1] ) BIGGOV=conservative ;;
+  [2] ) BIGGOV=ondemand ;;
+  [3] ) BIGGOV=performance ;;
+  [4] ) BIGGOV=powersave ;;
+  [5] ) BIGGOV=schedutil ;;
+  [6] ) BIGGOV=userspace ;;
+  * ) BIGGOV=conservative && echo "\n*** BIGGOV not selected, so using conservative by default.\n" ;;
+ esac
+
+ read -p "Select new little CPU governor: (1-6) " LITTLEGOVSEL
+ case $LITTLEGOVSEL in
+  [1] ) LITTLEGOV=conservative ;;
+  [2] ) LITTLEGOV=ondemand ;;
+  [3] ) LITTLEGOV=performance ;;
+  [4] ) LITTLEGOV=powersave ;;
+  [5] ) LITTLEGOV=schedutil ;;
+  [6] ) LITTLEGOV=userspace ;;
+  * ) LITTLEGOV=conservative && echo "\n*** LITTLEGOV not selected, so using conservative by default.\n" ;;
+ esac
+fi
+
+## BIG FREQUENCIES
+if [ -z $PROFILE ]; then
+ echo "\nAvailable big CPU frequencies:\n"
+ echo "1: 408 MHz."
+ echo "2: 600 MHz."
+ echo "3: 816 MHz."
+ echo "4: 1.01 GHz."
+ echo "5: 1.20 GHz."
+ echo "6: 1.42 GHz."
+ echo "7: 1.61 GHz."
+ echo "8: 1.80 GHz."
+ echo "9: 2.00 GHz.\n"
+
+ read -p "Select new big CPU min frequency: (1-9) " BIGMINSEL
+ case $BIGMINSEL in
+  [1] ) BIGMIN=408MHz ;;
+  [2] ) BIGMIN=600MHz ;;
+  [3] ) BIGMIN=816MHz ;;
+  [4] ) BIGMIN=1.01GHz ;;
+  [5] ) BIGMIN=1.20GHz ;;
+  [6] ) BIGMIN=1.42GHz ;;
+  [7] ) BIGMIN=1.61GHz ;;
+  [8] ) BIGMIN=1.80GHz ;;
+  [9] ) BIGMIN=2.00GHz ;;
+  * ) BIGMIN=408MHz && echo "\n*** BIGMIN not selected, so using 408 MHz by default.\n" ;;
+ esac
+
+ read -p "Select new big CPU max frequency: (1-9) " BIGMAXSEL
+ case $BIGMAXSEL in
+  [1] ) BIGMAX=408MHz ;;
+  [2] ) BIGMAX=600MHz ;;
+  [3] ) BIGMAX=816MHz ;;
+  [4] ) BIGMAX=1.01GHz ;;
+  [5] ) BIGMAX=1.20GHz ;;
+  [6] ) BIGMAX=1.42GHz ;;
+  [7] ) BIGMAX=1.61GHz ;;
+  [8] ) BIGMAX=1.80GHz ;;
+  [9] ) BIGMAX=2.00GHz ;;
+  * ) BIGMAX=2.00GHz && echo "\n*** BIGMAX not selected, so using 2.00 GHz by default.\n" ;;
+ esac
+fi
+
+## LITTLE FREQUENCIES
+if [ -z $PROFILE ]; then
+ echo "\nAvailable little CPU frequencies:\n"
+ echo "1: 408 MHz."
+ echo "2: 600 MHz."
+ echo "3: 816 MHz."
+ echo "4: 1.01 GHz."
+ echo "5: 1.20 GHz."
+ echo "6: 1.42 GHz.\n"
+
+ read -p "Select new little CPU min frequencies: (1-6) " LITTLEMINSEL
+ case $LITTLEMINSEL in
+  [1] ) LITTLEMIN=408MHz ;;
+  [2] ) LITTLEMIN=600MHz ;;
+  [3] ) LITTLEMIN=816MHz ;;
+  [4] ) LITTLEMIN=1.01GHz ;;
+  [5] ) LITTLEMIN=1.20GHz ;;
+  [6] ) LITTLEMIN=1.42GHz ;;
+  * ) LITTLEMIN=408MHz && echo "\n*** LITTLEMIN not selected, so using 408 MHz by default.\n" ;;
+ esac
+
+ read -p "Select new little CPU max frequencies: (1-6) " LITTLEMAXSEL
+ case $LITTLEMAXSEL in
+  [1] ) LITTLEMAX=408MHz ;;
+  [2] ) LITTLEMAX=600MHz ;;
+  [3] ) LITTLEMAX=816MHz ;;
+  [4] ) LITTLEMAX=1.01GHz ;;
+  [5] ) LITTLEMAX=1.20GHz ;;
+  [6] ) LITTLEMAX=1.42GHz ;;
+  * ) LITTLEMAX=1.42GHz && echo "\n*** LITTLEMAX not selected, so using 1.42 GHz by default.\n" ;;
+ esac
+fi
+
+## SELECTIONS
+echo "*** BIGGOV selected is $BIGGOV."
+echo "*** LITTLEGOV selected is $LITTLEGOV."
+echo "*** BIGMIN selected is $BIGMIN."
+echo "*** BIGMAX selected is $BIGMAX."
+echo "*** LITTLEMIN selected is $LITTLEMIN."
+echo "*** LITTLEMAX selected is $LITTLEMAX."
+
+## RUN
+sudo cpupower -c 0-3 frequency-set -d $LITTLEMIN -u $LITTLEMAX -g $LITTLEGOV > /dev/null
+sudo cpupower -c 4-5 frequency-set -d $BIGMIN -u $BIGMAX -g $BIGGOV > /dev/null
+
+## NEW STATUS
+pbp-info-cpupower
+
+## EXIT
+exit
+
+## ENJOY

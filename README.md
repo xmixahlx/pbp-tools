@@ -4,8 +4,10 @@
 
 tools for system management, hardware acceleration, and wayland environment for the pinebook pro.
 
+### install
+
 **desktop:**<br>
-pbp-install-desktop-debian
+pbp-install-desktop<br>
 
 **system:**<br>
 pbp-install-ap6256-firmware<br>
@@ -42,6 +44,21 @@ pbp-install-wlogout<br>
 pbp-install-xdg-desktop-portal<br>
 pbp-install-xdg-desktop-portal-wlr<br>
 
+### misc
+
+**info:**<br>
+pbp-info-cpupower<br>
+pbp-info-upower<br>
+
+**config:**<br>
+pbp-config-cpupower<br>
+
+**reset:**<br>
+pbp-reset-emmc<br>
+pbp-reset-wireless<br>
+
+### info
+
 **notes:**<br>
 * system management tools borrow manjaro configurations for mainline kernel and mrfixit2001 boot images.<br>
 * many scripts have variable override via commandline (ffmpeg, kodi, linux, etc.).<br>
@@ -53,7 +70,7 @@ pbp-install-xdg-desktop-portal-wlr<br>
 * alacritty is a GL(ES) enhanced terminal.<br>
 * to use sway, first build the sway suite (wlroots, sway, swaybg, swaylock, and swayidle), then optionally dmenu-wayland, waybar, wdisplays, and wlogout.<br>
 * fontawesome is an optional dependency of waybar for fancy icons.<br>
-* please feel free to modify and adapt to your own distro, and contribute changes.<br>
+* please feel free to modify and adapt to your own distro, and contribute changes or raise issues.<br>
 * REVIEW EACH SCRIPT PRIOR TO USAGE.<br>
 
 **discussion:**<br>

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+### Package: pbp-info-cpupower
+### Version: v20200706.2000
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+### Usage: Provide GOVERNOR, BIGFREQ, and LITTLEFREQ
+
+## STATUS
+echo "\nCurrent CPU governor and frequency settings:\n"
+sudo cpupower frequency-info -o
+
+## EXIT
+exit
+
+## ENJOY

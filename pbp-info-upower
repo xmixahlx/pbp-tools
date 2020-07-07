@@ -1,0 +1,16 @@
+#!/bin/sh
+
+### Package: pbp-info-upower
+### Version: v20200706.2200
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## RUN
+echo "\nCurrent battery status:\n"
+upower -i /org/freedesktop/UPower/devices/battery_cw2015_battery
+
+## EXIT
+exit
+
+## ENJOY
