@@ -1,6 +1,6 @@
 #!/bin/sh
 
-### Package: pbp-run-reset-wireless
+### Package: pbp-reset-wireless
 ### Version: v20200629.2200
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
@@ -15,4 +15,4 @@ echo "fe310000.mmc" | sudo tee /sys/bus/platform/drivers/dwmmc_rockchip/bind > /
 ## EXIT
 exit
 
-# ENJOY
+## ENJOY

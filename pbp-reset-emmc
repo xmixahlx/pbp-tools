@@ -1,6 +1,6 @@
 #!/bin/sh
 
-### Package: pbp-run-reset-emmc
+### Package: pbp-reset-emmc
 ### Version: v20200629.2200
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
@@ -15,4 +15,4 @@ echo "fe330000.sdhci" | sudo tee /sys/bus/platform/drivers/sdhci-arasan/bind
 ## EXIT
 exit
 
-# ENJOY
+## ENJOY

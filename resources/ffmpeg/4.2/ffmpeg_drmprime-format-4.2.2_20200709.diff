@@ -1,0 +1,95 @@
+diff --git a/libavcodec/rkmppdec.c b/libavcodec/rkmppdec.c
+index 143d05b..3ea64d8 100644
+--- a/libavcodec/rkmppdec.c
++++ b/libavcodec/rkmppdec.c
+@@ -419,6 +419,7 @@ static int rkmpp_retrieve_frame(AVCodecContext *avctx, AVFrame *frame)
+                 goto fail;
+             }
+ 
++            desc->format = drmformat;
+             desc->nb_objects = 1;
+             desc->objects[0].fd = mpp_buffer_get_fd(buffer);
+             desc->objects[0].size = mpp_buffer_get_size(buffer);
+diff --git a/libavdevice/kmsgrab.c b/libavdevice/kmsgrab.c
+index d0de774..1ebc30e 100644
+--- a/libavdevice/kmsgrab.c
++++ b/libavdevice/kmsgrab.c
+@@ -162,6 +162,7 @@ static int kmsgrab_read_packet(AVFormatContext *avctx, AVPacket *pkt)
+                 .pitch        = fb->pitch,
+             },
+         },
++        .format = ctx->drm_format,
+     };
+ 
+     frame = av_frame_alloc();
+diff --git a/libavutil/hwcontext_drm.h b/libavutil/hwcontext_drm.h
+index 42709f2..0ccbd19 100644
+--- a/libavutil/hwcontext_drm.h
++++ b/libavutil/hwcontext_drm.h
+@@ -147,6 +147,10 @@ typedef struct AVDRMFrameDescriptor {
+      * Array of layers in the frame.
+      */
+     AVDRMLayerDescriptor layers[AV_DRM_MAX_PLANES];
++    /**
++     * Format of the frame (DRM_FORMAT_*).
++     */
++    uint32_t format;
+ } AVDRMFrameDescriptor;
+ 
+ /**
+diff --git a/libavutil/hwcontext_vaapi.c b/libavutil/hwcontext_vaapi.c
+index cf11764..3386e6c 100644
+--- a/libavutil/hwcontext_vaapi.c
++++ b/libavutil/hwcontext_vaapi.c
+@@ -1122,6 +1122,43 @@ static void vaapi_unmap_to_drm_esh(AVHWFramesContext *hwfc,
+     av_freep(&drm_desc);
+ }
+ 
++static uint32_t vaapi_va_fourcc_to_drm_format(uint32_t fourcc)
++{
++    switch (fourcc) {
++    case VA_FOURCC_NV12:
++        return DRM_FORMAT_NV12;
++    case VA_FOURCC_I420:
++        return DRM_FORMAT_YUV420;
++    case VA_FOURCC_YV12:
++        return DRM_FORMAT_YVU420;
++    case VA_FOURCC_YV16:
++        return DRM_FORMAT_YVU422;
++    case VA_FOURCC_YUY2:
++        return DRM_FORMAT_YUYV;
++    case VA_FOURCC_UYVY:
++        return DRM_FORMAT_UYVY;
++    case VA_FOURCC_Y800:
++        return DRM_FORMAT_R8;
++#ifdef DRM_FORMAT_P010
++    case VA_FOURCC_P010:
++        return DRM_FORMAT_P010;
++#endif
++    case VA_FOURCC_RGBA:
++        return DRM_FORMAT_ABGR8888;
++    case VA_FOURCC_RGBX:
++        return DRM_FORMAT_XBGR8888;
++    case VA_FOURCC_BGRA:
++        return DRM_FORMAT_ARGB8888;
++    case VA_FOURCC_BGRX:
++        return DRM_FORMAT_XRGB8888;
++    case VA_FOURCC_ARGB:
++        return DRM_FORMAT_BGRA8888;
++    case VA_FOURCC_ABGR:
++        return DRM_FORMAT_RGBA8888;
++    }
++    return 0;
++}
++
+ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
+                                 const AVFrame *src, int flags)
+ {
+@@ -1179,6 +1216,7 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
+                 va_desc.layers[i].pitch[j];
+         }
+     }
++    drm_desc->format = vaapi_va_fourcc_to_drm_format(va_desc.fourcc);
+ 
+     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
+                                 &vaapi_unmap_to_drm_esh, drm_desc);

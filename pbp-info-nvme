@@ -1,0 +1,111 @@
+#!/bin/sh
+
+### Package: pbp-info-nvme
+### Version: v20200706.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
+## VARS
+DATE=`date +%Y%m%d%H%M%S`
+DEVDIR=$PBPTOOLSDIR/upstream
+
+## OVERRIDES
+# Override nvmecon.
+if [ -z $NVMECON ]; then
+ NVMECON=/dev/nvme0
+fi
+echo "\n*** NVMECON selected is $NVMECON.\n"
+
+# Override nvmedev.
+if [ -z $NVMEDEV ]; then
+ NVMEDEV=/dev/nvme0n1
+fi
+echo "\n*** NVMEDEV selected is $NVMEDEV.\n"
+
+# Override nvmelog.
+if [ -z $NVMELOG ]; then
+ NVMELOG=$DEVDIR/pbp-info-nvme_$DATE.log
+fi
+echo "\n*** NVMELOG selected is $NVMELOG.\n"
+
+# Override yes with no to skip smartmontools info.
+if [ -z $SMARTMONTOOLS ]; then
+ SMARTMONTOOLS=yes
+fi
+echo "\n*** SMARTMONTOOLS selected is $SMARTMONTOOLS.\n"
+
+# Override yes with no to skip hdparm tests.
+if [ -z $HDPARM ]; then
+ HDPARM=yes
+fi
+echo "\n*** HDPARM selected is $HDPARM.\n"
+
+# DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install coreutils smartmontools nvme-cli hdparm util-linux
+ fi
+fi
+
+## DATE
+echo "*** DATE: $DATE \n" > $NVMELOG
+
+## SMARTMONTOOLS
+if [ $SMARTMONTOOLS = yes ]; then
+ echo "\n*** SMARTMONTOOLS:\n" >> $NVMELOG
+ sudo smartctl -x $NVMECON >> $NVMELOG
+fi
+
+## NVME
+echo "\n*** NVME:\n" >> $NVMELOG
+sudo nvme list >> $NVMELOG
+sudo nvme id-ctrl $NVMEDEV -H >> $NVMELOG
+sudo nvme id-ns $NVMEDEV -H >> $NVMELOG
+sudo nvme get-feature -f 1 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 2 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 3 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 4 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 5 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 6 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 7 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 8 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 9 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 10 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 11 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 12 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 13 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 14 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 15 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 16 $NVMECON -H >>$NVMELOG
+sudo nvme get-feature -f 17 $NVMECON -H >>$NVMELOG
+
+## HDPARM
+if [ $HDPARM = yes ]; then
+ echo "\n*** HDPARM:\n" >> $NVMELOG
+ echo "\n*** Test disk using PS0.\n" >> $NVMELOG
+ sudo nvme set-feature -f 2 $NVMEDEV -v 0x0 >> $NVMELOG
+ sudo hdparm -tT --direct $NVMEDEV >> $NVMELOG
+ echo "\n*** Test disk using PS1.\n" >> $NVMELOG
+ sudo nvme set-feature -f 2 $NVMEDEV -v 0x1 >> $NVMELOG
+ sudo hdparm -tT --direct $NVMEDEV >> $NVMELOG
+ echo "\n*** Test disk using PS2.\n" >> $NVMELOG
+ sudo nvme set-feature -f 2 $NVMEDEV -v 0x2 >> $NVMELOG
+ sudo hdparm -tT --direct $NVMEDEV >> $NVMELOG
+ echo "\nNOTE: NVME left on PS2. Set back to your preference manually." >> $NVMELOG
+ echo "i.e. sudo nvme set-feature -f 2 /dev/$NVMEDEV -v 0" >> $NVMELOG
+fi
+
+## READ LOG
+more $NVMELOG
+
+## EXIT
+exit
+
+## ENJOY
