@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-ffmpeg
-### Version: v20200709.2330
+### Version: v20200712.1400
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -18,9 +18,9 @@ DEVDIR=$PBPTOOLSDIR/upstream
 GITREPO=https://github.com/ffmpeg
 GITTREE=ffmpeg
 
-# Override n4.3 with <branch> i.e. release/4.3, master, etc.
+# Override n4.3.1 with <branch> i.e. release/4.3, master, etc.
 if [ -z $GITBRANCH ]; then
- GITBRANCH=n4.3
+ GITBRANCH=n4.3.1
 fi
 echo "\n*** GITBRANCH selected is $GITBRANCH.\n"
 
