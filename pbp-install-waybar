@@ -27,7 +27,7 @@ if [ $INSTALLDEPS ]; then
   sudo apt-get -y install build-essential coreutils libc-bin git meson \
   libfmt-dev libspdlog-dev libgtkmm-3.0-dev libdbusmenu-gtk3-dev libjsoncpp-dev \
   libnl-3-dev libnl-genl-3-dev libmpdclient-dev libgtk-layer-shell-dev \
-  clang-tidy cmake
+  clang-tidy cmake libpulse-dev libudev-dev
  fi
 fi
 

@@ -48,10 +48,13 @@ pbp-install-xdg-desktop-portal-wlr<br>
 
 **info:**<br>
 pbp-info-cpupower<br>
+pbp-info-nvme<br>
 pbp-info-upower<br>
 
 **config:**<br>
 pbp-config-cpupower<br>
+pbp-config-nvme-ps<br>
+pbp-config-system<br>
 
 **reset:**<br>
 pbp-reset-emmc<br>
