@@ -1,0 +1,52 @@
+#!/bin/sh
+
+### Package: pbp-config-system
+### Version: v20200712.1400
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: cpupower, nvme-ps
+
+## OVERRIDES
+# Override with desired swappiness value
+if [ -z $SWAPPINESS ]; then
+ SWAPPINESS=1
+fi
+echo "\n*** SWAPPINESS selected is $SWAPPINESS.\n"
+
+## VM
+# Set VM swappiness
+echo $SWAPPINESS | sudo tee /proc/sys/vm/swappiness > /dev/null
+echo "\n*** VM swappiness set to $SWAPPINESS.\n"
+
+# Set VM writeback timeout
+echo 1500 | sudo tee /proc/sys/vm/dirty_writeback_centisecs > /dev/null
+echo "\n*** VM writeback timeout set to 1500.\n"
+
+## POWER
+# Enable powersave for wireless device
+sudo iw dev wlan0 set power_save on > /dev/null
+
+# Auto PM for PCIE 00
+if [ -e /sys/bus/pci/devices/0000:\00\:00.0/power/control ]; then
+ echo auto | sudo tee /sys/bus/pci/devices/0000\:00\:00.0/power/control > /dev/null
+ echo "\n*** PCIE 00 power control set to auto.\n"
+fi
+
+# Auto PM for PCIE 01
+if [ -e /sys/bus/pci/devices/0000:\01\:00.0/power/control ]; then
+ echo auto | sudo tee /sys/bus/pci/devices/0000\:01\:00.0/power/control > /dev/null
+ echo "\n*** PCIE 01 power control set to auto.\n"
+fi
+
+# Auto PM for USB 3-1 power control
+echo auto | sudo tee /sys/bus/usb/devices/3-1/power/control > /dev/null
+echo "\n*** USB 3-1 power control set to auto.\n"
+
+# Disable wake for USB 3-1 device
+echo disabled | sudo tee /sys/bus/usb/devices/3-1/power/wakeup > /dev/null
+echo "\n*** USB 3-1 power wakeup disabled.\n"
+
+## EXIT
+exit
+
+## ENJOY

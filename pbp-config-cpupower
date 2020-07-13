@@ -1,11 +1,11 @@
 #!/bin/sh
 
 ### Package: pbp-config-cpupower
-### Version: v20200706.2000
+### Version: v20200712.1400
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
-### Usage: Provide GOVERNOR, BIGFREQ, and LITTLEFREQ
+### Usage: Provide PROFILE or select governor and frequencies per core
 
 ## STATUS
 pbp-info-cpupower

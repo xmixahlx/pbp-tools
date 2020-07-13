@@ -1,0 +1,39 @@
+#!/bin/sh
+
+### Package: pbp-config-nvme-ps
+### Version: v20200712.1400
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## OVERRIDES
+# Override with your NVME device
+if [ -z $NVMEDEV ]; then
+ NVMEDEV=/dev/nvme0n1
+fi
+echo "\n*** NVMEDEV selected is $NVMEDEV.\n"
+
+# Override with your desired maximum power state
+if [ -z $NVMEPS ]; then
+ NVMEPS=1
+fi
+echo "\n*** NVMEPS selected is $NVMEPS.\n"
+
+## CHECKS
+# Check NVME device
+if [ ! -e $NVMEDEV ]; then
+ echo "\n*** NVMEDEV selected is NOT detected. Exiting.\n"
+ exit
+else
+ echo "\n*** NVMEDEV selected is detected.\n"
+fi
+
+## RUN
+# Set NVME PS
+sudo nvme set-feature -f 2 $NVMEDEV -v $NVMEPS
+echo "\n*** NVMEDEV power state set to $NVMEPS.\n"
+
+## EXIT
+exit
+
+## ENJOY
