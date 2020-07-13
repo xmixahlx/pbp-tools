@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-dmenu-wayland
-### Version: v20200630.2300
+### Version: v20200712.2100
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: sway
@@ -24,7 +24,8 @@ PKGDIR=$GITTREE\_$GITBRANCH
 # Provide INSTALLDEPS=debian to install dependencies.
 if [ $INSTALLDEPS ]; then
  if [ $INSTALLDEPS = debian ]; then
-  sudo apt-get -y install build-essential coreutils libc-bin git meson
+  sudo apt-get -y install build-essential coreutils libc-bin git meson \
+  libcairo2-dev libpango1.0-dev libwayland-dev wayland-protocols libxkbcommon-dev
  fi
 fi
 

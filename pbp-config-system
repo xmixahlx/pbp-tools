@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-config-system
-### Version: v20200712.1400
+### Version: v20200712.2100
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: cpupower, nvme-ps
@@ -12,6 +12,14 @@ if [ -z $SWAPPINESS ]; then
  SWAPPINESS=1
 fi
 echo "\n*** SWAPPINESS selected is $SWAPPINESS.\n"
+
+## DEPS
+# Install dependencies for debian
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install coreutils iw
+ fi
+fi
 
 ## VM
 # Set VM swappiness

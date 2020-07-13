@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### Package: pbp-install-desktop
-### Version: v20200701.1830
+### Version: v20200712.2100
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: linux
@@ -192,7 +192,7 @@ if [ $INSTALLDEPS = debian ]; then
  ## SWAY
  if [ $SWAY = yes ]; then
    sudo apt-get -y install xwayland sway sway-backgrounds swaybg swayidle swaylock \
-   grim slurp imv mako-notifier wl-clipboard
+   grim slurp imv mako-notifier wl-clipboard waybar
  fi
 fi
 

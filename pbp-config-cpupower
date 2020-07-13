@@ -1,11 +1,19 @@
 #!/bin/sh
 
 ### Package: pbp-config-cpupower
-### Version: v20200712.1400
+### Version: v20200712.2100
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
-### Script Dependencies: (none)
+### Script Dependencies: info-cpupower
 ### Usage: Provide PROFILE or select governor and frequencies per core
+
+## DEPS
+# Install dependencies for debian
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y install linux-cpupower
+ fi
+fi
 
 ## STATUS
 pbp-info-cpupower
