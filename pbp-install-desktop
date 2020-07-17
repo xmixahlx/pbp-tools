@@ -55,9 +55,9 @@ if [ $INSTALLDEPS = debian ]; then
  echo "\n*** DEBMULTIMEDIA selected is $DEBMULTIMEDIA.\n"
 fi
 
-# Override yes with no to NOT install sway, waybar and bash configs.
+# Override with yes to install sway, waybar and bash configs.
 if [ -z $USERCONFIGS ]; then
- USERCONFIGS=yes
+ USERCONFIGS=no
 fi
 echo "\n*** USERCONFIGS selected is $USERCONFIGS.\n"
 
@@ -135,9 +135,7 @@ if [ $USERCONFIGS = yes ]; then
   [ -f ~/.bash_profile ]; then
    cp ~/.bash_profile ~/.bash_profile.$DATE
  fi
- mkdir -p ~/.config/sway
- mkdir -p ~/.config/waybar
- mkdir -p ~/.config/i3
+ mkdir -p ~/.config/{i3,sway,waybar}
  cp $RESDIR/sway/config ~/.config/sway/config
  cp $RESDIR/waybar/config ~/.config/waybar/config
  cp $RESDIR/i3/config ~/.config/i3/config
@@ -148,14 +146,14 @@ fi
 if [ $INSTALLDEPS = debian ]; then
  ## APTCONFIG
  if [ $APTCONFIG = yes ]; then
-  sudo install -Dm644 resources/apt/preferences.$DEBRELEASE /etc/apt/preferences
-  sudo install -Dm644 resources/apt/sources.list.$DEBRELEASE /etc/apt/sources.list
+  sudo install -Dm644 $RESDIR/apt/preferences.$DEBRELEASE /etc/apt/preferences
+  sudo install -Dm644 $RESDIR/apt/sources.list.$DEBRELEASE /etc/apt/sources.list
  fi
 
  ## DEBIAN MULTIMEDIA
  if [ $DEBMULTIMEDIA = yes ]; then
   sudo mkdir -p /etc/apt/sources.list.d/
-  sudo install -Dm644 resources/apt/deb-multimedia-$DEBRELEASE.list /etc/apt/sources.list.d/deb-multimedia-$DEBRELEASE.list
+  sudo install -Dm644 $RESDIR/apt/deb-multimedia-$DEBRELEASE.list /etc/apt/sources.list.d/deb-multimedia-$DEBRELEASE.list
   sudo apt-get -y update -oAcquire::AllowInsecureRepositories=true
   sudo apt-get -y install deb-multimedia-keyring --allow-unauthenticated
  fi
@@ -199,41 +197,41 @@ fi
 
 ## HWACCEL
 if [ $HWACCEL = yes ]; then
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva-v4l2-request
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-libva-utils
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-mesa
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-ffmpeg
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-alacritty
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-gstreamer
+ INSTALLDEPS=$INSTALLDEPS pbp-install-libva
+ INSTALLDEPS=$INSTALLDEPS pbp-install-libva-v4l2-request
+ INSTALLDEPS=$INSTALLDEPS pbp-install-libva-utils
+ INSTALLDEPS=$INSTALLDEPS pbp-install-mesa
+ INSTALLDEPS=$INSTALLDEPS pbp-install-ffmpeg
+ INSTALLDEPS=$INSTALLDEPS pbp-install-alacritty
+ INSTALLDEPS=$INSTALLDEPS pbp-install-gstreamer
 fi
 
 ## KODI
 if [ $KODI = yes ]; then
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-libudfread
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-jellyfin-kodi
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-inputstream-adaptive
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-p8-platform
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-kodi-platform
+ INSTALLDEPS=$INSTALLDEPS pbp-install-libudfread
+ INSTALLDEPS=$INSTALLDEPS pbp-install-kodi
+ INSTALLDEPS=$INSTALLDEPS pbp-install-jellyfin-kodi
+ INSTALLDEPS=$INSTALLDEPS pbp-install-kodi-inputstream-adaptive
+ INSTALLDEPS=$INSTALLDEPS pbp-install-kodi-p8-platform
+ INSTALLDEPS=$INSTALLDEPS pbp-install-kodi-platform
 fi
 
 ## WAYLAND
 if [ $WAYLAND = yes ]; then
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-xdg-desktop-portal
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-xdg-desktop-portal-wlr
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-fontawesome
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-sway
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-dmenu-wayland
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-waybar
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-wdisplays
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-wlogout
+ INSTALLDEPS=$INSTALLDEPS pbp-install-xdg-desktop-portal
+ INSTALLDEPS=$INSTALLDEPS pbp-install-xdg-desktop-portal-wlr
+ INSTALLDEPS=$INSTALLDEPS pbp-install-fontawesome
+ INSTALLDEPS=$INSTALLDEPS pbp-install-sway
+ INSTALLDEPS=$INSTALLDEPS pbp-install-dmenu-wayland
+ INSTALLDEPS=$INSTALLDEPS pbp-install-waybar
+ INSTALLDEPS=$INSTALLDEPS pbp-install-wdisplays
+ INSTALLDEPS=$INSTALLDEPS pbp-install-wlogout
 fi
 
 ## MEDIA
 if [ $MEDIA = yes ]; then
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-libcamera
- INSTALLDEPS=$INSTALLDEPS ./pbp-install-pipewire
+ INSTALLDEPS=$INSTALLDEPS pbp-install-libcamera
+ INSTALLDEPS=$INSTALLDEPS pbp-install-pipewire
 fi
 
 ## EXIT
