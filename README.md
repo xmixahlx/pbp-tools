@@ -31,20 +31,23 @@ pbp-install-mesa<br>
 
 **media:**<br>
 pbp-install-libcamera<br>
-pbp-install-libudfread<br>
 pbp-install-pipewire<br>
+
+**misc:**<br>
+pbp-install-fontawesome<br>
+pbp-install-libinput<br>
+pbp-install-libudfread<br>
+pbp-install-xdg-desktop-portal<br>
 
 **wayland:**<br>
 pbp-install-dmenu-wayland<br>
-pbp-install-fontawesome<br>
 pbp-install-sway<br>
 pbp-install-waybar<br>
 pbp-install-wdisplays<br>
 pbp-install-wlogout<br>
-pbp-install-xdg-desktop-portal<br>
 pbp-install-xdg-desktop-portal-wlr<br>
 
-### misc
+### other
 
 **info:**<br>
 pbp-info-cpupower<br>

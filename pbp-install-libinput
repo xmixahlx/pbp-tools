@@ -1,0 +1,61 @@
+#!/bin/sh
+
+### Package: pbp-install-libinput
+### Version: v20200724.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## PBPTOOLSDIR
+if [ -z $PBPTOOLSDIR ]; then
+ PBPTOOLSDIR="`pwd`"
+fi
+
+## VARS
+DATE=`date +%Y%m%d%H%M%S`
+RESDIR=$PBPTOOLSDIR/resources
+DEVDIR=$PBPTOOLSDIR/upstream
+GITREPO=https://gitlab.freedesktop.org/libinput
+GITTREE=libinput
+GITBRANCH=master
+PKGDIR=$GITTREE\_$GITBRANCH
+
+## DEPS
+# Provide INSTALLDEPS=debian to install dependencies.
+if [ $INSTALLDEPS ]; then
+ if [ $INSTALLDEPS = debian ]; then
+  sudo apt-get -y build-dep libinput
+  sudo apt-get -y install build-essential coreutils libc-bin git meson \
+  python3-sphinx python3-sphinx-rtd-theme python3-recommonmark check
+ fi
+fi
+
+## PREP
+set -e
+mkdir -p $DEVDIR
+cd $DEVDIR
+
+## GIT
+[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
+cd $PKGDIR
+git clean -f
+git reset --hard HEAD
+git pull
+
+## CLEAN
+rm -Rf tmpbuild
+
+## CONFIGURE
+meson tmpbuild --buildtype=release --prefix=/usr/local --libdir=/usr/local/lib/aarch64-linux-gnu
+
+## BUILD
+ninja -C tmpbuild
+
+## INSTALL
+sudo ninja -C tmpbuild install
+sudo ldconfig
+
+## EXIT
+exit
+
+## ENJOY
