@@ -1,0 +1,20 @@
+#!/bin/sh
+
+### Package: pbp-config-systemd
+### Version: v20200724.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## SLEEP.CONF
+sudo sed -i s/"#AllowHibernation=yes"/"AllowHibernation=no"/g /etc/systemd/sleep.conf
+sudo sed -i s/"#SuspendState=mem standby freeze"/"SuspendState=mem"/g /etc/systemd/sleep.conf
+
+## LOGIND.CONF
+sudo sed -i s/"#HandlePowerKey=poweroff"/"HandlePowerKey=ignore"/g /etc/systemd/logind.conf
+
+## EXIT
+exit
+
+## ENJOY
+
