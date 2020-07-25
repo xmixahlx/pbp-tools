@@ -1,0 +1,44 @@
+#!/bin/sh
+
+### Package: pbp-config-danielt-installer-conversion
+### Version: v20200724.2300
+### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
+### License: GPLv3
+### Script Dependencies: (none)
+
+## OVERRIDES
+# Override yes with no to skip swapfile recreation
+if [ -z $NEWSWAP ]; then
+ NEWSWAP=yes
+fi
+
+## FILES
+echo "\n*** Cleanup unnecessary configs.\n"
+sudo sed -i '/"maxcpus=4 "/d' /etc/default/u-boot
+sudo rm /etc/initramfs-tools/conf.d/listed_modules_only.conf
+sudo rm /etc/initramfs-tools/modules.append
+sudo rm /etc/tmpfiles.d/00-enable-big-cores.conf
+sudo rm /etc/tmpfiles.d/enable-cpufreq-ondemand.conf
+sudo rm /etc/tmpfiles.d/enable-zswap.conf
+sudo rm /etc/tmpfiles.d/force-s2idle.conf
+sudo update-initramfs -c -k all
+sudo u-boot-update
+
+## SWAPFILE
+if [ $NEWSWAP = yes ]; then
+ echo "\n*** Recreating swapfile.\n"
+ sudo swapoff -a
+ sudo rm /swapfile
+ sudo dd if=/dev/zero of=/swapfile bs=1M count=2048 status=progress
+ sudo mkswap /swapfile
+ sudo chmod 600 /swapfile
+ sudo swapon -a
+fi
+
+## EXIT
+echo "\n*** Done. Reboot.\n"
+
+exit
+
+## ENJOY
+
