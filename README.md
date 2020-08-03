@@ -55,9 +55,12 @@ pbp-info-nvme<br>
 pbp-info-upower<br>
 
 **config:**<br>
+pbp-config-apt<br>
 pbp-config-cpupower<br>
+pbp-config-danielt-installer-conversion<br>
 pbp-config-nvme-ps<br>
 pbp-config-system<br>
+pbp-config-systemd<br>
 
 **reset:**<br>
 pbp-reset-emmc<br>
