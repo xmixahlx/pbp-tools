@@ -1,11 +1,11 @@
 #!/bin/sh
 
 ### Package: pbp-install-linux
-### Version: v20200711.2310
+### Version: v20200827.2300
 ### Author: Michael Gan "xmixahlx" michaelbgan@gmail.com
 ### License: GPLv3
 ### Script Dependencies: (none)
-### Notes: Currently builds v5.7.{0-4} and v5.8-{rc2-rc4} with hwaccel and 5.{7-8}.* without.
+### Notes: Currently builds v5.7.{0-4} and v5.8.{0-5} with hwaccel and 5.{7-8}.* without.
 
 ## PBPTOOLSDIR
 if [ -z $PBPTOOLSDIR ]; then
@@ -33,15 +33,15 @@ if [ -z $CROSSBUILD ]; then
 fi
 echo "\n*** CROSSBUILD selected is $CROSSBUILD.\n"
 
-# Override 5.7 with a major release version number.
+# Override 5.8 with a major release version number.
 if [ -z $LINUXREL ]; then
- LINUXREL=5.7
+ LINUXREL=5.8
 fi
 echo "\n*** LINUXREL selected is $LINUXREL.\n"
 
 # Override recommended version with release i.e. "5.7.4" or "5.8-rc4" etc.
 if [ -z $LINUXPATCH ]; then
- LINUXPATCH=5.7.4
+ LINUXPATCH=5.8.5
 fi
 echo "\n*** LINUXPATCH selected is $LINUXPATCH.\n"
 
@@ -68,6 +68,12 @@ if [ -z $KERNELCONFIG ]; then
  KERNELCONFIG=default
 fi
 echo "\n*** KERNELCONFIG selected is $KERNELCONFIG.\n"
+
+# Override pinebookpro with none.
+if [ -z $DEVPATCH ]; then
+ DEVPATCH=pinebookpro
+fi
+echo "\n*** DEVPATCH selected is $DEVPATCH.\n"
 
 # Override none with patchfilename and place in upstream directory to add an additional patch.
 if [ -z $ADDPATCH ]; then
@@ -134,7 +140,7 @@ if [ $LINUXBASE = $LINUXREL ]; then
   [ -f linux-${LINUXREL}_${LINUXPATCH}.diff ] || wget "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/rawdiff/?id=v${LINUXPATCH}&id2=v${LINUXREL}" -O linux-${LINUXREL}_${LINUXPATCH}.diff
 fi
 
-## PATCH
+## LINUXPATCH
 cd linux-$LINUXREL
 # Apply mainline patch or rc diff.
 if [ $LINUXBASE = $LINUXREL ]; then
@@ -147,11 +153,14 @@ if [ $LINUXBASE = $LINUXREL ]; then
   patch -p1 < $DEVDIR/linux-${LINUXREL}_${LINUXPATCH}.diff
 fi
 
-# Apply Pinebook Pro Manjaro patch.
-echo "\n*** Applying $LINUXBASE pinebookpro patch.\n"
-patch -p1 < $RESDIR/linux/$LINUXBASE/current_diff_pinebookpro
+## DEVPATCH
+if [ $DEVPATCH = pinebookpro ]; then
+ # Apply Pinebook Pro Manjaro patch.
+ echo "\n*** Applying $LINUXBASE pinebookpro patch.\n"
+ patch -p1 < $RESDIR/linux/$LINUXBASE/current_diff_pinebookpro
+fi
 
-# Apply hwaccel patch.
+## HWACCELREL
 if [ $HWACCELREL = none ]; then
  echo "\n*** Not applying HWACCEL diff.\n"
 fi
@@ -164,7 +173,7 @@ if [ $HWACCELREL = testing ]; then
  patch -p1 < $RESDIR/linux/$LINUXBASE/current_diff_hwaccel_testing
 fi
 
-# Apply Additional patch.
+## ADDPATCH
 if [ $ADDPATCH = none ]; then
  echo "\n*** Not applying ADDPATCH.\n"
 else
@@ -172,7 +181,7 @@ else
  patch -p1 < $DEVDIR/$ADDPATCH
 fi
 
-## CONFIG
+## KERNELCONFIG
 if [ $KERNELCONFIG = default ];then
  echo "\n*** Using default KERNELCONFIG.\n"a
  cp $RESDIR/linux/$LINUXBASE/current_config .config
@@ -191,7 +200,7 @@ if [ $CROSSBUILD = no ]; then
  make -j `nproc` menuconfig
 fi
 
-## BUILD
+## CROSSBUILD
 if [ $CROSSBUILD = yes ]; then
  if [ $MAKEDISTRO = debian ]; then
   KCFLAGS="$BUILDOPTS -march=$TARCH$TOPTS -mcpu=$TCPU -mtune=$TCPU" \
@@ -209,6 +218,8 @@ if [ $CROSSBUILD = yes ]; then
   make -j `nproc` $BUILDCONFIG INITRD=yes KBUILD_IMAGE=/arch/arm64/boot/Image
  fi
 fi
+
+## BUILD
 if [ $CROSSBUILD = no ]; then
  if [ $MAKEDISTRO = debian ]; then
   make -j `nproc` INITRD=yes KBUILD_IMAGE=arch/arm64/boot/Image bindeb-pkg
