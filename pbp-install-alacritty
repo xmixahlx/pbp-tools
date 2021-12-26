@@ -21,13 +21,13 @@ GITTREE=alacritty
 if [ -z $GITBRANCH ]; then
  GITBRANCH=v0.9.0
 fi
-echo "\n*** GITBRANCH selected is $GITBRANCH.\n"
+printf "\n*** GITBRANCH selected is %s.\n" "$GITBRANCH"
 
 # Override gles3 with gles2 or none.
 if [ -z $GLESVER ]; then
  GLESVER=gles3
 fi
-echo "\n*** GLESVER selected is $GLESVER.\n"
+printf "\n*** GLESVER selected is %s.\n" "$GLESVER"
 
 PKGDIR=$GITTREE\_$GITBRANCH
 
