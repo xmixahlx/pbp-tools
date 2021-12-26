@@ -85,8 +85,10 @@ sudo install -D -m644 "extra/logo/alacritty-term.svg" "/usr/local/share/pixmaps/
 sudo install -D -m755 "target/release/alacritty" "/usr/local/bin/alacritty"
 
 ## X-TERMINAL-EMULATOR
-if [ "$INSTALLDEPS" = debian ]; then
- sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/alacritty 90
+if [ "$INSTALLDEPS" ]; then
+ if [ "$INSTALLDEPS" = debian ]; then
+  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/alacritty 90
+ fi
 fi
 
 ## EXIT
