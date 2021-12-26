@@ -7,34 +7,34 @@
 ### Script Dependencies: (none)
 
 ## PBPTOOLSDIR
-if [ -z $PBPTOOLSDIR ]; then
- PBPTOOLSDIR="`pwd`"
+if [ -z "$PBPTOOLSDIR" ]; then
+ PBPTOOLSDIR="$(pwd)"
 fi
 
 ## VARS
-DEVDIR=$PBPTOOLSDIR/upstream
+DEVDIR="$PBPTOOLSDIR"/upstream
 GITREPO=https://github.com/alacritty
 GITTREE=alacritty
 
 ## OVERRIDES
 # Override v0.4.2 with <branch>.
-if [ -z $GITBRANCH ]; then
+if [ -z "$GITBRANCH" ]; then
  GITBRANCH=v0.9.0
 fi
 printf "\n*** GITBRANCH selected is %s.\n" "$GITBRANCH"
 
 # Override gles3 with gles2 or none.
-if [ -z $GLESVER ]; then
+if [ -z "$GLESVER" ]; then
  GLESVER=gles3
 fi
 printf "\n*** GLESVER selected is %s.\n" "$GLESVER"
 
-PKGDIR=$GITTREE\_$GITBRANCH
+PKGDIR="$GITTREE"\_"$GITBRANCH"
 
 ## DEPS
 # Provide INSTALLDEPS=debian to install dependencies.
-if [ $INSTALLDEPS ]; then
- if [ $INSTALLDEPS = debian ]; then
+if [ "$INSTALLDEPS" ]; then
+ if [ "$INSTALLDEPS" = debian ]; then
   sudo apt-get -y install build-essential coreutils libc-bin wget patch \
   libfontconfig-dev libfreetype-dev libxcb1-dev libgcc-9-dev libc6-dev libexpat1-dev \
   libuuid1 uuid-dev libpng-dev zlib1g-dev libxau-dev libxdmcp-dev libbsd-dev \
@@ -44,20 +44,20 @@ fi
 
 ## PREP
 set -e
-mkdir -p $DEVDIR
-cd $DEVDIR
+mkdir -p "$DEVDIR"
+cd "$DEVDIR"
 
 ## GLES
-if [ $GLESVER = gles2 ]; then
- [ -f $GITTREE\_$GLESVER.patch ] || wget https://github.com/cyclopsian/alacritty/commit/2e15b476ea1125c6fa6c0a694e8a911079577da7.patch -O $GITTREE\_$GLESVER.patch
+if [ "$GLESVER" = gles2 ]; then
+ [ -f "$GITTREE"\_"$GLESVER".patch ] || wget https://github.com/cyclopsian/alacritty/commit/2e15b476ea1125c6fa6c0a694e8a911079577da7.patch -O $GITTREE\_$GLESVER.patch
 fi
-if [ $GLESVER = gles3 ]; then
- [ -f $GITTREE\_$GLESVER.patch ] || wget -q -O- https://github.com/alacritty/alacritty/files/6819378/0001-use-OpenGL-3.1-with-extensions-instead-of-OpenGL-3.3.patch.gz | zcat > $GITTREE\_$GLESVER.patch
+if [ "$GLESVER" = gles3 ]; then
+ [ -f "$GITTREE"\_"$GLESVER".patch ] || wget -q -O- https://github.com/alacritty/alacritty/files/6819378/0001-use-OpenGL-3.1-with-extensions-instead-of-OpenGL-3.3.patch.gz | zcat > "$GITTREE"\_"$GLESVER".patch
 fi
 
 ## GIT
-[ -d $PKGDIR ] || git clone --depth=1 $GITREPO/$GITTREE.git --branch=$GITBRANCH $PKGDIR
-cd $PKGDIR
+[ -d "$PKGDIR" ] || git clone --depth=1 "$GITREPO"/"$GITTREE".git --branch="$GITBRANCH" "$PKGDIR"
+cd "$PKGDIR"
 git clean -f
 git reset --hard HEAD
 git pull
@@ -66,8 +66,8 @@ git pull
 cargo clean
 
 ## PATCH
-if [ $GLESVER = gles2 -o $GLESVER = gles3 ]; then
- patch -p1 < $DEVDIR/$GITTREE\_$GLESVER.patch
+if [ "$GLESVER" = gles2 -o "$GLESVER" = gles3 ]; then
+ patch -p1 < "$DEVDIR"/"$GITTREE"\_"$GLESVER".patch
 fi
 
 ## BUILD
@@ -85,7 +85,7 @@ sudo install -D -m644 "extra/logo/alacritty-term.svg" "/usr/local/share/pixmaps/
 sudo install -D -m755 "target/release/alacritty" "/usr/local/bin/alacritty"
 
 ## X-TERMINAL-EMULATOR
-if [ $INSTALLDEPS = debian ]; then
+if [ "$INSTALLDEPS" = debian ]; then
  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/alacritty 90
 fi
 
