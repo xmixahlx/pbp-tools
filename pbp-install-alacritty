@@ -66,7 +66,7 @@ git pull
 cargo clean
 
 ## PATCH
-if [ "$GLESVER" = gles2 -o "$GLESVER" = gles3 ]; then
+if [ "$GLESVER" = gles2 ] || [ "$GLESVER" = gles3 ]; then
  patch -p1 < "$DEVDIR"/"$GITTREE"\_"$GLESVER".patch
 fi
 
