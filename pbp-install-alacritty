@@ -19,7 +19,7 @@ GITTREE=alacritty
 ## OVERRIDES
 # Override v0.4.2 with <branch>.
 if [ -z $GITBRANCH ]; then
- GITBRANCH=v0.4.2
+ GITBRANCH=v0.9.0
 fi
 echo "\n*** GITBRANCH selected is $GITBRANCH.\n"
 
@@ -52,7 +52,7 @@ if [ $GLESVER = gles2 ]; then
  [ -f $GITTREE\_$GLESVER.patch ] || wget https://github.com/cyclopsian/alacritty/commit/2e15b476ea1125c6fa6c0a694e8a911079577da7.patch -O $GITTREE\_$GLESVER.patch
 fi
 if [ $GLESVER = gles3 ]; then
- [ -f $GITTREE\_$GLESVER.patch ] || wget https://github.com/cyclopsian/alacritty/commit/4a659169bd69312ec59fa283b069f6710088a688.patch -O $GITTREE\_$GLESVER.patch
+ [ -f $GITTREE\_$GLESVER.patch ] || wget -q -O- https://github.com/alacritty/alacritty/files/6819378/0001-use-OpenGL-3.1-with-extensions-instead-of-OpenGL-3.3.patch.gz | zcat > $GITTREE\_$GLESVER.patch
 fi
 
 ## GIT
