@@ -17,9 +17,9 @@ GITREPO=https://github.com/alacritty
 GITTREE=alacritty
 
 ## OVERRIDES
-# Override v0.4.2 with <branch>.
+# Override v0.10.0 with <branch>.
 if [ -z "$GITBRANCH" ]; then
- GITBRANCH=v0.9.0
+ GITBRANCH=v0.10.0
 fi
 printf "\n*** GITBRANCH selected is %s.\n" "$GITBRANCH"
 
